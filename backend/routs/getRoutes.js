@@ -1,6 +1,4 @@
-
 const router = express.Router()
-
 
 router.get('/sing_in', (req, res) => {
     //res.sendFile(path.join(__dirname + 'paginadecadastro.html')) for example

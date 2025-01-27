@@ -1,14 +1,23 @@
-const express = require('express') 
-const app = express()
-const router = require('../')
+// Importações e configuração do ambiente
+require('dotenv').config(); // Carrega as variáveis de .env
+const express = require('express');
+const app = express();
 
+// Importação de rotas
+const getRoutes = require('./routes/getRoutes');
+const postRoutes = require('./routes/postRoutes');
 
-require('dotenv').config();  // Carrega as variáveis de .env
+// Middleware para interpretar JSON
+app.use(express.json());
 
+// Rotas
+app.use('/api/get', getRoutes); // Rotas GET
+app.use('/api/post', postRoutes); // Rotas POST
 
-// Server on
-app.listen(27017, () => {
-    console.log("[SERVIDOR RODANDO]")
-})
+// Inicia o servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`[SERVIDOR RODANDO] na porta ${PORT}`);
+});
 
-module.exports = express
+module.exports = app;
