@@ -4,8 +4,8 @@ const express = require('express');
 const app = express();
 
 // Importação de rotas
-const getRoutes = require('./routes/getRoutes');
-const postRoutes = require('./routes/postRoutes');
+const getRoutes = require('./routes/productRoutes');
+const postRoutes = require('./routes/userRoutes');
 
 // Middleware para interpretar JSON
 app.use(express.json());
