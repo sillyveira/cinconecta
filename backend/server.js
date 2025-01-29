@@ -4,15 +4,15 @@ const express = require('express');
 const app = express();
 
 // Importação de rotas
-const getRoutes = require('./routes/productRoutes');
-const postRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Middleware para interpretar JSON
 app.use(express.json());
 
 // Rotas
-app.use('/api/get', getRoutes); // Rotas GET
-app.use('/api/post', postRoutes); // Rotas POST
+app.use('/produtos', productRoutes); // Rotas produtos
+app.use('/usuarios', userRoutes); // Rotas usuários
 
 // Inicia o servidor
 const PORT = process.env.PORT || 3000;
