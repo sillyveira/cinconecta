@@ -3,15 +3,15 @@ require('dotenv').config()
 
 const mongoose = require('mongoose')
 
-const MONGO_URI = process.env.MONGO_URI //"meubanco" deverá ser substituído pelo nome do banco
+const MONGO_URI = process.env.MONGO_URI 
 
 // Estabelecendo conexão com o banco de dados
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-    .then(() => console.log("[SUCESS] Connection established"))
-    .catch((err) => console.error("[ERROR] Connection failed: ", err))
+    .then(() => console.log("[SUCESSO] Conexão estabelecida com o banco"))
+    .catch((err) => console.error("[ERRO] A conexão falhou: ", err))
 
 
 module.exports = mongoose
