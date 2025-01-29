@@ -1,7 +1,8 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
-
+// -- Wesley
+// TODO: remover esse código de criar usuário e seguir o protocolo do slide de planejamento. o usuário e a senha será enviada diretamente por requisição POST para a API do governo. obs.: colocar o endereço da API e todas informações privadas nas variáveis secretas (.env) 
 exports.createUser =  async (req, res) => {
     const {name, email, password} = req.body // Capture the values in name, email and password
     
