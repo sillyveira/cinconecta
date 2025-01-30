@@ -32,7 +32,7 @@ exports.createUser =  async (req, res) => {
                     password: hashedPassword
                 })
                    return res.status(201).json({ success: true, message: "User created successfully." })
-                
+              // verifi  
             } catch(error) {
                     console.error('Error creating user:', error); 
                     res.status(500).json({ 
