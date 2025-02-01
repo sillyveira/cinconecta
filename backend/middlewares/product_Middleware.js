@@ -3,7 +3,7 @@
 exports.date_validity = async (req, res, next) => {
     const { validity } = req.body 
 
-    // Check if the "validity" field was provided
+    // Checa se o campo validade foi preenchido 
     if (!validity) {
         return res.status(400).json({ 
             success: false,
@@ -11,18 +11,18 @@ exports.date_validity = async (req, res, next) => {
         });
     }
     try {
-        // Attempt to convert the provided value into a date
+        // Converte a data em um objeto Date
         const object_date = new Date(validity)
         
-        // Check if the value can be converted to a valid date
+        // Checa se a data fornecida é valida 
         if (isNaN(object_date)){
             return res.status(400).json({ error: 'Invalid date' })
         }
 
-        // If no errors are detected, proceed to the next middleware
+        // Se nenhum erro for detectado passa pro próximo verificador
         next()
         
-    // Catch any unexpected errors
+    // Em caso de erros inesperados
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -30,3 +30,4 @@ exports.date_validity = async (req, res, next) => {
         })
     }
 }
+
