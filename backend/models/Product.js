@@ -1,15 +1,8 @@
 const mongoose = require('mongoose')
 const User = require('./User')
 
-// Define scheme of category
-const categorySchema = new mongoose.Schema({
-    name_category: { type: String}, 
-    id_category: { type: mongoose.Schema.Types.ObjectId }
-})
 
-const category = mongoose.model('Category', categorySchema)
-
-// Define scheme of product
+// Definindo esquema do produto
 const productSchema = new mongoose.Schema ({
     _id : {
         type: mongoose.Schema.Types.ObjectId, 
@@ -52,7 +45,7 @@ const productSchema = new mongoose.Schema ({
 
 })
 
-// Create the model of user 
+// Criando modelo do produto
 const Product = mongoose.model('Product', productSchema)
 
  module.exports = Product
