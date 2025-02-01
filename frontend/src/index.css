@@ -2,7 +2,7 @@
 
 /* 
  Wesley aqui, você pode ver a lista de variáveis possíveis nesse link abaixo:
- https://tailwindcss.com/docs/them
+ https://tailwindcss.com/docs/theme
 
  Para setar uma nova variável, você digita: --tipodavariavel-nome: valor;
  Exemplo: --color-verde-musgo: #d3ffa8;
@@ -10,7 +10,13 @@
 
 /* TODO: Adrielly, adiciona as cores do projeto por favor! */
 @theme {
+  /* Definindo breakpoints personalizados */
+
+  /* Definindo tamanhos de fonte personalizados */
+  --font-size-xxs: 0.625rem;
+
+  /* Cores personalizadas */
   --color-cor-primaria: #ff0000;
   --color-cor-secundaria: #ffffff;
+  
 }
-
