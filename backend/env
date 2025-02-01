@@ -1,0 +1,2 @@
+MONGO_URI=mongodb+srv://cinconecta:cinconecta%23%40%213924@cinconectacluster.uilvp.mongodb.net/?retryWrites=true&w=majority&appName=cinconectacluster
+PORT=3000
