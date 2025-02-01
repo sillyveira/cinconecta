@@ -26,7 +26,7 @@ exports.date_validity = async (req, res, next) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            error: 'Internal server error'
+            error: 'internal server error'
         })
     }
 }
