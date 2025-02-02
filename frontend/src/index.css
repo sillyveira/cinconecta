@@ -20,16 +20,3 @@
   --color-cor-secundaria: #ffffff;
   
 }
-
-.botao-vermelho {
-  background-color: red;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.botao-vermelho:hover {
-  background-color: darkred;
-}
