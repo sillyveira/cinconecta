@@ -34,7 +34,7 @@ function DropDownMenu({variant,label,opcoes,onChange}){
     <div className="ml-[345px]"> {/* Para que o componente não seja sobreposto pela sidebar OBS:REMOVER DEPOIS. */}
 
       <select
-        id="frutas"
+        id="opcoes"
         value = {valor}
         onChange={handleChange}
         className={variant === 'gray' ? 
