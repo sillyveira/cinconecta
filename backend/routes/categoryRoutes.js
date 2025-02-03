@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = express.Router();
+const categoryController = require('../controllers/categoryController')
 
 const app = express();
 
@@ -15,27 +16,13 @@ router.get('/', (req,res,next) =>{
 });
 
 //rota para criar categorias
-router.post('/adicionar-categorias', (req,res,next)=>{
-    res.status(201).send(req.body)
-});
+router.post('/adicionar-categorias', categoryController.post);
 
 //rotas para atualizar categorias
-router.put('/atualizar-categorias/:id', (req,res,next)=>{
-    const id = req.params.id;
-    res.status(200).send({
-        id: id,
-        item: req.body
-    });
-});
+router.put('/atualizar-categorias/:id', categoryController.put);
 
 //rotas para apagar categorias
-router.delete('/apagar-categorias/:id', (req,res,next)=>{
-    const id = req.params.id;
-    res.status(200).send({
-        id: id,
-        item:req.body
-    })
-})
+router.delete('/apagar-categorias/:id', categoryController.delete)
 
 
 module.exports = router;
