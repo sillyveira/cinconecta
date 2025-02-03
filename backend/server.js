@@ -7,6 +7,7 @@ const app = express();
 // Importação de rotas
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
+const categoryRoutes= require('./routes/categoryRoutes');
 
 // Middleware para interpretar JSON
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use(express.json());
 // Rotas
 app.use('/produtos', productRoutes); // Rotas produtos
 app.use('/usuarios', userRoutes); // Rotas usuários
+app.use('/categorias', categoryRoutes ); //Rotas categorias
 
 // Inicia o servidor
 const PORT = process.env.PORT || 3000;
