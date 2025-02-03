@@ -1,12 +1,5 @@
 import { useState } from 'react';
 
-//Já estava fazendo com react select, porém não existe suporte para tailwind nisso
-//fiz então da maneira recomendada por Wesley.
-//a tag select não tem suporte para imagens ou ícones
-//Por isso, então, não ficou próximo do que foi pedido
-//pesquisarei mais sobre e testarei as opções recomendadas por Wesley, se caso eu descobrir uma maneira melhor de estilzar,
-//modifico o componente posteriormente
-
 /**
  * 
  * @param {variant} string "gray" or qualquer coisa 
@@ -31,15 +24,13 @@ function DropDownMenu({variant,label,opcoes,onChange}){
   };
 
   return(
-    <div className="ml-[345px]"> {/* Para que o componente não seja sobreposto pela sidebar OBS:REMOVER DEPOIS. */}
-
       <select
         id="opcoes"
         value = {valor}
         onChange={handleChange}
         className={variant === 'gray' ? 
-          "appearance-none p-4 bg-[#B6B6B6] w-[261px] h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]" : 
-          "appearance-none p-4 bg-[#F7F7F7] w-[261px] h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]"}
+          "appearance-none p-2 bg-[#B6B6B6] w-[261px] h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]" : 
+          "appearance-none p-2 bg-[#F7F7F7] w-[261px] h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]"}
       >
         <option value=""> {label} </option>
         {opcoes.map((optione) =>(
@@ -50,8 +41,6 @@ function DropDownMenu({variant,label,opcoes,onChange}){
           ))}
 
       </select>
-    </div>
-
   )
   console.log(valor)
 }
