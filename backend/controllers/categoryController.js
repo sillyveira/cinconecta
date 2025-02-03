@@ -17,3 +17,5 @@ exports.delete = (req,res,next)=>{
         item:req.body
     })
 };
+
+//TODO: (Iranildo)Ainda preciso criar os models do banco de dados para finalizar isso.
