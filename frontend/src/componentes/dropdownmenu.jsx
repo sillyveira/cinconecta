@@ -1,0 +1,55 @@
+import { useState } from 'react';
+
+//Já estava fazendo com react select, porém não existe suporte para tailwind nisso
+//fiz então da maneira recomendada por Wesley.
+//a tag select não tem suporte para imagens ou ícones
+//Por isso, então, não ficou próximo do que foi pedido
+//pesquisarei mais sobre e testarei as opções recomendadas por Wesley, se caso eu descobrir uma maneira melhor de estilzar,
+//modifico o componente posteriormente
+
+/**
+ * 
+ * @param {variant} string "gray" or qualquer coisa 
+ * @returns gray box or white dropdown menu
+ * @param {label} string do seu agrado
+ * @returns default option
+ * @param {opcoes} array de objetos das opcoes e seus valores
+ * @returns opcoes do dropdown menu
+ */
+
+
+function DropDownMenu({variant,label,opcoes}){
+
+  const [valor,setValor] = useState("")
+
+  return(
+  <div className="ml-[345px]"> {/* Para que o componente não seja sobreposto pela sidebar OBS:REMOVER DEPOIS. */}
+
+    <select
+      id="frutas"
+      value = {valor}
+      onChange={(event) => { setValor(event.target.value) }}
+      className={variant === 'gray' ? 
+        "appearance-none p-4 bg-[#B6B6B6] w-[261px] h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]" : 
+        "appearance-none p-4 bg-[#F7F7F7] w-[261px] h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]"}
+    >
+      <option value=""> {label} </option>
+      {opcoes.map((optione) =>(
+          <option key={optione.valore} 
+          value={optione.valore}>
+            {optione.title}
+          </option>
+        ))}
+
+    </select>
+
+    {valor !== "" && 
+    <p className="mt-2 text-center text-black">
+      Você escolheu: {valor}.
+    </p>}
+  </div>
+
+  )
+}
+
+export default DropDownMenu;
