@@ -18,38 +18,42 @@ import { useState } from 'react';
  */
 
 
-function DropDownMenu({variant,label,opcoes}){
+function DropDownMenu({variant,label,opcoes,onChange}){
 
   const [valor,setValor] = useState("")
 
+  const handleChange = (event) => {
+    const newValue = event.target.value;
+    setValor(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
+  };
+
   return(
-  <div className="ml-[345px]"> {/* Para que o componente não seja sobreposto pela sidebar OBS:REMOVER DEPOIS. */}
+    <div className="ml-[345px]"> {/* Para que o componente não seja sobreposto pela sidebar OBS:REMOVER DEPOIS. */}
 
-    <select
-      id="frutas"
-      value = {valor}
-      onChange={(event) => { setValor(event.target.value) }}
-      className={variant === 'gray' ? 
-        "appearance-none p-4 bg-[#B6B6B6] w-[261px] h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]" : 
-        "appearance-none p-4 bg-[#F7F7F7] w-[261px] h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]"}
-    >
-      <option value=""> {label} </option>
-      {opcoes.map((optione) =>(
-          <option key={optione.valore} 
-          value={optione.valore}>
-            {optione.title}
-          </option>
-        ))}
+      <select
+        id="frutas"
+        value = {valor}
+        onChange={handleChange}
+        className={variant === 'gray' ? 
+          "appearance-none p-4 bg-[#B6B6B6] w-[261px] h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]" : 
+          "appearance-none p-4 bg-[#F7F7F7] w-[261px] h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]"}
+      >
+        <option value=""> {label} </option>
+        {opcoes.map((optione) =>(
+            <option key={optione.valore} 
+            value={optione.valore}>
+              {optione.title}
+            </option>
+          ))}
 
-    </select>
-
-    {valor !== "" && 
-    <p className="mt-2 text-center text-black">
-      Você escolheu: {valor}.
-    </p>}
-  </div>
+      </select>
+    </div>
 
   )
+  console.log(valor)
 }
 
 export default DropDownMenu;
