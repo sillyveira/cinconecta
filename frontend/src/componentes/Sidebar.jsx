@@ -1,10 +1,28 @@
-import { ArrowLeft, BarChart, Eye, Home, LucideArchive, Menu, User } from "lucide-react";
+import {
+  ArrowLeft,
+  BarChart,
+  Eye,
+  Home,
+  LucideArchive,
+  Menu,
+  User,
+} from "lucide-react";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 const SIDEBAR_ITEMS = [
-  { name: "Início", icon: Home, color: "#E2FCB3FF", href: "/" },
-  { name: "Perfil", icon: User, color: "#FCB3B3FF", href: "/perfil" },
+  {
+    name: "Início",
+    icon: Home,
+    color: "#E2FCB3FF",
+    href: "/",
+  },
+  {
+    name: "Perfil",
+    icon: User,
+    color: "#FCB3B3FF",
+    href: "/perfil",
+  },
   {
     name: "Análise Geral",
     icon: BarChart,
@@ -16,6 +34,12 @@ const SIDEBAR_ITEMS = [
     icon: LucideArchive,
     color: "#FCFAB3FF",
     href: "/estoque",
+  },
+  {
+    name: "Auditoria",
+    icon: Eye,
+    color: "#B3FCEBFF",
+    href: "/auditoria",
   },
 ];
 
@@ -29,17 +53,23 @@ export const Sidebar = () => {
       animate={{ width: SidebarAberta ? 256 : 80 }}
     >
       <div className="h-full bg-white bg-opacity-100 backdrop-blur-md p-4 flex-col border-r-2 border-gray-400">
-        <div
-        className={`flex w-full justify-end pr-2`}
-        >
+        <div className={`flex w-full justify-end pr-2`}>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setSidebarAberta(!SidebarAberta)}
             className="ml-3 rounded-full flex hover:bg-red-600 group hover:shadow-[0_0_0px_5px_rgba(220,38,38,1)]"
           >
-            <Menu className={`text-black group-hover:text-white ${SidebarAberta ? 'hidden' : ''}`} />
-            <ArrowLeft className={`text-black group-hover:text-white ${SidebarAberta ? '' : 'hidden'}`} />
+            <Menu
+              className={`text-black group-hover:text-white ${
+                SidebarAberta ? "hidden" : ""
+              }`}
+            />
+            <ArrowLeft
+              className={`text-black group-hover:text-white ${
+                SidebarAberta ? "" : "hidden"
+              }`}
+            />
           </motion.button>
         </div>
 
