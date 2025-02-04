@@ -1,23 +1,25 @@
 const mongoose = require('mongoose')
+const { trusted } = require('./Database')
 
-// Define Schema of user
+// Schema do usuário
 const userSchema = new mongoose.Schema({
-    name: {
+    login: {
         type: String,
-        required: true
-    },
-    email: {
-        type: String, 
         required: true,
-        unique: true
+        unique: trusted
     },
-    password: {
-        type: String,
-        required: true
+    data_ingresso: {
+        type: Date, 
+        required: true,
+        default: Date.now
+    },
+    ultimo_login: {
+        type: Date,
+        required: false
     }
 })
 
-// Create the model of user 
-const User = mongoose.model('User', userSchema)
 
-module.exports = User
+const User = mongoose.model('User', userSchema, 'usuarios');
+
+module.exports = User;
