@@ -8,6 +8,10 @@ const app = express();
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 
+// Importação do scheduler (timer programado para realizar ações automáticas)
+const scheduler = require('./services/timerService');
+scheduler.iniciarScheduler(10);
+
 // Middleware para interpretar JSON
 app.use(express.json());
 
