@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AuditCard from "../componentes/AuditCard";
 import Botao from "../componentes/Botao";
-import ModalCC from "../componentes/ModalCC";
+import ModalCC from "../componentes/Modal";
 function Perfil() {
   const [openModal, setOpenModal] = useState(false);
   const toggleModal = () => setOpenModal((prev) => !prev);
