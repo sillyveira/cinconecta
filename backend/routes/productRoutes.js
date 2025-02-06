@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const productController = require('../controllers/productController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// Exemplo de rota
-router.get('/', (req, res) => {
-  res.send('Rota de produtos funcionando!');
-});
+// Rota POST para criar produtos
+router.post("/criar-produto", authMiddleware, productController.create_product)
 
-module.exports = router;
+module.exports = router

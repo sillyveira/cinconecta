@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const axios = require("axios");
 const sessionService = require("../services/sessionService");
-
+const auditController = require("../controllers/auditController")
 const login = async (req, res) => {
   const { email, password } = req.body; // Recebe o email e senha do usuário
 
@@ -39,53 +39,74 @@ const login = async (req, res) => {
               //Tentativa de salvar no banco de dados:
               await novoUsuario.save();
               // Gerando a sessão do novo usuário e inserindo o token no banco de dados:
-              const tokenGerado = await sessionService.gerarSessao(novoUsuario._id);
-              
+              const tokenGerado = await sessionService.gerarSessao(
+                novoUsuario._id
+              );
+
+              try {
+                //Tentativa de salvar o log de auditoria
+                await auditController.criarLog("reg", novoUsuario._id);
+                console.log("O log do usuário [registrar] foi salvo.");
+              } catch (err) {
+                console.log("Não foi possível salvar o log do usuário.");
+                console.log(err.message)
+              }
 
               return res.status(200).json({
                 message: "O usuário foi logado e registrado com sucesso.",
                 userid: novoUsuario._id,
-                token: tokenGerado
+                token: tokenGerado,
               });
-
             } catch (err) {
               return res.status(500).json({
                 message:
                   "Houve erro na tentativa de registro. Tente novamente.",
               });
             }
-
           } else {
             // Caso 2: O usuário foi encontrado, ele já está registrado. [Segundo+ login]
 
             // Bloco para gerar a sessão do usuário e inserir o token no banco de dados
-            let tokenGerado = ""
+            let tokenGerado = "";
             try {
               // Se o token já tiver sido gerado, ele é enviado ao usuário
-              tokenGerado = await sessionService.checarSessao(user._id)
-              
+              tokenGerado = await sessionService.checarSessao(user._id);
+
               // O token será gerado se a sessão não existir
               if (tokenGerado == null) {
                 tokenGerado = await sessionService.gerarSessao(user._id);
               } else {
-            // Se a sessão já existe, o token é retornado
+                // Se a sessão já existe, o token é retornado
                 return res.status(200).json({
-                    message: "O usuário já está logado.",
-                    userid: user._id,
-                    token: tokenGerado
-                  });
-              }  
-              
+                  message: "O usuário já está logado.",
+                  userid: user._id,
+                  token: tokenGerado,
+                });
+              }
             } catch (err) {
               return res.status(500).json({
                 message: "Houve erro no login. Tente novamente.",
               });
             }
             // --------
+
+            try {
+              //Tentativa de salvar o log de auditoria
+              await auditController.criarLog("log", user._id);
+              console.log("O log do usuário [login] foi salvo.");
+            } catch (err) {
+              console.log("Não foi possível salvar o log do usuário.");
+              console.log(err.message)
+            }
+
+            // Atualizando a data do último_login
+            user.ultimo_login = new Date();
+            await user.save();
+
             return res.status(200).json({
               message: "O usuário foi logado.",
               userid: user._id,
-              token: tokenGerado
+              token: tokenGerado,
             });
           }
         } else {
@@ -119,14 +140,12 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-    try {
-        const revogarSessao_ = await sessionService.revogarSessao(req.token);
+  try {
+    const revogarSessao_ = await sessionService.revogarSessao(req.token);
 
-        return res.status(revogarSessao_.status).json({
-            message: revogarSessao_.message
-        })
-    
-    } catch (err) {}
-} 
+    return res.status(revogarSessao_.status).json({
+      message: revogarSessao_.message,
+    });
+  } catch (err) {}
+};
 module.exports = { login, logout };
-
