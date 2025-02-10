@@ -17,7 +17,21 @@ const criarLog = async (acao, userid, nomeusuario, ongid, descricao = {}) => {
 };
 
 const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
-  // Desestruturação condicional:
+
+  // Se a diferença da data inicial par a data final for maior que um ano, setar para um ano apenas.
+
+  // Calculando a diferença em milissegundos
+  dataFinal = new Date(dataFinal)
+  dataInicial = new Date(dataInicial)
+
+  const diferencaMs = dataInicial - dataFinal
+  // Convertendo a diferença de milissegundos para anos (aproximadamente)
+  const diferencaAnos = diferencaMs / (1000 * 60 * 60 * 24 * 365);
+  console.log(diferencaAnos);
+  if (diferencaAnos > 1 || diferencaAnos <= -1){
+    dataInicial.setFullYear(dataFinal.getFullYear() - 1)
+    console.log("A diferença é maior que um ano, setando para um ano apenas");
+  }
 
   const query = {
     id_ong: ongid,
