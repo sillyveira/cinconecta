@@ -52,8 +52,8 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
           variant="gray"
           label="Categoria"
           opcoes={[
-            /*{ value: "eletronico", title: "Eletrônico" },
-            { value: "vestuario", title: "Vestuário" },*/
+            { value: "eletronico", title: "Eletrônico" },
+            { value: "vestuario", title: "Vestuário" },
           ]}
           className="p-3 bg-[#B6B6B6] text-white rounded-xl" 
           onChange={(value) => setFormData({ ...formData, categoria: value })}
