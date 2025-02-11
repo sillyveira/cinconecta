@@ -1,8 +1,5 @@
 import { ListFilter, CirclePlus, Search } from "lucide-react";
-import {InputAdornment, TextField} from '@mui/material'
 
-//AVISO IMPORTANTE: A barra de pesquisa deste componente foi feita a partir do textfield da biblioteca material/mui, para renderizar este
-//componente, instale antes esta biblioteca (Emotion Engine)
 
 export default function StockBar(){
 
@@ -18,34 +15,12 @@ export default function StockBar(){
                 <h1 className="self-center text-black">Filtrar</h1>
             </button>
 
-            <TextField 
-            className="w-[648px]"
-            placeholder="Pesquisar"
-            color="black"
-            slotProps={{
-                input:{
-                    startAdornment:(
-                        <InputAdornment position="start" className="">
-                            <Search color="black"/>
-                        </InputAdornment>
-                    )
-                }
-            }}
-            sx={{
-                '& .MuiOutlinedInput-root': {
-                paddingTop: '4px',
-                borderRadius:'37px',
-                height:'43px',
-                },
-                '& .MuiInputBase-input::placeholder': {
-                    color: 'black',
-                    opacity: 1,
-                    left: '50%',
-                    transform:'translateX(-50%)',
-                    textAlign: 'center',
-                }
-            }}
-            />
+            <div className="relative">
+                <Search color="black" className=" absolute left-4 top-2"/>
+                <input placeholder="Pesquisar" 
+                type="search" 
+                className="placeholder:text-center placeholder:text-black flex flex-row w-[648px] h-[43px] rounded-[37px] text-black border-2 border-[#D9D9D9] p-4 pl-12"/>
+            </div>
 
             <button onClick={clicou} className="cursor-pointer flex flex-row justify-start w-[138px] h-[43px] rounded-[24px] border-2 border-black gap-2 p-4">
                 <CirclePlus className="self-center" color="black"/>
