@@ -1,45 +1,56 @@
 const mongoose = require('mongoose')
-const User = require('./User')
+
 
 
 // Definindo esquema do produto
 const productSchema = new mongoose.Schema ({
-    id_category: {
+
+    id_categoria: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
-        required: true,
+        required: false,
     }, 
 
-    id_user: {
+    id_usuario: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
         
     }, 
 
-    name: {
+    nome: {
         type: String, 
         required: true,
     }, 
    
-    description: {
+    descricao: {
         type: String,
-        required: true
+        required: false
     }, 
 
-    quantity: {
+    quantidade: {
         type: Number, 
         required: true
     }, 
 
-    validity: {
+    validade: {
         type: Date,
-        required: true
+        required: false
+    },
+
+    valor: {
+        type: Number,
+        required: false
+    },
+
+    codbarras: {
+        type: String,
+        required: false
     }
 
 })
 
 // Criando modelo do produto
-const Product = mongoose.model('Product', productSchema)
+const Product = mongoose.model('Product', productSchema, 'produtos')
 
  module.exports = Product

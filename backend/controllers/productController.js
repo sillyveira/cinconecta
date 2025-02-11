@@ -1,89 +1,58 @@
-const Product = require('../models/Product')
-const product = require('../models/Product')
+const Product = require('../models/Product');
+const mongoose = require('mongoose');
+const auditController = require('../controllers/auditController');
 
 // Controoler para criar um novo produto
-exports.create_product = async (req, res, next) => {
-    const { id_user, id_category, name, description, quantity, validity } = req.body
-    
-        // Checa se "name", "quantity", "description", and "validity" foram preenchidos
-        if (!name || !quantity || !description || !validity){
-            return res.status(400).json({ success: false, message: "All fields are required."
+exports.create_product = async (req, res) => {
+    const {id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body
+    const id_usuario = req.userId
+
+        // Checa se "name", "quantidade", "descricao", and "validade" foram preenchidos
+        if (!nome || !quantidade || !id_usuario){
+            return res.status(400).json({ 
+                success: false,
+                message: "Todos os campos são necessários."
             })
         }
 
+        if (!mongoose.Types.ObjectId.isValid(id_usuario)) {
+            return res.status(400).json({
+                success: false,
+                message: "ID de usuário inválido."
+            });
+        }
+    
         try {
             // Cria o produto no Banco de dados
-            await product.create({
-                id_user, id_category, name, description, quantity, validity
+            const novoProduto = new Product({
+                id_usuario: new mongoose.Types.ObjectId(id_usuario), // Converte para ObjectId tentar depois: mongoose.Types.ObjectId.createFromHexString(userId)
+                id_categoria: id_categoria ? new mongoose.Types.ObjectId(id_categoria) : null, // Se id_categoria for fornecido, converte para ObjectId
+                nome: nome,
+                descricao: descricao || null,
+                quantidade: quantidade,
+                validade: validade || null,
+                valor: valor || null,
+                codbarras: codbarras || null
             })
-            return res.status(201).json({ success: true, message: "Product created successfully." })
-
-        } catch(error) {
-            console.error('Error creating product:', error); 
-            res.status(500).json({ success: false, message: "Error creating product.", error: error.message })
-        }
-    }
-
-// Controller para deletar produto 
-exports.delete_product = async (req, res) =>{   
-    const { id } = req.params
-        try {   
-            const Delete = await Product.deleteOne({ _id: id }) // Deleta o produto com base no seu id
+            await novoProduto.save();
             
-            if(Delete.deletedCount === 0) {
-                return res.status(404).json({ success: false, message: "Product not found." }); // Se o produto não for encontrado
-                
+            try { //Tentativa de salvar o log de auditoria
+                const descricaoLog = {
+                    novoProduto: novoProduto.toObject(),
+                    quantidade: novoProduto.quantidade,
+                    valor: novoProduto.valor || ""
+                }
+
+                await auditController.criarLog('add', id_usuario, descricaoLog);
+                console.log("O log do usuário [criar-produto] foi salvo.")
+            } catch (err) {
+                console.log("Não foi possível salvar o log do usuário.")
             }
             
-            return res.status(204).json({ success: true, message: "Product deleted successfully."}) // Se o produto for encontrado e deletado
-        
-        } catch(error) {
-            res.status(500).json({ success: false, message: "Error deleting product.", error: error.message}) // Caso aconteça algum erro ao deletar o produto
-        }
-    }
-
-exports.atualizar_product = async (req, res) => {
-    const { id } = req.params
-    const { id_category, name, description, quantity, validity} = req.body
-
-    try{
-        const product = await Product.findById(id)
-
-        if (!product) {
-            return res.status(404).json({ success: false, message: "Product not found." }); // Se o produto não for encontrado
-        }
-
-        product.id_category = id_category || product.id_category, 
-        product.name = name || product.name, 
-        product.description = description || product.description, 
-        product.quantity = quantity || product.quantity,
-        product.validity = validity || product.validity
-
-        return res.status(204).json({ success: true, message: "Product updating successfully."}) // Se o produto for encontrado e deletado
+            return res.status(201).json({ success: true, message: "Produto criado com sucesso." });
     
-    } catch(error) {
-        console.error('Error updating product:', error)
-        return res.status(500).json({ success: false, message: "Error updating product.", error: error.message})
-    }
-
-}
-
-exports.vizu_product = async (req,res) => {
-    const { id_user } = req.body
-
-    try {
-        
-        const product = await Product.find({id_user: id_user})
-
-        if (products.length === 0) {
-            return res.status(404).json({ success: false, message: "Product not found." }); // Se o produto não for encontrado
+        } catch (error) {
+            console.error('Erro ao criar produto:', error);
+            res.status(500).json({ success: false, message: "Erro ao criar produto.", error: error.message });
         }
-
-
-        return res.status(200).json({ success: true, product}) // Se o produto for encontrado 
-
-    }catch(error) {
-        console.error('Error v product:', error)
-        return res.status(500).json({ success: false, message: "Error retrieving product.", error: error.message})
     }
-}

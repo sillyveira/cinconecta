@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const express = require('express')
 const router = express.Router()
 const productController = require('../controllers/productController')
@@ -20,5 +21,14 @@ router.put("/update_product/:id", productController.atualizar_product)
 
 router.get("/vizu_product", productController.vizu_product)
 
+=======
+const express = require('express');
+const router = express.Router();
+const productController = require('../controllers/productController');
+const authMiddleware = require('../middlewares/authMiddleware');
+
+// Rota POST para criar produtos
+router.post("/criar-produto", authMiddleware, productController.create_product)
+>>>>>>> 87e721bfdfc2c2580e99d3eb0ec8ff54eb5dfa71
 
 module.exports = router
