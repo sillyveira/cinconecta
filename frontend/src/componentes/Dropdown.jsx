@@ -11,7 +11,7 @@ import { useState } from 'react';
  */
 
 
-function DropDownMenu({variant,largura,label,opcoes,onChange}){
+function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
 
   const [valor,setValor] = useState("")
 
@@ -29,8 +29,8 @@ function DropDownMenu({variant,largura,label,opcoes,onChange}){
         value = {valor}
         onChange={handleChange}
         className={variant === 'gray' ? 
-          `appearance-none p-2 bg-[#B6B6B6] w-[${largura}] h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]` : 
-          `appearance-none p-2 bg-[#F7F7F7] w-[${largura}] h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]`}
+          `appearance-none p-2 bg-[#B6B6B6] w-[${largura}] ${className} h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]` : 
+          `appearance-none p-2 bg-[#F7F7F7] w-[${largura}] ${className} h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]`}
       >
         <option value=""> {label} </option>
         {opcoes.map((optione) =>(

@@ -106,7 +106,12 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
       {/* Botão */}
       <div className="flex justify-end w-full mt-4">
         <div className="flex">
-            <Botao texto="Adicionar" disabled={!formData.nome || !formData.quantidade} className="bg-red-600 text-white px-6 py-3 rounded-xl" />
+            <Botao
+            texto="Adicionar"
+            disabled={!formData.nome || !formData.quantidade}
+            className="bg-red-600 text-white px-6 py-3 rounded-xl" 
+            onClick={onClose}
+            />
         </div>
     </div>
 

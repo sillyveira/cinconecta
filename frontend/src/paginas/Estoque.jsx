@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import DataTable from "react-data-table-component";
 import { Edit, Info } from "lucide-react";
 import {motion} from "framer-motion";
 import Header from "../componentes/Header";
+import ModalFiltro from "../componentes/ModalFiltro";
+import ModalNovoProduto from "../componentes/ModalNovoProduto"
 // Definição das colunas
 const columns = [
   {
@@ -151,6 +153,12 @@ const customStyles = {
 
 function Estoque() {
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [openModalFiltro, setOpenModalFiltro] = useState(false);
+  const toggleModalFiltro = () => setOpenModalFiltro((prev) => !prev);
+
+  const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
+  const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
+
   const [data, setData] = React.useState([
     {
       id: 1,
@@ -411,6 +419,7 @@ function Estoque() {
 
       
 <Header titulo={"Estoque"}/>
+  
       <div className="flex justify-center mr-20 space-x-2 mt-6">
           
         {/* Botão Filtrar com motion */}
@@ -418,6 +427,7 @@ function Estoque() {
           className="bg-white text-black border-2 border-black rounded-lg px-4 py-2 hover:bg-black hover:text-white transition-all"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
+          onClick={toggleModalFiltro}
         >
           Filtrar
         </motion.button>
@@ -441,6 +451,7 @@ function Estoque() {
           className="bg-white text-black border-2 border-black rounded-lg px-4 py-2 hover:bg-black hover:text-white transition-all"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
+          onClick={toggleModalNovoProduto}
         >
           Novo
         </motion.button>
@@ -476,6 +487,8 @@ function Estoque() {
           />
         </div>
       </div>
+      <ModalFiltro isOpen={openModalFiltro} onClose={toggleModalFiltro}></ModalFiltro>
+      <ModalNovoProduto isOpen={openModalNovoProduto} onClose={toggleModalNovoProduto}></ModalNovoProduto>
     </>
   );
 }
