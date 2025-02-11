@@ -29,8 +29,8 @@ function DropDownMenu({variant,label,opcoes,onChange}){
         value = {valor}
         onChange={handleChange}
         className={variant === 'gray' ? 
-          "appearance-none p-2 bg-[#B6B6B6] w-[261px] h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]" : 
-          "appearance-none p-2 bg-[#F7F7F7] w-[261px] h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]"}
+          "appearance-none p-2 bg-[#B6B6B6] h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]" : /*mudança na retirada dos with para se adaptar ao modal */
+          "appearance-none p-2 bg-[#F7F7F7] h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]"}
       >
         <option value=""> {label} </option>
         {opcoes.map((optione) =>(
