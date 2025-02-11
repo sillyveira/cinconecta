@@ -1,5 +1,6 @@
 // Importações e configuração do ambiente
 require('dotenv').config(); // Carrega as variáveis de .env
+require('./models/Database'); // Inicializa o servidor 
 const express = require('express');
 const app = express();
 

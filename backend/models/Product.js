@@ -4,12 +4,6 @@ const User = require('./User')
 
 // Definindo esquema do produto
 const productSchema = new mongoose.Schema ({
-    _id : {
-        type: mongoose.Schema.Types.ObjectId, 
-        required: true,
-        unique: true
-    }, 
-
     id_category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',

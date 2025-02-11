@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-// Define Schema of user
+// Definindo esquema do usuário 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-// Create the model of user 
+// Criando modelo do usuário
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
