@@ -7,6 +7,7 @@ const app = express();
 // Importação de rotas
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
+const categoryRoutes= require('./routes/categoryRoutes');
 
 // Importação do scheduler (timer programado para realizar ações automáticas)
 const scheduler = require('./services/timerService');
@@ -18,6 +19,7 @@ app.use(express.json());
 // Rotas
 app.use('/produtos', productRoutes); // Rotas produtos
 app.use('/usuarios', userRoutes); // Rotas usuários
+app.use('/categorias', categoryRoutes ); //Rotas categorias
 
 // Inicia o servidor
 const PORT = process.env.PORT || 3000;
