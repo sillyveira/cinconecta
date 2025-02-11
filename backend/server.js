@@ -7,6 +7,7 @@ const app = express();
 // Importação de rotas
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
+const Database = require('./models/Database');
 
 // Importação do scheduler (timer programado para realizar ações automáticas)
 const scheduler = require('./services/timerService');

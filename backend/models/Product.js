@@ -38,8 +38,8 @@ const productSchema = new mongoose.Schema ({
         required: false
     },
 
-    valor: {
-        type: Number,
+    preco: {
+        type: String,
         required: false
     },
 
