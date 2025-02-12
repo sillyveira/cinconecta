@@ -7,6 +7,7 @@ const app = express();
 // Importação de rotas
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
+const dataRoutes = require('./routes/dataRoutes');
 const auditRoutes = require('./routes/auditRoutes');
 
 // Importação do scheduler (timer programado para realizar ações automáticas)
@@ -18,6 +19,7 @@ app.use(express.json());
 
 // Rotas
 app.use('/produtos', productRoutes); // Rotas produtos
+app.use('/analise-dados', dataRoutes); // Rotas dados
 app.use('/usuarios', userRoutes); // Rotas usuários
 app.use('/auditoria', auditRoutes);
 
