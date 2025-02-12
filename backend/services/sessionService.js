@@ -7,7 +7,7 @@ function gerarToken() {
 
 // checar se a sessão existe
 const checarSessao = async (userid) => {
-    const tokenExiste = await Session.findOne({userId: userid})
+    const tokenExiste = await Session.findOne({id_usuario: userid})
 
     if (tokenExiste) { //Verifica se o token já existe 
         //TODO: Devemos colocar lógica de logout para quando o token já existe? Pensamento para o futuro.
@@ -20,17 +20,19 @@ const checarSessao = async (userid) => {
 const checarToken = async (tokenFornecido) => {
     const tokenExiste = await Session.findOne({token: tokenFornecido})
     if(tokenExiste) {
-        return tokenExiste.userId
+        return {userid: tokenExiste.id_usuario, ongid: tokenExiste.id_ong, nome_usuario: tokenExiste.nome_usuario}
     } else {
-        return null
+        return {}
     }
 }
 
-const gerarSessao = async (userid) => {    
+const gerarSessao = async (userid, ongid, nome_usuario) => {    
     const novoToken = gerarToken()
 
     const novaSessao = new Session({
-        userId: userid,
+        id_usuario: userid,
+        id_ong: ongid,
+        nome_usuario: nome_usuario,
         token: novoToken,
         expira_em: new Date() 
     })

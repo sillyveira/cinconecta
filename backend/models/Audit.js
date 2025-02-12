@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 
 
 const auditSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
+    id_usuario: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'User' },
+    id_ong: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Ong' },
+    nome_usuario: {type: String, required: false},
     acao: {type: String, required: true},
     desc: {type: Object, required: true},
     data: {type: Date, required: true, default: new Date()}

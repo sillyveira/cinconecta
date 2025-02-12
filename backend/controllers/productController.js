@@ -4,8 +4,10 @@ const auditController = require('../controllers/auditController');
 
 // Controoler para criar um novo produto
 exports.create_product = async (req, res) => {
-    const {id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body
-    const id_usuario = req.userId
+    const {id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body;
+    const id_usuario = req.userId;
+    const id_ong = req.ongId;
+    const nome_usuario = req.nomeUsuario;
 
         // Checa se "name", "quantidade", "descricao", and "validade" foram preenchidos
         if (!nome || !quantidade || !id_usuario){
@@ -25,8 +27,8 @@ exports.create_product = async (req, res) => {
         try {
             // Cria o produto no Banco de dados
             const novoProduto = new Product({
-                id_usuario: new mongoose.Types.ObjectId(id_usuario), // Converte para ObjectId tentar depois: mongoose.Types.ObjectId.createFromHexString(userId)
-                id_categoria: id_categoria ? new mongoose.Types.ObjectId(id_categoria) : null, // Se id_categoria for fornecido, converte para ObjectId
+                id_ong: id_ong,
+                id_categoria: id_categoria ? id_categoria : null, // Se id_categoria for fornecido, converte para ObjectId
                 nome: nome,
                 descricao: descricao || null,
                 quantidade: quantidade,
@@ -43,10 +45,10 @@ exports.create_product = async (req, res) => {
                     valor: novoProduto.valor || ""
                 }
 
-                await auditController.criarLog('add', id_usuario, descricaoLog);
-                console.log("O log do usuário [criar-produto] foi salvo.")
+                await auditController.criarLog('add', id_usuario, nome_usuario, id_ong, descricaoLog);
+                console.log("O log do usuário [criar-produto] foi salvo.");
             } catch (err) {
-                console.log("Não foi possível salvar o log do usuário.")
+                console.log("Não foi possível salvar o log do usuário.");
             }
             
             return res.status(201).json({ success: true, message: "Produto criado com sucesso." });
