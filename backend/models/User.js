@@ -3,22 +3,30 @@ const { trusted } = require('./Database')
 
 // Schema do usuário
 const userSchema = new mongoose.Schema({
-    login: {
+    id_ong: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Ong'
+    },
+    email: {
         type: String,
         required: true,
-        unique: trusted
+        unique: true
+    },
+    nome: {
+        type: String,
+        required: true,
     },
     data_ingresso: {
         type: Date, 
         required: true,
-        default: Date.now
+        default: new Date()
     },
     ultimo_login: {
         type: Date,
         required: false
     }
 
-    //TODO: inserir ultimo_login no código
 })
 
 

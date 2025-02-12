@@ -7,7 +7,6 @@ function iniciarScheduler(tempoMinutos) {
 
 const executarTarefa = async() => {
     Session.apagarSessoesExpiradas();
-    Audit.procurarUsuariosDesatualizados();
 }
 
 module.exports = {iniciarScheduler, executarTarefa};

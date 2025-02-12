@@ -19,7 +19,7 @@ const middlewareAutenticacao = async (req, res, next) => {
             });
         }
         
-        const userid = await sessionService.checarToken(token);
+        const {userid, ongid, nome_usuario} = await sessionService.checarToken(token);
 
         if (!userid) {
             return res.status(401).json({
@@ -30,6 +30,8 @@ const middlewareAutenticacao = async (req, res, next) => {
         //Se for válido, o userId do token será armazenado para a requisição em sequência
 
         req.userId = userid;
+        req.ongId = ongid;
+        req.nomeUsuario = nome_usuario;
         req.token = token;
         next();
     } catch (err) {
