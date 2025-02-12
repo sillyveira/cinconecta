@@ -83,8 +83,21 @@ function Auditoria() {
   const itemPorPagina = 10;
   const pagTotais = (data.length % itemPorPagina) + 1;
 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  
+  const [Info, setInfo] = useState({
+    dataInicial: '',
+    dataFinal: '',
+    categoria: null,
+    categorias: [
+      {key: 'a', value: 'Login', title: 'Login'},
+      {key: 'b', value: 'Registro', title: 'Registro'},
+      {key: 'c', value: 'Revisão', title: 'Revisão'},
+      {key: 'd', value: 'Produtos', title: 'Produtos'},
+      {key: 'e', value: 'Adição', title: 'Adição'},
+      {key: 'f', value: 'Remoção', title: 'Remoção'},
+      {key: 'g', value: 'Atualização', title: 'Atualização'},
+    ]
+  })
  
   // Para buscar dados quando tivermos acesso à API.
   // useEffect(() => {
@@ -110,7 +123,8 @@ function Auditoria() {
         {/* Componente de filtro para PC */}
         <FiltroAuditoria
         className={""}
-        dataInicial={startDate} setDataInicial={setStartDate} dataFinal={endDate} setDataFinal={setEndDate} ></FiltroAuditoria>
+        info={Info}
+        setInfo={setInfo} ></FiltroAuditoria>
         {/* TODO: Aqui deve ser implementado o componente de filtro para Mobile*/}
 
         {/* Uma abordagem para fazer essa implementação de diferentes componentes a depender do tamanho da tela é você fazer isso: */}
