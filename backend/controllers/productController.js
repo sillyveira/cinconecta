@@ -2,7 +2,7 @@ const Product = require('../models/Product');
 const mongoose = require('mongoose');
 const auditController = require('../controllers/auditController');
 
-// Controoler para criar um novo produto
+// Controller para criar um novo produto
 exports.create_product = async (req, res) => {
     const {id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body;
     const id_usuario = req.userId;
@@ -59,10 +59,12 @@ exports.create_product = async (req, res) => {
         }
     }
 
+// Controller para atualizar produtos
 exports.update_product = async (req, res) => {
     const { id } = req.params; // Extrai o ID do produto da URL
     const { id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body
     const id_usuario = req.userId 
+    const id_ong = req.ongId
     
     // Validação de campos obrigatórios
     if (!nome || !id_usuario || !quantidade) {
@@ -99,12 +101,12 @@ exports.update_product = async (req, res) => {
     try {
         // Cria um objeto com os dados a serem atualizados
         const atualizando_dados = {
-            nome, 
-            descricao: descricao || null, // Define descricao como null se não for fornecida
-            quantidade, 
-            validade: validade || null, // Define validade como null se não for fornecida
-            valor: valor || null, // Define valor como null se não for fornecida
-            codbarras: codbarras || null // Define codbarras como null se não for fornecida
+            nome: nome, 
+            descricao: descricao || null, 
+            quantidade: quantidade,
+            validade: validade || null, 
+            valor: valor || null, 
+            codbarras: codbarras || null 
         };
     
         // Se id_categoria for fornecido, adiciona ao objeto de atualização
