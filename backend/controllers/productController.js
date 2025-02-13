@@ -2,9 +2,6 @@ const Product = require("../models/Product");
 const mongoose = require("mongoose");
 const auditController = require("../controllers/auditController");
 
-
-
-
 // Controller para criar um novo produto
 exports.create_product = async (req, res) => {
   const {
@@ -69,14 +66,10 @@ exports.create_product = async (req, res) => {
       console.log("Não foi possível salvar o log do usuário.");
     }
 
-    return res
-      .status(201)
-      .json({ success: true, message: "Produto criado com sucesso." });
+    return res.status(201).json({ success: true, message: "Produto criado com sucesso." });
   } catch (error) {
     console.error("Erro ao criar produto:", error);
-    res
-      .status(500)
-      .json({
+    res.status(500).json({
         success: false,
         message: "Erro ao criar produto.",
         error: error.message,
@@ -84,18 +77,50 @@ exports.create_product = async (req, res) => {
   }
 };
 
+//Controller para excluir produtos
+exports.delete_product = async (req, res) =>{   
+    const { ids } = req.body
+    const id_ong = req.ongId
+    const id_usuario = req.userId
+    
+    // Verifica se a lista de IDs foi enviada e se é um array válido
+    if(!ids || !Array.isArray(ids) || ids.length === 0 ) {
+        return res.status(400).json({
+            success: false,
+            message: "A lista de IDs é obrigatória e deve conter pelo menos um ID."
+        })
+    }
+
+    // Filtra apenas os IDs válidos (ObjectId do MongoDB)
+    const ids_validos = ids.filter(id => mongoose.Types.ObjectId.isValid(id))
+        
+    if (ids_validos.length === 0){
+        return res.status(400).json({
+            success: false,
+            message: "Nenhum ID válido foi fornecido"
+        })
+    }
+    try {   
+            // Deleta os produtos cujo _id está na lista de IDs válidos e pertencem à ONG do usuário
+            const deletados = await Product.deleteMany({ _id: { $in: ids_validos }, id_ong: id_ong }) 
+           
+            if(deletados.deletedCount === 0) {
+                return res.status(404).json({ success: false, message: "Nenhum produto foi encontrado." }); // Se o produto não for encontrado
+            }
+           
+            return res.status(200).json({ success: true, message: "Produto deletado com sucesso."}) // Se o produto for encontrado e deletado
+       
+        } catch(error) {
+            res.status(500).json({ success: false, message: "Erro ao tentar deletar produtos", error: error.message}) // Caso aconteça algum erro ao deletar o produto
+        }
+    }
+
+
+
 // Controller para atualizar produtos
 exports.update_product = async (req, res) => {
   const { id } = req.params; // Extrai o ID do produto da URL
-  const {
-    id_categoria,
-    nome,
-    descricao,
-    quantidade,
-    validade,
-    valor,
-    codbarras,
-  } = req.body;
+  const { id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body;
   const id_usuario = req.userId;
   const id_ong = req.ongId;
   const nome_usuario = req.nomeUsuario
@@ -103,7 +128,7 @@ exports.update_product = async (req, res) => {
   try {
     // Cria um objeto com os dados a serem atualizados
     const atualizando_dados = {
-      nome: nome,
+      nome: nome || undefined,
       id_categoria: id_categoria || undefined,
       descricao: descricao || undefined,
       quantidade: quantidade,
@@ -144,57 +169,19 @@ exports.update_product = async (req, res) => {
       console.log(err);
     }
 
-    // Retorna sucesso e os dados do produto atualizado
-    return res.status(200).json({
-      success: true,
-      message: "Produto atualizado com sucesso.",
-    });
-  } catch (error) {
-    // Captura e trata erros inesperados
-    console.error("Erro ao atualizar produto.", error);
-    res.status(500).json({
-      success: false,
-      message: "Erro ao atualizar produto.",
-      error: error.message,
-    });
-  }
-};
-
-// Funções para receber as alterações no update de produtos e fazer um log de auditoria.
-
-function getAlteracoes(antigoProduto, novoProduto) {
-    const mudancas = {};
-
-    for (const key in novoProduto) {
-        let valorAntigo = antigoProduto[key];
-        let valorNovo = novoProduto[key];
-
-        // Se for Date, converte para ISO string
-        if (valorAntigo instanceof Date) {
-            valorAntigo = valorAntigo.toISOString();
-        }
-        if (valorNovo instanceof Date) {
-            valorNovo = valorNovo.toISOString();
-        }
-
-        // Converte tudo para string para evitar diferenças de tipo
-        valorAntigo = valorAntigo != null ? valorAntigo.toString() : null;
-        valorNovo = valorNovo != null ? valorNovo.toString() : null;
-
-        if (valorNovo !== valorAntigo) {
-            mudancas[key] = novoProduto[key];
-        }
+        // Retorna sucesso e os dados do produto atualizado
+        return res.status(200).json({
+            success: true,
+            message: "Produto atualizado com sucesso.",
+            produto: atualizar_produto // Retorna o produto atualizado
+        });
+    } catch (error) {
+        // Captura e trata erros inesperados
+        console.error("Erro ao atualizar produto.", error); 
+        res.status(500).json({
+            success: false,
+            message: "Erro ao atualizar produto.", 
+            error: error.message 
+        });
     }
-
-    return mudancas;
-}
-
-
-function parseDataTypes(dados) {
-    return {
-        ...dados,
-        id_categoria: mongoose.Types.ObjectId.isValid(dados.id_categoria)
-            ? dados.id_categoria.toString()
-            : null
-    };
-}
+}   
