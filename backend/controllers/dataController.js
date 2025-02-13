@@ -1,12 +1,7 @@
-// Controller para a análise de dados levando em conta os registros de auditoria e tabela de produtos.
-const auditController = require('./auditController');
-const productController = require('./productController');
-
+// Controller para a análise de dados.
 const mongoose = require('mongoose');
-
 const Product = require('../models/Product');
-const Audit = require('../models/Audit');
-const Ong = require('../models/Ong');
+
 
 
 const retornarQuantidadeTotalItens = async(ongId) => {
@@ -69,4 +64,47 @@ const produtosProximosValidade = async(ongId) => {
     }
 }
 
-module.exports = {retornarQuantidadeTotalItens, valorEstimadoEstoque, produtosProximosValidade};
+const ProdutosPorCategoria = async (idOng) => {
+    const produtosProximos = await Product.aggregate([
+        {
+          $match: {
+            id_ong: idOng,
+          }
+        },
+        {
+          $lookup: {
+            from: "categorias",
+            localField: "id_categoria",
+            foreignField: "_id",
+            as: "categoria"
+          }
+        },
+        {
+          $addFields: {
+            nomeCategoria: {
+              $cond: {
+                if: { $gt: [{ $size: "$categoria" }, 0] },
+                then: { $arrayElemAt: ["$categoria.nome", 0] },
+                else: "Outros"
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: "$nomeCategoria",
+            quantidade: { $sum: 1 }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            categoria: "$_id",
+            quantidade: 1
+          }
+        }
+      ]);
+    return produtosCategoria;      
+};
+
+module.exports = {retornarQuantidadeTotalItens, valorEstimadoEstoque, produtosProximosValidade, ProdutosPorCategoria};

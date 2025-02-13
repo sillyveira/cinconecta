@@ -52,4 +52,20 @@ router.get("/proximos-validade", authMiddleware, async (req, res) => {
         });
     }
 })
+
+router.get("/produto-por-categoria", authMiddleware, async (req, res) => {
+    try {
+        const produtoPorCategoria = await dataController.ProdutosPorCategoria(req.ongId);
+        res.status(200).json({
+            message: 'Análise feita com sucesso.',
+            produtos: produtoPorCategoria
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: 'Erro no retorno dos itens',
+            error: err.message
+        });
+    }
+})
+
 module.exports = router

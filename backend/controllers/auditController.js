@@ -54,7 +54,7 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
   return logs;
 }
 
-const checarNovosLogs = async (res, ongid, dataInicio) => {
+const checarNovosLogs = async ( ongid, dataInicio) => {
   try {
     
     // Busca os registros nos últimos x dias
@@ -110,14 +110,10 @@ const checarNovosLogs = async (res, ongid, dataInicio) => {
     await Audit.deleteMany({
         _id: {$in: idsParaRemover}
     })
-    return res.status(200).json({
-      message: "Logs checados com sucesso.",
-    });
+
   } catch (error) {
     console.error("Erro ao checar novos logs:", error);
-    return res.status(500).json({
-      message: "Houve erro na checagem de logs. Tente novamente.",
-    });
+
   }
 };
 
