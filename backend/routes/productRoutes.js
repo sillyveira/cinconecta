@@ -10,6 +10,6 @@ router.post("/criar-produto", authMiddleware, productController.create_product)
 router.put("/atualizar-produto/:id", authMiddleware, productController.update_product)
 
 // Rota DELETE para excluir produtos
-//router.delete("/deletar-produto/:id_ong", authMiddleware, productController.delete_product)
+router.post("/deletar-produto", authMiddleware, productController.delete_product)
 
 module.exports = router

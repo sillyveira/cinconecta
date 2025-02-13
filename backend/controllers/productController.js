@@ -120,7 +120,15 @@ exports.delete_product = async (req, res) =>{
 // Controller para atualizar produtos
 exports.update_product = async (req, res) => {
   const { id } = req.params; // Extrai o ID do produto da URL
-  const { id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body;
+  const {
+    id_categoria,
+    nome,
+    descricao,
+    quantidade,
+    validade,
+    valor,
+    codbarras,
+  } = req.body;
   const id_usuario = req.userId;
   const id_ong = req.ongId;
   const nome_usuario = req.nomeUsuario
@@ -128,7 +136,7 @@ exports.update_product = async (req, res) => {
   try {
     // Cria um objeto com os dados a serem atualizados
     const atualizando_dados = {
-      nome: nome || undefined,
+      nome: nome,
       id_categoria: id_categoria || undefined,
       descricao: descricao || undefined,
       quantidade: quantidade,
@@ -169,19 +177,57 @@ exports.update_product = async (req, res) => {
       console.log(err);
     }
 
-        // Retorna sucesso e os dados do produto atualizado
-        return res.status(200).json({
-            success: true,
-            message: "Produto atualizado com sucesso.",
-            produto: atualizar_produto // Retorna o produto atualizado
-        });
-    } catch (error) {
-        // Captura e trata erros inesperados
-        console.error("Erro ao atualizar produto.", error); 
-        res.status(500).json({
-            success: false,
-            message: "Erro ao atualizar produto.", 
-            error: error.message 
-        });
+    // Retorna sucesso e os dados do produto atualizado
+    return res.status(200).json({
+      success: true,
+      message: "Produto atualizado com sucesso.",
+    });
+  } catch (error) {
+    // Captura e trata erros inesperados
+    console.error("Erro ao atualizar produto.", error);
+    res.status(500).json({
+      success: false,
+      message: "Erro ao atualizar produto.",
+      error: error.message,
+    });
+  }
+};
+
+// Funções para receber as alterações no update de produtos e fazer um log de auditoria.
+
+function getAlteracoes(antigoProduto, novoProduto) {
+    const mudancas = {};
+
+    for (const key in novoProduto) {
+        let valorAntigo = antigoProduto[key];
+        let valorNovo = novoProduto[key];
+
+        // Se for Date, converte para ISO string
+        if (valorAntigo instanceof Date) {
+            valorAntigo = valorAntigo.toISOString();
+        }
+        if (valorNovo instanceof Date) {
+            valorNovo = valorNovo.toISOString();
+        }
+
+        // Converte tudo para string para evitar diferenças de tipo
+        valorAntigo = valorAntigo != null ? valorAntigo.toString() : null;
+        valorNovo = valorNovo != null ? valorNovo.toString() : null;
+
+        if (valorNovo !== valorAntigo) {
+            mudancas[key] = novoProduto[key];
+        }
     }
-}   
+
+    return mudancas;
+}
+
+
+function parseDataTypes(dados) {
+    return {
+        ...dados,
+        id_categoria: mongoose.Types.ObjectId.isValid(dados.id_categoria)
+            ? dados.id_categoria.toString()
+            : null
+    };
+}
