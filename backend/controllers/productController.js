@@ -66,38 +66,6 @@ exports.update_product = async (req, res) => {
     const id_usuario = req.userId 
     const id_ong = req.ongId
     
-    // Validação de campos obrigatórios
-    if (!nome || !id_usuario || !quantidade) {
-        return res.status(400).json({
-            success: false, 
-            message: "Todos os campos são necessários." 
-        });
-    }
-    
-    // Validação do ID do produto
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({
-            success: false, 
-            message: "ID do produto inválido." 
-        });
-    }
-    
-    // Validação do ID do usuário
-    if (!mongoose.Types.ObjectId.isValid(id_usuario)) {
-        return res.status(400).json({
-            success: false,
-            message: "ID do usuário inválido." 
-        });
-    }
-    
-    // Validação do ID da categoria (se fornecido)
-    if (id_categoria && !mongoose.Types.ObjectId.isValid(id_categoria)) {
-        return res.status(400).json({
-            success: false, 
-            message: "ID da categoria inválido." 
-        });
-    }
-    
     try {
         // Cria um objeto com os dados a serem atualizados
         const atualizando_dados = {
@@ -115,12 +83,12 @@ exports.update_product = async (req, res) => {
         }
     
         // Atualiza o produto no banco de dados
-        const atualizar_produto = await Product.findByIdAndUpdate(
-            id, // ID do produto a ser atualizado
-            atualizando_dados, // Dados a serem atualizados
-            { new: true } // Retorna o documento atualizado
+        const atualizar_produto = await Product.findOneAndUpdate(
+            { _id: id, id_ong: id_ong },  // Condição de filtro (encontrar pelo id do produto e id da ONG)
+            atualizando_dados,             // Dados a serem atualizados
+            { new: true }                  // Retorna o documento atualizado
         );
-    
+        
         // Verifica se o produto foi encontrado e atualizado
         if (!atualizar_produto) {
             return res.status(404).json({
@@ -128,7 +96,7 @@ exports.update_product = async (req, res) => {
                 message: "Produto não encontrado." 
             });
         }
-    
+
         // Retorna sucesso e os dados do produto atualizado
         return res.status(200).json({
             success: true,
