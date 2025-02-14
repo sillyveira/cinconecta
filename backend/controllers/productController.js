@@ -136,7 +136,7 @@ exports.update_product = async (req, res) => {
   try {
     // Cria um objeto com os dados a serem atualizados
     const atualizando_dados = {
-      nome: nome,
+      nome: nome || undefined, 
       id_categoria: id_categoria || undefined,
       descricao: descricao || undefined,
       quantidade: quantidade,
@@ -230,4 +230,38 @@ function parseDataTypes(dados) {
             ? dados.id_categoria.toString()
             : null
     };
+}
+
+exports.view_product = async (req, res) => {
+  const { id } = req.params
+  const { id_categoria } = req.query
+  const id_usuario = req.userId
+  const id_ong = req.ongId
+
+
+  try{
+    const filtros = {}
+
+    if(id_categoria) {
+      filtros.id_categoria = id_categoria
+    }
+
+    if (id_ong && mongoose.Types.ObjectId.isValid(id_ong)){
+      filtros.id_ong = id_ong;
+    } 
+    
+    const vizualizar_produto = await Product.find(filtros)
+
+    return res.status(200).json({
+      success: true,
+      vizualizar_produto
+    })
+
+  } catch(error){
+    res.status(500).json({
+      sucess: false,
+      message: "Os produtos não podem ser vizualizados",
+      error: error.message
+    })
+  }
 }
