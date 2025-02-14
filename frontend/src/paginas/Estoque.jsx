@@ -1,15 +1,16 @@
-import React, {useState} from "react";
+import React, { useState, useContext } from "react";
 import DataTable from "react-data-table-component";
 import { Edit, Info } from "lucide-react";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 import Header from "../componentes/Header";
 import ModalFiltro from "../componentes/ModalFiltro";
 import ModalNovoProduto from "../componentes/ModalNovoProduto"
+import EstoqueContext from "../contextos/EstoqueContext";
 // Definição das colunas
 const columns = [
   {
     name: "ID",
-    selector: (row) => row.id,
+    selector: (row) => row._id,
     sortable: true,
     maxWidth: "80px",
     style: {
@@ -18,7 +19,7 @@ const columns = [
   },
   {
     name: "Nome",
-    selector: (row) => row.name,
+    selector: (row) => row.nome,
     sortable: true,
     style: {
       overflow: "hidden",
@@ -29,7 +30,7 @@ const columns = [
   },
   {
     name: "Categoria",
-    selector: (row) => row.category,
+    selector: (row) => row.categoria,
     sortable: true,
     minWidth: "140px",
     style: {
@@ -39,7 +40,7 @@ const columns = [
   },
   {
     name: "Qtd",
-    selector: (row) => row.quantity,
+    selector: (row) => row.quantidade,
     sortable: true,
     maxWidth: "80px",
     style: {
@@ -129,19 +130,19 @@ const customStyles = {
 
   rows: {
     selectedHighlightStyle: {
-			// use nth-of-type(n) to override other nth selectors
-			style: {
-				color: "#91E2FFFF",
-				backgroundColor: "#91E2FFFF",
-				borderBottomColor: "#91E2FFFF",
-			},
-		},
+      // use nth-of-type(n) to override other nth selectors
+      style: {
+        color: "#91E2FFFF",
+        backgroundColor: "#91E2FFFF",
+        borderBottomColor: "#91E2FFFF",
+      },
+    },
     highlightOnHoverStyle: {
-			borderBottomColor: "#91E2FFFF",
-			outlineStyle: 'solid',
-			outlineWidth: '1px',
-			outlineColor: "#91E2FFFF",
-		},
+      borderBottomColor: "#91E2FFFF",
+      outlineStyle: 'solid',
+      outlineWidth: '1px',
+      outlineColor: "#91E2FFFF",
+    },
   },
 
   cells: {
@@ -158,7 +159,7 @@ function Estoque() {
 
   const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
-
+  const { itens, carregando, erro, recarregarItens } = useContext(EstoqueContext);
   const [data, setData] = React.useState([
     {
       id: 1,
@@ -417,11 +418,11 @@ function Estoque() {
   return (
     <>
 
-      
-<Header titulo={"Estoque"}/>
-  
+
+      <Header titulo={"Estoque"} />
+
       <div className="flex justify-center mr-20 space-x-2 mt-6">
-          
+
         {/* Botão Filtrar com motion */}
         <motion.button
           className="bg-white text-black border-2 border-black rounded-lg px-4 py-2 hover:bg-black hover:text-white transition-all"
@@ -460,31 +461,34 @@ function Estoque() {
       <div className="flex justify-center  items-center w-screen">
         {/* DataTable centralizado */}
         <div className="overflow-x-auto w-screen max-h-[calc(100vh-200px)]">
-           
+
           {/* mx-auto para centralizar a tabela */}
-          <DataTable
-            columns={columns}
-            customStyles={customStyles}
-            data={data}
-            highlightOnHover
-            onSort={handleSort}
-            fixedHeader
-            fixedHeaderScrollHeight="calc(100vh - 190px)"
-            selectableRows
-            pagination 
-            paginationPerPage={10}
-            selectableRowsHighlight
-            onSelectedRowsChange={({ selectedRows }) =>
-              setSelectedRows(selectedRows)
-            }
-            selected
-            paginationComponentOptions={{
-              rowsPerPageText: "Linhas por página",
-              rangeSeparatorText: "de",
-              selectAllRowsItem: true,
-              selectAllRowsItemText: "Todos",
-            }}
-          />
+
+          {itens && itens.length > 0 ? ( // Condição para renderizar o DataTable
+            <DataTable
+              columns={columns}
+              customStyles={customStyles}
+              data={itens}
+              highlightOnHover
+              onSort={handleSort}
+              fixedHeader
+              fixedHeaderScrollHeight="calc(100vh - 190px)"
+              selectableRows
+              pagination
+              paginationPerPage={10}
+              selectableRowsHighlight
+              onSelectedRowsChange={({ selectedRows }) => setSelectedRows(selectedRows)}
+              selected
+              paginationComponentOptions={{
+                rowsPerPageText: "Linhas por página",
+                rangeSeparatorText: "de",
+                selectAllRowsItem: true,
+                selectAllRowsItemText: "Todos",
+              }}
+            />
+          ) : (
+            <p>Nenhum item encontrado.</p> // Ou outro componente/mensagem que você queira exibir
+          )}
         </div>
       </div>
       <ModalFiltro isOpen={openModalFiltro} onClose={toggleModalFiltro}></ModalFiltro>

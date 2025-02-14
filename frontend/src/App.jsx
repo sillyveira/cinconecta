@@ -7,16 +7,16 @@ import Perfil from "./paginas/Perfil.jsx";
 import Auditoria from "./paginas/Auditoria.jsx";
 import Login from "./paginas/Login.jsx";
 import { AuthProvider, useAuth } from "./contextos/AuthContext.jsx";
-
+import { EstoqueProvider } from "./contextos/EstoqueContext.jsx";
 function AppRoutes() {
-  const { isAuthenticated } = useAuth(); 
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="flex h-screen bg-white text-gray-200 overflow-hidden">
       <div className={`z-10 w-full ${isAuthenticated && 'ml-20'}`}>
         <Routes>
           <Route path="/" element={isAuthenticated ? <Inicio /> : <Navigate to="/login" />} />
-          <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login/>} />
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
           <Route path="/perfil" element={isAuthenticated ? <Perfil /> : <Navigate to="/login" />} />
           <Route path="/analise-geral" element={isAuthenticated ? <AnaliseGeral /> : <Navigate to="/login" />} />
           <Route path="/estoque" element={isAuthenticated ? <Estoque /> : <Navigate to="/login" />} />
@@ -25,14 +25,17 @@ function AppRoutes() {
       </div>
       {isAuthenticated && <Sidebar />}
     </div>
-    
+
   );
 }
 
 function App() {
   return (
+
     <AuthProvider>
-      <AppRoutes />
+      <EstoqueProvider>
+        <AppRoutes />
+      </EstoqueProvider>
     </AuthProvider>
   );
 }

@@ -3,6 +3,40 @@ const mongoose = require('mongoose');
 const auditController = require('../controllers/auditController');
 
 // Controoler para criar um novo produto
+
+exports.get_product = async (req, res) => {
+    try {
+        const id_ong = req.ongId;
+        const find = await Product.find({ id_ong: id_ong });
+
+        // Mapeia os resultados para preencher campos ausentes
+        const produtosComValoresPadrao = find.map(produto => {
+            return {
+                _id: produto._id, // Mantém o _id do MongoDB
+                id_categoria: produto.id_categoria || "", // "" se não existir
+                id_ong: produto.id_ong, // Não altera o id_ong
+                nome: produto.nome || "",
+                descricao: produto.descricao || "",
+                quantidade: produto.quantidade || 0, // 0 se não existir
+                validade: produto.validade || "", // "" se não existir
+                valor: produto.valor || 0, // 0 se não existir
+                codbarras: produto.codbarras || ""
+            };
+        });
+
+        res.status(200).json({
+            message: "Funcionou.",
+            produtos: produtosComValoresPadrao // Retorna o array modificado
+        });
+
+    } catch (err) {
+        console.error(err); // Use console.error para erros
+        res.status(500).json({
+            message: err.message,
+            produtos: [] // Em caso de erro, retorna um array vazio para evitar problemas no frontend
+        });
+    }
+};
 exports.create_product = async (req, res) => {
     const {id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body;
     const id_usuario = req.userId;
