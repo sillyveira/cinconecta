@@ -20,6 +20,7 @@ class CategoryController{
 
         try{
             const categorias = new categories({
+                id_categoria: new mongoose.Types.ObjectId,
                 nome_categoria: nome_categoria
             })
             await categorias.save()
