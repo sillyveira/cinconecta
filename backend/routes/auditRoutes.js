@@ -18,12 +18,12 @@ router.get('/receber-logs', authMiddleware, async (req, res) =>{
     try {
         const logs = await auditController.getLogs(idong, acao, dataInicial, dataFinal, nomeUsuario);
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Os logs foram recebidos com sucesso',
             logs: logs
         })
     } catch (err) {
-        res.status(401).json({
+        return res.status(401).json({
             message: 'Não foi possível receber os logs.',
             error: err.message
         })

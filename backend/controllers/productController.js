@@ -50,9 +50,10 @@ exports.create_product = async (req, res) => {
       //Tentativa de salvar o log de auditoria
       const descricaoLog = {
         novoProduto: novoProduto.toObject(),
-        quantidade: novoProduto.quantidade,
-        valor: novoProduto.valor || "",
-      };
+        entrada: novoProduto.quantidade, //Para a análise de entrada e saída do estoque
+        saida: 0,
+        valor: novoProduto.valor || 0
+    }
 
       await auditController.criarLog(
         "add",
@@ -164,11 +165,14 @@ exports.update_product = async (req, res) => {
     try {
         const novoProduto = parseDataTypes(atualizando_dados)
         const mudancas = getAlteracoes(atualizar_produto, novoProduto);
+        const qtd = (parseInt(novoProduto.quantidade) ?? 0) - (parseInt(atualizar_produto.quantidade) ?? 0);
+
         const descricaoLog = {
             produto: atualizar_produto,
             alteracoes: mudancas,
-            quantidade: (parseInt(novoProduto.quantidade) ?? 0) - (parseInt(atualizar_produto.quantidade) ?? 0),
-            valor: (parseInt(novoProduto.valor) ?? 0) - (parseInt(atualizar_produto.valor) ?? 0)
+            entrada: qtd >= 0 ? qtd : 0,
+            saida: qtd <= 0 ? Math.abs(qtd) : 0,
+            valor: (parseFloat(novoProduto.valor) ?? 0) - (parseFloat(atualizar_produto.valor) ?? 0)
         };
       await auditController.criarLog("att", id_usuario, nome_usuario, id_ong, descricaoLog);
 

@@ -52,4 +52,50 @@ router.get("/proximos-validade", authMiddleware, async (req, res) => {
         });
     }
 })
+
+router.get("/produto-por-categoria", authMiddleware, async (req, res) => {
+    try {
+        const produtoPorCategoria = await dataController.ProdutosPorCategoria(req.ongId);
+        res.status(200).json({
+            message: 'Análise feita com sucesso.',
+            produtos: produtoPorCategoria
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: 'Erro no retorno dos itens',
+            error: err.message
+        });
+    }
+})
+
+router.get("/grafico-entrada-saida", authMiddleware, async(req, res) => {
+    try{
+        const entradaSaida = await dataController.graficoEntradaSaida(req.ongId);
+        return res.status(200).json({
+            message: 'Análise feita com sucesso.',
+            grafico: entradaSaida
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: 'Erro no retorno do gráfico.',
+            error: err.message
+        })
+    }
+})
+
+router.get("/grafico-valor", authMiddleware, async(req, res) => {
+    try{
+        const valor = await dataController.graficoValor(req.ongId);
+        return res.status(200).json({
+            message: 'Análise feita com sucesso.',
+            grafico: valor
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: 'Erro no retorno do gráfico.',
+            error: err.message
+        })
+    }
+})
+
 module.exports = router

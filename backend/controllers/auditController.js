@@ -54,7 +54,7 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
   return logs;
 }
 
-const checarNovosLogs = async (res, ongid, dataInicio) => {
+const checarNovosLogs = async ( ongid, dataInicio) => {
   try {
     
     // Busca os registros nos últimos x dias
@@ -76,18 +76,20 @@ const checarNovosLogs = async (res, ongid, dataInicio) => {
       );
 
       if (!entrada) {
-        entrada = [dataCompleta, 0, 0, []];
+        entrada = [dataCompleta, 0, 0, 0, []];
         logsPorData.push(entrada);
       }
 
-      const quantidadeAtual = entrada[1];
-      const valorAtual = entrada[2];
+      const entradaAtual = entrada[1];
+      const saidaAtual = entrada[2];
+      const valorAtual = entrada[3];
 
       if (log.acao !== "log" && log.acao !== "reg" && log.acao !== "rev") {
-        entrada[1] = quantidadeAtual + (parseInt(log.desc.quantidade, 10) || 0); //soma a quantidade de itens que já temos com o do log
-        entrada[2] = valorAtual + (parseInt(log.desc.valor, 10) || 0);
+        entrada[1] = entradaAtual + (parseInt(log.desc.entrada, 10) || 0); //soma a quantidade de itens que já temos com o do log
+        entrada[2] = saidaAtual + (parseInt(log.desc.saida, 10) || 0);
+        entrada[3] = valorAtual + (parseFloat(log.desc.valor, 10) || 0);
       }
-      entrada[3].push(log); // [data, 0, 0, [registro_adicionado]]
+      entrada[4].push(log); // [data, 0, 0, [registro_adicionado]]
     });
 
     // [data, 0, 0, [registro_adicionado]]
@@ -96,13 +98,14 @@ const checarNovosLogs = async (res, ongid, dataInicio) => {
 
     logsPorData.forEach((item) => {
       const descricaoLog = {
-        quantidade: item[1],
-        valor: item[2],
+        entrada: item[1],
+        saida: item[2],
+        valor: item[3],
       };
 
       criarLog("rev", null, null, ongid, descricaoLog);
     
-      item[3].forEach((log) => {
+      item[4].forEach((log) => {
         idsParaRemover.push(log._id);
       })
     });
@@ -110,14 +113,10 @@ const checarNovosLogs = async (res, ongid, dataInicio) => {
     await Audit.deleteMany({
         _id: {$in: idsParaRemover}
     })
-    return res.status(200).json({
-      message: "Logs checados com sucesso.",
-    });
+
   } catch (error) {
     console.error("Erro ao checar novos logs:", error);
-    return res.status(500).json({
-      message: "Houve erro na checagem de logs. Tente novamente.",
-    });
+
   }
 };
 
