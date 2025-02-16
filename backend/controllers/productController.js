@@ -256,24 +256,21 @@ exports.view_product = async (req, res) => {
       filtros.id_categoria = id_categoria
     }
 
-    if (id_ong){
-      if (id_ong && mongoose.Types.ObjectId.isValid(id_ong)) {
-        filtros.id_ong = id_ong
-      }
-    }
+
+    filtros.id_ong = id_ong
+
     
-    const visualizar_produto = await Product.find(filtros).select('nome descricao valor quantidade');
+    const visualizar_produto = await Product.find(filtros);
 
     return res.status(200).json({
       success: true,
-      total: visualizar_produto.length,
-      visualizar_produto
+      produtos: visualizar_produto
     })
 
   } catch(error){
     res.status(500).json({
       success: false,
-      message: "Os produtos não podem ser vizualizados",
+      message: "Os produtos não podem ser visualizados.",
       error: error.message
     })
   }
