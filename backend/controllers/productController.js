@@ -237,33 +237,42 @@ function parseDataTypes(dados) {
 }
 
 exports.view_product = async (req, res) => {
-  const { id } = req.params
-  const { id_categoria } = req.query
-  const id_usuario = req.userId
+  // definindo os tipos de filtro que vão ser utilizados na visualização
+  const { id_categoria, validade } = req.query 
   const id_ong = req.ongId
 
-
   try{
-    const filtros = {}
+    const filtros = {} // Os filtros serão armazenados nessa constante
+    
+    
+    if (validade) {
+      const dataValidade = new Date(validade) 
+      if (!isNaN(dataValidade.getTime())) {
+        filtros.validade = { $lt: dataValidade } // adicionando validade aos filtros
+      }
+    }
 
-    if(id_categoria) {
+    if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria)) {
       filtros.id_categoria = id_categoria
     }
 
-    if (id_ong && mongoose.Types.ObjectId.isValid(id_ong)){
-      filtros.id_ong = id_ong;
-    } 
+    if (id_ong){
+      if (id_ong && mongoose.Types.ObjectId.isValid(id_ong)) {
+        filtros.id_ong = id_ong
+      }
+    }
     
-    const vizualizar_produto = await Product.find(filtros)
+    const visualizar_produto = await Product.find(filtros).select('nome descricao valor quantidade');
 
     return res.status(200).json({
       success: true,
-      vizualizar_produto
+      total: visualizar_produto.length,
+      visualizar_produto
     })
 
   } catch(error){
     res.status(500).json({
-      sucess: false,
+      success: false,
       message: "Os produtos não podem ser vizualizados",
       error: error.message
     })
