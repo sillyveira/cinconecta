@@ -4,6 +4,7 @@ import Textfield from "../componentes/Textfield";
 import Botao from "../componentes/Botao";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contextos/AuthContext";
+import toast from "react-hot-toast";
 const Login = () => {
   const [dadosLogin, setDadosLogin] = useState({
     email: "",
@@ -25,13 +26,13 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
-        alert(data.message);
         login(data.username);
       } else {
-        // Lide com erros de login (exiba uma mensagem de erro, etc.)
-        console.error('Erro ao fazer login.');
+        if(data.message == "Credenciais inválidas"){
+        toast.error('Credenciais inválidas!');
+        }
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
