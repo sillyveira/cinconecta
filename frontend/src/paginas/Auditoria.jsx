@@ -4,7 +4,6 @@ import Header from "../componentes/Header";
 import Paginacao from "../componentes/Paginacao";
 import FiltroAuditoria from "../componentes/FiltroAuditoria";
 
-
 function Auditoria() {
   const data = [
     {
@@ -81,24 +80,27 @@ function Auditoria() {
   const [itensAtuais, setItensAtuais] = useState([]);
   const [numeroPag, setNumeroPag] = useState(1);
   const itemPorPagina = 10;
-  const pagTotais = (data.length % itemPorPagina) + 1;
+  const pagTotais = Math.ceil(data.length / itemPorPagina);
+  const itensDaPagina = data.slice(
+    (numeroPag - 1) * itemPorPagina,
+    numeroPag * itemPorPagina
+  );
 
-  
   const [Info, setInfo] = useState({
-    dataInicial: '',
-    dataFinal: '',
+    dataInicial: "",
+    dataFinal: "",
     categoria: null,
     categorias: [
-      {key: 'a', value: 'Login', title: 'Login'},
-      {key: 'b', value: 'Registro', title: 'Registro'},
-      {key: 'c', value: 'Revisão', title: 'Revisão'},
-      {key: 'd', value: 'Produtos', title: 'Produtos'},
-      {key: 'e', value: 'Adição', title: 'Adição'},
-      {key: 'f', value: 'Remoção', title: 'Remoção'},
-      {key: 'g', value: 'Atualização', title: 'Atualização'},
-    ]
-  })
- 
+      { key: "a", value: "Login", title: "Login" },
+      { key: "b", value: "Registro", title: "Registro" },
+      { key: "c", value: "Revisão", title: "Revisão" },
+      { key: "d", value: "Produtos", title: "Produtos" },
+      { key: "e", value: "Adição", title: "Adição" },
+      { key: "f", value: "Remoção", title: "Remoção" },
+      { key: "g", value: "Atualização", title: "Atualização" },
+    ],
+  });
+
   // Para buscar dados quando tivermos acesso à API.
   // useEffect(() => {
   //   fetchData();
@@ -119,41 +121,45 @@ function Auditoria() {
       <Header titulo={"Auditoria"}></Header>
 
       <div className="flex justify-center gap-4 pt-10">
-        
         {/* Componente de filtro para PC */}
         <FiltroAuditoria
-        className={""}
-        info={Info}
-        setInfo={setInfo} ></FiltroAuditoria>
+          className={""}
+          info={Info}
+          setInfo={setInfo}
+        ></FiltroAuditoria>
         {/* TODO: Aqui deve ser implementado o componente de filtro para Mobile*/}
 
         {/* Uma abordagem para fazer essa implementação de diferentes componentes a depender do tamanho da tela é você fazer isso: */}
         {/* <div className="block md:hidden">Componente para tela móvel</div>
              <div className="hidden md:block">Componente para tela desktop</div> */}
         {/* Quando a tela for maior que o "md", o componente para desktop aparece ^. Qualquer dúvida, só me perguntar ~ Wesley. */}
-        
+
         {/* Componente da lista de itens */}
         <div>
           <div className="border rounded-xl flex flex-col gap-3 items-center max-h-[calc(100vh-300px)] overflow-y-auto py-5 p-4">
-            {data.map((item, index) => (
-              <AuditCard
-                key={index}
-                titulo={item.titulo}
-                horario={item.horario}
-                data={item.data}
-                funcaoClique={() => alert(`Clicou em: ${item.titulo}`)}
-              />
-            ))}
-        </div>
-        {/* -------------- */}
+            {itensDaPagina.length === 0 ? (
+              <p className="text-black">Não há itens para exibir.</p>
+            ) : (
+              itensDaPagina.map((item, index) => (
+                <AuditCard
+                  key={index}
+                  titulo={item.titulo}
+                  horario={item.horario}
+                  data={item.data}
+                  funcaoClique={() => alert(`Clicou em: ${item.titulo}`)}
+                />
+              ))
+            )}
+          </div>
+          {/* -------------- */}
 
-        {/* Componente de paginação */}
-        <Paginacao
+          {/* Componente de paginação */}
+          <Paginacao
             paginaAtual={numeroPag}
             paginasTotais={pagTotais}
             setPagina={setNumeroPag}
           />
-        {/* ----------------- */}
+          {/* ----------------- */}
         </div>
       </div>
     </>
@@ -161,3 +167,64 @@ function Auditoria() {
 }
 
 export default Auditoria;
+
+// Código para integrar a auditoria com o backend
+// function Auditoria() {
+//   const [logs, setlogs] = useState([]);
+//   useEffect(() => {
+//     async function receberLogs() {
+//       try {
+//         const response = await fetch(
+//           "http://localhost:3000/auditoria/receber-logs",
+//           {
+//             method: "GET",
+//             credentials: "include",
+//             headers: {
+//               "Content-Type": "application/json",
+//             },
+//           }
+//         );
+
+//         if (response.ok) {
+//           const info = await response.json();
+//           setlogs(info.logs);
+//           console.log(info);
+//         } else {
+//           // Lide com erros de login (exiba uma mensagem de erro, etc.)
+//           console.error("Erro ao fazer a requisição.");
+//           return [];
+//         }
+//       } catch (error) {
+//         console.error("Erro ao fazer a req:", error);
+//       }
+//     }
+//     const receberL = receberLogs();
+//   }, []);
+
+//         <FiltroAuditoria
+//           className={""}
+//           info={Info}
+//           setInfo={setInfo}
+//         ></FiltroAuditoria>
+
+//             {logs?.length > 0 && // Verifica se logs existe e tem pelo menos um elemento
+//               logs.map((item, index) => (
+//                 <AuditCard
+//                   key={index}
+//                   titulo={item.nome_usuario}
+//                   horario={item.data}
+//                   data={item.acao}
+//                   funcaoClique={() => alert(`Clicou em: ${item.nome_usuario}`)}
+//                 />
+
+//           {/* -------------- */}
+
+//           {/* Componente de paginação */}
+//           {logs?.length > 0 && (
+//                         <Paginacao
+//                             paginaAtual={numeroPag}
+//                             paginasTotais={pagTotais}
+//                             setPagina={setNumeroPag}
+//                         />
+//                     )}
+//           {/* ----------------- */}
