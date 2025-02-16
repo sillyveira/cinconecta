@@ -6,9 +6,9 @@ class CategoryController{
     async getCategories(req, res){
       
         try{
-            //const id_ong = req.ongId  //não precisa filtrar
+            const id_ong = req.ongId 
 
-            const categorias = await categories.find();
+            const categorias = await categories.find({id_ong: id_ong})
             return res.end(JSON.stringify(categorias))
 
         }catch(error){
@@ -43,16 +43,20 @@ class CategoryController{
          try{
             const {nome_categoria} = req.body
             const {id_categoria} = req.params
+            const id_ong = req.ongId
     
             if(!mongoose.Types.ObjectId.isValid(id_categoria)){
                 return res.status(400).end('ID inválido.')
+            }
+            if(!id_ong){
+                return res.status(404).end('Não foi possível identificar a ong.')
             }
             if(!nome_categoria){
                 return res.status(401).end('Nome precisa ser preenchido.')
             }
 
            await categories.findOneAndUpdate( 
-            {id_categoria},
+            {id_categoria, id_ong},
             {$set: {nome_categoria: nome_categoria}},
             {new: true}
         )
@@ -66,12 +70,16 @@ class CategoryController{
         
         try{
             const {id_categoria} = req.params
+            const id_ong = req.ongId
 
             if(!mongoose.Types.ObjectId.isValid(id_categoria)){
                 return res.status(400).end('ID inválido.')
             }
+            if(!id_ong){
+                return res.status(404).end('Não foi possível identificar a ong.')
+            }
 
-            await categories.findOneAndDelete({id_categoria})
+            await categories.findOneAndDelete({id_categoria, id_ong})
             return res.status(200).end('Categoria deletada com sucesso.')
 
         }catch(error){
