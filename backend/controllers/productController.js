@@ -2,9 +2,6 @@ const Product = require("../models/Product");
 const mongoose = require("mongoose");
 const auditController = require("../controllers/auditController");
 
-
-
-
 // Controller para criar um novo produto
 exports.create_product = async (req, res) => {
   const {
@@ -70,20 +67,56 @@ exports.create_product = async (req, res) => {
       console.log("Não foi possível salvar o log do usuário.");
     }
 
-    return res
-      .status(201)
-      .json({ success: true, message: "Produto criado com sucesso." });
+    return res.status(201).json({ success: true, message: "Produto criado com sucesso." });
   } catch (error) {
     console.error("Erro ao criar produto:", error);
-    res
-      .status(500)
-      .json({
+    res.status(500).json({
         success: false,
         message: "Erro ao criar produto.",
         error: error.message,
       });
   }
 };
+
+//Controller para excluir produtos
+exports.delete_product = async (req, res) =>{   
+    const { ids } = req.body
+    const id_ong = req.ongId
+    const id_usuario = req.userId
+    
+    // Verifica se a lista de IDs foi enviada e se é um array válido
+    if(!ids || !Array.isArray(ids) || ids.length === 0 ) {
+        return res.status(400).json({
+            success: false,
+            message: "A lista de IDs é obrigatória e deve conter pelo menos um ID."
+        })
+    }
+
+    // Filtra apenas os IDs válidos (ObjectId do MongoDB)
+    const ids_validos = ids.filter(id => mongoose.Types.ObjectId.isValid(id))
+        
+    if (ids_validos.length === 0){
+        return res.status(400).json({
+            success: false,
+            message: "Nenhum ID válido foi fornecido"
+        })
+    }
+    try {   
+            // Deleta os produtos cujo _id está na lista de IDs válidos e pertencem à ONG do usuário
+            const deletados = await Product.deleteMany({ _id: { $in: ids_validos }, id_ong: id_ong }) 
+           
+            if(deletados.deletedCount === 0) {
+                return res.status(404).json({ success: false, message: "Nenhum produto foi encontrado." }); // Se o produto não for encontrado
+            }
+           
+            return res.status(200).json({ success: true, message: "Produto deletado com sucesso."}) // Se o produto for encontrado e deletado
+       
+        } catch(error) {
+            res.status(500).json({ success: false, message: "Erro ao tentar deletar produtos", error: error.message}) // Caso aconteça algum erro ao deletar o produto
+        }
+    }
+
+
 
 // Controller para atualizar produtos
 exports.update_product = async (req, res) => {
@@ -104,7 +137,7 @@ exports.update_product = async (req, res) => {
   try {
     // Cria um objeto com os dados a serem atualizados
     const atualizando_dados = {
-      nome: nome,
+      nome: nome || undefined, 
       id_categoria: id_categoria || undefined,
       descricao: descricao || undefined,
       quantidade: quantidade,
@@ -201,4 +234,44 @@ function parseDataTypes(dados) {
             ? dados.id_categoria.toString()
             : null
     };
+}
+
+exports.view_product = async (req, res) => {
+  // definindo os tipos de filtro que vão ser utilizados na visualização
+  const { id_categoria, validade } = req.query 
+  const id_ong = req.ongId
+
+  try{
+    const filtros = {} // Os filtros serão armazenados nessa constante
+    
+    
+    if (validade) {
+      const dataValidade = new Date(validade) 
+      if (!isNaN(dataValidade.getTime())) {
+        filtros.validade = { $lt: dataValidade } // adicionando validade aos filtros
+      }
+    }
+
+    if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria)) {
+      filtros.id_categoria = id_categoria
+    }
+
+
+    filtros.id_ong = id_ong
+
+    
+    const visualizar_produto = await Product.find(filtros);
+
+    return res.status(200).json({
+      success: true,
+      produtos: visualizar_produto
+    })
+
+  } catch(error){
+    res.status(500).json({
+      success: false,
+      message: "Os produtos não podem ser visualizados.",
+      error: error.message
+    })
+  }
 }
