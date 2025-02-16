@@ -1,13 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/categoryController')
+const auth = require('../middlewares/authMiddleware')
 
-router.post('/criar-categoria', controller.createCategories)
+router.post('/criar-categoria', auth, controller.createCategories)
 
-router.get('/', controller.getCategories)
+router.get('/', auth, controller.getCategories)
 
-router.put('/atualizar-categoria/:id_categoria', controller.updateCategories)
+router.put('/atualizar-categoria/:id_categoria', auth, controller.updateCategories)
 
-router.delete('/deletar-categoria/:id_categoria', controller.deleteCategories)
+router.delete('/deletar-categoria/:id_categoria', auth, controller.deleteCategories)
 
 module.exports = router
