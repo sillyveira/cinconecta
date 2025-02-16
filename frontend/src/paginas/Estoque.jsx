@@ -5,6 +5,7 @@ import {motion} from "framer-motion";
 import Header from "../componentes/Header";
 import ModalFiltro from "../componentes/ModalFiltro";
 import ModalNovoProduto from "../componentes/ModalNovoProduto"
+import StockBar from "../componentes/StockBar"
 // Definição das colunas
 const columns = [
   {
@@ -159,6 +160,7 @@ function Estoque() {
   const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
 
+  const [Pesquisa, setPesquisa] = useState();
   const [data, setData] = React.useState([
     {
       id: 1,
@@ -418,43 +420,14 @@ function Estoque() {
     <>
 
       
-<Header titulo={"Estoque"}/>
+<Header titulo={"Estoque"} className={"pr-20"}/>
   
-      <div className="flex justify-center mr-20 space-x-2 mt-6">
-          
-        {/* Botão Filtrar com motion */}
-        <motion.button
-          className="bg-white text-black border-2 border-black rounded-lg px-4 py-2 hover:bg-black hover:text-white transition-all"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={toggleModalFiltro}
-        >
-          Filtrar
-        </motion.button>
-
-        <div>
-          {/* Campo de Pesquisa */}
-          <input
-            type="text"
-            placeholder="Pesquisar..."
-            className="border-2 border-black rounded-l-lg px-4 py-2 focus:outline-none text-black focus:ring-2 focus:ring-gray-500"
-          />
-
-          {/* Botão Pesquisar */}
-          <button className="bg-black text-white border-2 border-black rounded-r-lg px-4 py-2 hover:bg-gray-800 transition-all">
-            Pesquisar
-          </button>
-        </div>
-
-        {/* Botão Novo com motion */}
-        <motion.button
-          className="bg-white text-black border-2 border-black rounded-lg px-4 py-2 hover:bg-black hover:text-white transition-all"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={toggleModalNovoProduto}
-        >
-          Novo
-        </motion.button>
+      <div className="flex justify-center">
+        <StockBar
+        onChangePesquisar={(e)=>setPesquisa(e.target.value)}
+        onClickAdicionar={toggleModalNovoProduto}
+        onClickFiltrar={toggleModalFiltro}
+        />
       </div>
 
       <div className="flex justify-center  items-center w-screen">
