@@ -51,7 +51,22 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
   }
 
   const logs = await Audit.find(query) //Enviando a query criada acima
-  return logs;
+
+  const logsFormatado = logs.map(documento => {
+
+    return {
+        _id: documento._id,
+        id_usuario: documento.id_usuario || null,
+        id_ong: documento.id_ong,
+        nome_usuario: documento.nome_usuario || "",
+        acao: documento.acao,
+        desc: documento.desc,
+        data: documento.data.toLocaleDateString('pt-BR'),
+        horario: new Date(documento.data.getTime() - 3 *60*60*1000).toLocaleTimeString('pt-BR', {hour12:false}) // Subtrai 3 horas pois é o fuso de brasilia (-03:00)
+    };
+});
+
+return logsFormatado;
 }
 
 const checarNovosLogs = async ( ongid, dataInicio) => {
