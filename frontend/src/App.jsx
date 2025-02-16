@@ -7,7 +7,7 @@ import Perfil from "./paginas/Perfil.jsx";
 import Auditoria from "./paginas/Auditoria.jsx";
 import Login from "./paginas/Login.jsx";
 import { AuthProvider, useAuth } from "./contextos/AuthContext.jsx";
-import { EstoqueProvider } from "./contextos/EstoqueContext.jsx";
+import { DataProvider } from "./contextos/DataContext.jsx";
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
 
@@ -33,9 +33,9 @@ function App() {
   return (
 
     <AuthProvider>
-      <EstoqueProvider>
+      <DataProvider>
         <AppRoutes />
-      </EstoqueProvider>
+      </DataProvider>
     </AuthProvider>
   );
 }

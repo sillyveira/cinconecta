@@ -61,9 +61,9 @@ export const Sidebar = () => {
       });
 
       if (response.ok) {
-        alert(`O usuário foi deslogado.`);
-        logout();
-
+        // alert(`O usuário foi deslogado.`);
+        logout("Logout");
+        
       } else {
         // Lide com erros de login (exiba uma mensagem de erro, etc.)
         console.error('Erro ao fazer logout');
