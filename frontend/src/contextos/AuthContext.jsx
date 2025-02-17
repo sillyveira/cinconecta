@@ -46,7 +46,9 @@ export function AuthProvider({ children }) {
       toast.error("A sua sessão expirou, logue novamente.");
     } else if (logoutMessage == "Logout") {
       toast.success("Você deslogou com sucesso!")
-    } 
+    } else if (logoutMessage == "Timeout") {
+      toast.error("Não foi possível se conectar ao servidor.")
+    }
   };
 
   return (

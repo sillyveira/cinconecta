@@ -4,6 +4,7 @@ import Textfield from "../componentes/Textfield";
 import Botao from "../componentes/Botao";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contextos/AuthContext";
+import { loginRequest } from "../servicos/AuthAPI"; // Importa a função da API
 import toast from "react-hot-toast";
 const Login = () => {
   const [dadosLogin, setDadosLogin] = useState({
@@ -15,32 +16,22 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const funcaoLogin = async(email, password) => {
+  const funcaoLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3000/usuarios/login', {
-        method: 'POST',
-        credentials: "include",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        login(data.username);
-      } else {
-        if(data.message == "Credenciais inválidas"){
-        toast.error('Credenciais inválidas!');
-        }
-      }
+      const data = await loginRequest(dadosLogin.email, dadosLogin.password);
+      login(data.username);
     } catch (error) {
-      console.error('Erro ao fazer login:', error);
+      if (error.message === "Credenciais inválidas") {
+        toast.error("Credenciais inválidas!");
+      } else if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
+        toast.error("Não foi possível alcançar o servidor!");
+      } else {
+        toast.error("Ocorreu um erro inesperado no login!");
+      }
+      throw error;
     }
+  };
 
-  }
-  
-  
   return (
     <>
       <div className="flex flex-col justify-between w-full h-screen overflow-hidden bg-gray-100">

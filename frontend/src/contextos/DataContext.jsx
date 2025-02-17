@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import {useAuth} from "./AuthContext"
+import { buscarEstoque, graficoEntradaSaida } from "../servicos/DataAPI";
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
@@ -11,84 +12,50 @@ export const DataProvider = ({ children }) => {
     const {isAuthenticated, logout} = useAuth();
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            setEstoque([]);
-            setGrafico([]);
-        }
-    }, [isAuthenticated]);
-
-    
-
-    const buscarEstoque = async () => {
+      if (!isAuthenticated) {
+        setEstoque([]);
+        setGrafico([]);
+      }
+    }, [isAuthenticated]); // useEffect para reiniciar o estoque quando o usuário se desloga e loga novamente.
+  
+    const carregarEstoque = async () => {
       try {
         setCarregando(true);
-        const resposta = await fetch('http://localhost:3000/produtos/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-        if (!resposta.ok) {
-          throw new Error(`Erro na requisição: ${resposta.status}`);
-        }
-        const dados = await resposta.json();
-        if (dados.message == "Token não está presente na solicitação." || dados.message == "O token é inválido ou está expirado."){
-          logout("Expirado");
-        }
-        setEstoque(dados.produtos);
+        const produtos = await buscarEstoque(logout);
+        setEstoque(produtos);
       } catch (error) {
-        setErro(error);
+        setErro(error.message);
       } finally {
         setCarregando(false);
       }
     };
-
-    const graficoEntradaSaida = async () => {
-      try {
-          setCarregandoGrafico(true);
-          const resposta = await fetch('http://localhost:3000/analise-dados/grafico-entrada-saida', {
-              method: 'GET',
-              credentials: 'include',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          });
-          if (!resposta.ok) {
-              const errorData = await resposta.json(); // Tenta obter detalhes do erro do servidor
-              throw new Error(`Erro na requisição: ${resposta.status} - ${errorData.message || resposta.statusText}`);
-          }
-          const dados = await resposta.json();
-          if (dados.message == "Token não está presente na solicitação." || dados.message == "O token é inválido ou está expirado."){
-              logout("Expirado");
-          }
-          setGrafico(dados.grafico);
-          console.log("Dados do gráfico recebidos:", dados.grafico); // Verifique os dados recebidos
-      } catch (error) {
-          console.error("Erro ao buscar dados do gráfico:", error); // Exibe o erro no console
-          setErro(error.message); // Define a mensagem de erro para ser exibida ao usuário
-      } finally {
-          setCarregandoGrafico(false);
-      }
-  };
   
-    const recarregarEstoque = () => {
-      setCarregando(true);
-      setErro(null);
-      buscarEstoque();
-    };
+    const carregarGrafico = async () => {
+      try {
+        setCarregandoGrafico(true);
+        const grafico = await graficoEntradaSaida(logout);
+        setGrafico(grafico);
+      } catch (error) {
+        setErro(error.message);
+      } finally {
+        setCarregandoGrafico(false);
+      }
+    };  
 
     useEffect(() => {
+      if (!isAuthenticated) return; // Não atualiza os dados se não estiver autenticado
+  
       if (Estoque && Estoque.length === 0 && !carregando) {
-        buscarEstoque();
+        carregarEstoque();
       }
       if (Grafico && Grafico.length === 0 && !carregandoGrafico) {
-        graficoEntradaSaida();
+        carregarGrafico();
       }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, Estoque, Grafico, carregando, carregandoGrafico]); // Evita chamadas repetidas
+    
   
     return (
-      <DataContext.Provider value={{ Estoque, carregando, erro, recarregarEstoque, buscarEstoque, Grafico }}>
+      <DataContext.Provider value={{ Estoque, carregando, erro, carregarEstoque, Grafico }}>
         {children}
       </DataContext.Provider>
     );

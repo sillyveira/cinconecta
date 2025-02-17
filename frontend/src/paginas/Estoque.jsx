@@ -174,7 +174,7 @@ function Estoque() {
 
   const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
-  const { Estoque, carregando, erro, recarregarEstoque, buscarEstoque } =
+  const { Estoque, carregando, erro, carregarEstoque } =
     useContext(DataContext);
 
   const [openModalInfo, setOpenModalInfo] = useState(false);
@@ -194,7 +194,7 @@ function Estoque() {
         onChangePesquisar={(e)=>setPesquisa(e.target.value)}
         onClickAdicionar={toggleModalNovoProduto}
         onClickFiltrar={toggleModalFiltro}
-        onClickPesquisar={{}}
+        onClickPesquisar={()=>{}}
         />
       </div>
 

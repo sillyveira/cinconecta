@@ -1,0 +1,41 @@
+export const loginRequest = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:3000/usuarios/login', {
+        method: 'POST',
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Erro ao fazer login");
+      }
+  
+      return data; // Retorna os dados do usuário se a requisição for bem-sucedida
+    } catch (error) {
+      throw error; // Lança o erro para ser tratado na interface
+    }
+  };
+
+  export const logoutRequest = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/usuarios/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Erro ao fazer logout');
+      }
+      return response.ok;
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      throw error; // Propaga o erro para ser tratado no componente
+    }
+  };

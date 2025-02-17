@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {useAuth} from "../contextos/AuthContext";
+import { logoutRequest } from "../servicos/AuthAPI";
 const SIDEBAR_ITEMS = [
   {
     name: "Início",
@@ -52,26 +53,16 @@ export const Sidebar = () => {
   const {logout} = useAuth();
   const funcaoLogout = async() => {
     try {
-      const response = await fetch('http://localhost:3000/usuarios/logout', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        // alert(`O usuário foi deslogado.`);
+     const success = await logoutRequest();
+      if(success){
         logout("Logout");
-        
-      } else {
-        // Lide com erros de login (exiba uma mensagem de erro, etc.)
-        console.error('Erro ao fazer logout');
       }
-    } catch (error) {
-      console.error('Erro ao fazer logout:', error);
+    } catch (err) {
+      alert(`Erro no logout: ${err.message}`)
+      logout("Logout");
     }
   }
+
   return (
     <motion.div
       className={`fixed z-20 transition-all duration-0 ease-in-out flex-shrink-0 h-full ${
