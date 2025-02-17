@@ -24,8 +24,8 @@ app.use(cors({
 }));
 app.use(cookieParser()); //Para receber os cookies de token
 app.use(rateLimit({ //Limitar requests a 1 por 0.2 para evitar requests duplos.
-	windowMs: 200, // 0.2s
-	limit: 1, 
+	windowMs: 60000, // 0.01s
+	limit: 100, 
 	standardHeaders: 'draft-8', 
 	legacyHeaders: false, 
 
