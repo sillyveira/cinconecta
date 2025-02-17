@@ -11,7 +11,7 @@ function AuditCard({titulo, horario, data, funcaoClique}) {
         <h1>{data}</h1>
       </div>
 
-      <div className="border-1 h-8 border-gray-400" />
+      <div className="border-1 h-8 border-[#B6B6B6]" />
 
       {/*DIV DO TITULO */}
       <h1 className='px-6 max-w-[368px] text-center'>{titulo}</h1>

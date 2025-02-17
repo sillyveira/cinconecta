@@ -142,13 +142,14 @@ function Auditoria() {
     <>
       <Header titulo={"Auditoria"}></Header>
 
-      <div className="flex justify-center gap-4 pt-10">
+      <div className="flex flex-row-reverse justify-center gap-4 pt-10">
         
         {/* Componente de filtro para PC */}
         <FiltroAuditoria
         className={""}
         info={Info}
         setInfo={setInfo} ></FiltroAuditoria>
+        
         {/* TODO: Aqui deve ser implementado o componente de filtro para Mobile*/}
 
         {/* Uma abordagem para fazer essa implementação de diferentes componentes a depender do tamanho da tela é você fazer isso: */}
