@@ -91,7 +91,6 @@ const columns = [
       return (
         <div className="flex items-center">
           <span className="sm:text-[12px]">{row.validade}</span>
-          <Info className={`md:size-4 md:ml-1 cursor-pointer ${getColor(row.validade)}`} onClick={() => toggleModalInfo(row)} />
         </div>
       );
     },
