@@ -191,7 +191,7 @@ const ProdutosPorCategoria = async (idOng) => {
       },
     },
   ]);
-  return produtosCategoria;
+  return produtosProximos;
 };
 
 module.exports = {

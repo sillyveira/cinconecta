@@ -25,7 +25,7 @@ const ultimosMeses = [
   { name: "Dez", entrada: 30, saida: 9 },
 ];
 export default function EntradaSaida() {
-  const {Grafico} = useContext(DataContext);
+  const {Dados} = useContext(DataContext);
   return (
     <motion.div
       className="text-black bg-gray-800 shadow-2xl bg-opacity-100 border backdrop-blur-md rounded-md col-span-3"
@@ -37,11 +37,11 @@ export default function EntradaSaida() {
         Gráfico de entrada e saída
       </h2>
       <div className="h-48">
-      {(!Grafico || Grafico.length === 0) ? ( // Verifica se Grafico é null/undefined ou vazio
+      {(!Dados || Dados.length === 0) ? ( // Verifica se Grafico é null/undefined ou vazio
         <p>Sem gráfico disponível</p>
       ) : (
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={Grafico} margin={{ right: 40 }}>
+          <LineChart data={Dados.grafico} margin={{ right: 40 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#FFFFFFFF" />
             <XAxis color="#FFFFFFF" stroke="#EDFFECFF" dataKey="name" />
             <YAxis domain={[0, 45]} stroke="#EDFFECFF" dataKey="entrada" />
