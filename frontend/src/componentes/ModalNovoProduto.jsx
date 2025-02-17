@@ -2,17 +2,24 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import DropDownMenu from "./Dropdown";
 import Botao from "./Botao";
+import {adicionarProduto} from "../servicos/DataAPI";
+import {useAuth} from "../contextos/AuthContext";
 
 Modal.setAppElement("#root");
 
 export default function ModalNovoProduto({ isOpen, onClose }) {
+  const adicionar = (formData) => {
+    adicionarProduto(logout, formData);
+  }
+  const {logout} = useAuth();
+
   const [formData, setFormData] = useState({
     nome: "",
-    categoria: "",
+    id_categoria: "",
     quantidade: "",
-    preco: "",
+    valor: "",
     validade: "",
-    codigo: "",
+    codbarras: "",
     descricao: "",
   });
 
@@ -56,7 +63,7 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
             { value: "vestuario", title: "Vestuário" },
           ]}
           className="p-3 bg-[#B6B6B6] text-white rounded-xl" 
-          onChange={(value) => setFormData({ ...formData, categoria: value })}
+          onChange={(value) => setFormData({ ...formData, id_categoria: value })}
         />
         <input
           type="number"
@@ -69,9 +76,9 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
         />
         <input
           type="text"
-          name="preco"
+          name="valor"
           placeholder="Preço"
-          value={formData.preco}
+          value={formData.valor}
           onChange={handleChange}
           className="p-3 bg-[#B6B6B6] text-white rounded-xl" 
         />
@@ -87,9 +94,9 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
         />
         <input
           type="text"
-          name="codigo"
+          name="codbarras"
           placeholder="Código"
-          value={formData.codigo}
+          value={formData.codbarras}
           onChange={handleChange}
           className="p-3 bg-[#B6B6B6] text-white rounded-xl" 
         />
@@ -110,7 +117,10 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
             texto="Adicionar"
             disabled={!formData.nome || !formData.quantidade}
             className="bg-red-600 text-white px-6 py-3 rounded-xl" 
-            onClick={onClose}
+            onClick={() => {
+              adicionar(formData);
+              onClose();
+            }}
             />
         </div>
     </div>

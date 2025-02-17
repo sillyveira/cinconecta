@@ -114,3 +114,49 @@ export const buscarEstoque = async (logout) => {
   //       throw error; // Deixa o erro ser tratado pelo contexto
   //     }
   // };
+
+/*id_categoria,
+    nome,
+    descricao,
+    quantidade,
+    validade,
+    valor,
+    codbarras,*/
+
+  export const adicionarProduto = async (logout, produto) => {
+    try {
+      const resposta = await fetch("http://localhost:3000/produtos/criar-produto", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(produto)
+      });
+  
+      if (!resposta.ok) {
+        throw new Error(`Erro na requisição: ${resposta.status}`);
+      }
+  
+      const dados = await resposta.json();
+  
+      if (
+        dados.message === "Token não está presente na solicitação." ||
+        dados.message === "O token é inválido ou está expirado."
+      ) {
+        logout("Expirado");
+        return [];
+      }
+  
+      return dados.message;
+    } catch (error) {
+        console.error("Erro ao buscar estoque:", error);
+    
+        // Verifica se o erro está relacionado a falha de conexão (erro de rede)
+        if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
+          logout("Timeout");
+        }
+    
+        throw error; // Deixa o erro ser tratado pelo contexto
+      }
+  };
