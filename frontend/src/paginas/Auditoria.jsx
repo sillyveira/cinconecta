@@ -3,7 +3,7 @@ import AuditCard from "../componentes/AuditCard";
 import Header from "../componentes/Header";
 import Paginacao from "../componentes/Paginacao";
 import FiltroAuditoria from "../componentes/FiltroAuditoria";
-
+/*import ModalCC from "../componentes/Modal";*/
 
 function Auditoria() {
   const data = [
@@ -11,78 +11,102 @@ function Auditoria() {
       titulo: "'Nome do produto' foi removido do estoque",
       horario: "10:00",
       data: "2025-02-01",
+      detalhes: "Detalhes sobre a remoção do produto..."
     },
     {
       titulo: "'Nome do produto' foi adicionado no estoque",
       horario: "11:30",
       data: "2025-02-01",
+      detalhes: "Detalhes sobre a adição do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
     {
       titulo: "'Nome do produto' foi atualizado no estoque ",
       horario: "14:00",
       data: "2025-02-02",
+      detalhes: "Detalhes sobre a atualização do produto..."
     },
   ];
   const [itensAtuais, setItensAtuais] = useState([]);
   const [numeroPag, setNumeroPag] = useState(1);
   const itemPorPagina = 10;
   const pagTotais = (data.length % itemPorPagina) + 1;
-
+  {/*
+  const [modalAberto, setModalAberto] = useState(false);
+  const [infoAtual, setInfoAtual] = useState(null);
+  const abrirModal = (info) => {
+    setInfoAtual(info);
+    setModalAberto(true);
+  };
+  const fecharModal = () => {
+    setModalAberto(false);
+    setInfoAtual(null);
+  };*/}
   
   const [Info, setInfo] = useState({
     dataInicial: '',
@@ -156,6 +180,16 @@ function Auditoria() {
         {/* ----------------- */}
         </div>
       </div>
+      
+      {/* Modal de Informações */}
+      {/*infoAtual && (
+        <ModalCC titulo="Detalhes do Produto" isOpen={modalAberto} onClose={fecharModal}>
+          <p><strong>Título:</strong> {infoAtual.titulo}</p>
+          <p><strong>Horário:</strong> {infoAtual.horario}</p>
+          <p><strong>Data:</strong> {infoAtual.data}</p>
+          <p><strong>Detalhes:</strong> {infoAtual.detalhes}</p>
+        </ModalCC>
+      )*/}
     </>
   );
 }
