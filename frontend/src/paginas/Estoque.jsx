@@ -120,15 +120,15 @@ function Estoque() {
         const getColor = (validadeStr) => {
           const [dia, mes, ano] = validadeStr.split("/").map(Number);
           const dataValidade = new Date(ano, mes - 1, dia);
-  
+
           const diferencaMeses =
             (dataValidade - dataHoje) / (1000 * 60 * 60 * 24 * 30);
-  
+
           if (diferencaMeses <= 1) return "text-red-500"; // Vermelho
           if (diferencaMeses <= 3) return "text-yellow-500"; // Amarelo
           return "hidden"; // invisível
         };
-  
+
         return (
           <div className="flex items-center">
             <span className="sm:text-[12px]">{row.validade}</span>
@@ -141,10 +141,10 @@ function Estoque() {
           const [day, month, year] = dateStr.split("/").map(Number);
           return new Date(year, month - 1, day);
         };
-  
+
         const dateA = parseDate(rowA.validade);
         const dateB = parseDate(rowB.validade);
-  
+
         // Comparação de datas para ordem decrescente
         if (dateA > dateB) return -1; // A é mais recente, vem antes (ordem decrescente)
         if (dateA < dateB) return 1; // B é mais recente, vem antes (ordem decrescente)
@@ -156,7 +156,7 @@ function Estoque() {
       cell: (row) => (
         <div className="flex flex-row gap-2">
           <Edit onClick={() => alert(`Ação clicada para ${row.nome}`)}></Edit>
-          <Info className="cursor-pointer" onClick={()=>toggleModalInfo(row)}></Info>
+          <Info className="cursor-pointer" onClick={() => toggleModalInfo(row)}></Info>
         </div>
       ),
       style: {
@@ -168,6 +168,8 @@ function Estoque() {
     },
   ];
 
+  const [Pesquisa, setPesquisa] = useState("");
+
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [openModalFiltro, setOpenModalFiltro] = useState(false);
   const toggleModalFiltro = () => setOpenModalFiltro((prev) => !prev);
@@ -177,6 +179,12 @@ function Estoque() {
   const { Estoque, carregando, erro, carregarEstoque } =
     useContext(DataContext);
 
+  const [estoqueFiltrado, setEstoqueFiltrado] = useState([]);
+  if (Estoque && Estoque.length > 0) {
+    useEffect(() => {
+      setEstoqueFiltrado(Estoque);
+    }, [Estoque]);
+  }
   const [openModalInfo, setOpenModalInfo] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -185,16 +193,36 @@ function Estoque() {
     setOpenModalInfo((prev) => !prev);
   };
 
+  const funcaoPesquisar = (nomeBusca) => {
+    const resultados = [];
+    for (const produto of Estoque) {
+      if (nomeBusca.toLowerCase().includes(produto.nome.toLowerCase())) {
+        resultados.push(produto);
+      }
+    }
+    return resultados;
+  }
+
+
   return (
     <>
       <Header titulo={"Estoque"} />
 
       <div className="flex justify-center">
         <StockBar
-        onChangePesquisar={(e)=>setPesquisa(e.target.value)}
-        onClickAdicionar={toggleModalNovoProduto}
-        onClickFiltrar={toggleModalFiltro}
-        onClickPesquisar={()=>{}}
+          onChangePesquisar={(e) => setPesquisa(e.target.value)}
+          onClickAdicionar={toggleModalNovoProduto}
+          onClickFiltrar={toggleModalFiltro}
+          onClickPesquisar={() => {
+            if (Pesquisa != "") {
+              setEstoqueFiltrado(funcaoPesquisar(Pesquisa));
+            } else {
+              setEstoqueFiltrado(Estoque);
+            }
+          }}
+          onClickRefresh={()=>{
+            carregarEstoque();
+          }}
         />
       </div>
 
@@ -207,11 +235,11 @@ function Estoque() {
             <p className="text-center text-black justify-center">
               Carregando estoque...
             </p>
-          ) : Estoque && Estoque.length > 0 ? (
+          ) : estoqueFiltrado && estoqueFiltrado.length > 0 ? (
             <DataTable
               columns={columns}
               customStyles={customStyles}
-              data={Estoque}
+              data={estoqueFiltrado}
               highlightOnHover
               fixedHeader
               fixedHeaderScrollHeight="calc(100vh - 190px)"
@@ -242,7 +270,7 @@ function Estoque() {
         isOpen={openModalNovoProduto}
         onClose={toggleModalNovoProduto}
       ></ModalNovoProduto>
-      <ModalInfo isOpen={openModalInfo} onClose={()=>setOpenModalInfo((prev) => !prev)} product={selectedProduct} />
+      <ModalInfo isOpen={openModalInfo} onClose={() => setOpenModalInfo((prev) => !prev)} product={selectedProduct} />
     </>
   );
 }

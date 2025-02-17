@@ -1,7 +1,7 @@
-import { ListFilter, CirclePlus, Search } from "lucide-react";
+import { ListFilter, CirclePlus, Search, RefreshCcw } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function StockBar({onClickFiltrar, onChangePesquisar, onClickAdicionar, onClickPesquisar}){
+export default function StockBar({onClickFiltrar, onChangePesquisar, onClickAdicionar, onClickPesquisar, onClickRefresh}){
 
     const clicou = () =>{
         console.log("Clicou!")
@@ -29,7 +29,7 @@ export default function StockBar({onClickFiltrar, onChangePesquisar, onClickAdic
                 onChange={onChangePesquisar}
                 
                 type="text" 
-                className="placeholder:text-center placeholder:text-black flex flex-row md:w-[648px] w-[148px] sm:w-[248px] h-[43px] rounded-[37px] text-black border-2 border-[#D9D9D9] p-4 pl-4 pr-10"/>
+                className="placeholder:text-center placeholder:text-black flex flex-row xs:w-[448px] md:w-[648px] w-[148px] sm:w-[248px] h-[43px] rounded-[37px] text-black border-2 border-[#D9D9D9] p-4 pl-4 pr-10"/>
             </div>
 
             <motion.button
@@ -39,6 +39,15 @@ export default function StockBar({onClickFiltrar, onChangePesquisar, onClickAdic
             >
                 <CirclePlus className="self-center" color="black"/>
                 <h1 className="self-center text-black hidden sm:block">Adicionar</h1>
+            </motion.button>
+
+            <motion.button
+            onClick={onClickRefresh}
+            className="cursor-pointer flex flex-row justify-start h-[43px] rounded-[24px] border-2 border-black gap-2 p-4"
+            whileHover={{scale: 1.02}}
+            >
+            <RefreshCcw className="self-center" color="black"/>
+                
             </motion.button>
         </div>
     )
