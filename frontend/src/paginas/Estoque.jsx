@@ -5,7 +5,26 @@ import {motion} from "framer-motion";
 import Header from "../componentes/Header";
 import ModalFiltro from "../componentes/ModalFiltro";
 import ModalNovoProduto from "../componentes/ModalNovoProduto"
+import ModalInfo from "../componentes/ModalInfo";
 import StockBar from "../componentes/StockBar"
+
+function Estoque() {
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [openModalFiltro, setOpenModalFiltro] = useState(false);
+  const toggleModalFiltro = () => setOpenModalFiltro((prev) => !prev);
+
+  const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
+  const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
+
+  const [openModalInfo, setOpenModalInfo] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const toggleModalInfo = (product = null) => {
+    setSelectedProduct(product);
+    setOpenModalInfo((prev) => !prev);
+  };
+
+  
 // Definição das colunas
 const columns = [
   {
@@ -72,7 +91,6 @@ const columns = [
       return (
         <div className="flex items-center">
           <span className="sm:text-[12px]">{row.validade}</span>
-          <Info className={`md:size-4 md:ml-1 ${getColor(row.validade)}`} />
         </div>
       );
     },
@@ -90,7 +108,7 @@ const columns = [
     cell: (row) => (
       <div className="flex flex-row gap-2">
         <Edit onClick={() => alert(`Ação clicada para ${row.name}`)}></Edit>
-        <Info></Info>
+        <Info className="cursor-pointer" onClick={() => toggleModalInfo(row)}></Info>
       </div>
     ),
     style: {
@@ -151,14 +169,6 @@ const customStyles = {
     },
   },
 };
-
-function Estoque() {
-  const [selectedRows, setSelectedRows] = React.useState([]);
-  const [openModalFiltro, setOpenModalFiltro] = useState(false);
-  const toggleModalFiltro = () => setOpenModalFiltro((prev) => !prev);
-
-  const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
-  const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
 
   const [Pesquisa, setPesquisa] = useState();
   const [data, setData] = React.useState([
@@ -462,6 +472,7 @@ function Estoque() {
       </div>
       <ModalFiltro isOpen={openModalFiltro} onClose={toggleModalFiltro}></ModalFiltro>
       <ModalNovoProduto isOpen={openModalNovoProduto} onClose={toggleModalNovoProduto}></ModalNovoProduto>
+      <ModalInfo isOpen={openModalInfo} onClose={() => setOpenModalInfo(false)} product={selectedProduct} />
     </>
   );
 }
