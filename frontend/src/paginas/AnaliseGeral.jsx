@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Header from "../componentes/Header";
 import StatCard from "../componentes/StatCard";
 import { motion } from "framer-motion";
@@ -8,11 +8,12 @@ import ModalCC from "../componentes/Modal";
 import ValorEstoque from "../componentes/ValorEstoque";
 import ProdutoCategoria from "../componentes/ProdutoCategoria";
 import { useState } from "react";
+import DataContext from "../contextos/DataContext";
 export default function AnaliseGeral() {
   
   const [openModal, setOpenModal] = useState(false);
-  const toggleModal = () => setOpenModal((prev) => !prev);
-  
+  const toggleModal = () => setOpenModal((prev) => !prev);  
+  const {Dados} = useContext(DataContext);
   return (
     <>
       <Header titulo="Análise Geral" />
@@ -20,19 +21,19 @@ export default function AnaliseGeral() {
         <motion.div className="fixed grid grid-cols-3 gap-x-2 gap-y-2 pt-6">
           <StatCard
             titulo={"Quantidade total de itens"}
-            valor={"124"}
+            valor={(!Dados || Dados.length === 0) ? "Sem dados" : Dados.quantidadetotal}
             icone={Clipboard}
             expandirFunction={toggleModal}
           />
           <StatCard
             titulo={"Valor estimado do estoque"}
-            valor={"R$ 785,00"}
+            valor={`R$ ${(!Dados || Dados.length === 0) ? "Sem dados" : Dados.valorestoque}`}
             icone={CircleDollarSign}
             expandirFunction={toggleModal}
           />
           <StatCard
             titulo={"Produtos próximos à validade"}
-            valor={"4"}
+            valor={(!Dados || Dados.length === 0) ? "Sem dados" : Dados.produtosproximos.length}
             icone={CalendarX}
             expandirFunction={toggleModal}
           />

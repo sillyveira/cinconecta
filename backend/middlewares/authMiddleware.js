@@ -3,26 +3,27 @@ const sessionService = require('../services/sessionService')
 
 const middlewareAutenticacao = async (req, res, next) => {
     try {
-        const tokenHeader = req.headers['authorization'];
+        // const tokenHeader = req.headers['authorization'];
         
-        if (!tokenHeader) {
-            return res.status(401).json({
+        const tokenCookie = req.cookies.token || undefined;
+        if (!tokenCookie) {
+            return res.status(200).json({
                 message: 'Token não está presente na solicitação.'
             })
         }
 
-        const token = tokenHeader.split(' ')[1]; //Remove da solicitação o Bearer: "Bearer <token>".
+        // const token = tokenHeader.split(' ')[1]; //Remove da solicitação o Bearer: "Bearer <token>".
 
-        if (!token){
-            return res.status(401).json({
-                message: 'Token inválido.'
-            });
-        }
+        // if (!token){
+        //     return res.status(401).json({
+        //         message: 'Token inválido.'
+        //     });
+        // }
         
-        const {userid, ongid, nome_usuario} = await sessionService.checarToken(token);
+        const {userid, ongid, nome_usuario} = await sessionService.checarToken(tokenCookie);
 
         if (!userid) {
-            return res.status(401).json({
+            return res.status(200).json({
                 message: 'O token é inválido ou está expirado.'
             })
         }
@@ -32,7 +33,7 @@ const middlewareAutenticacao = async (req, res, next) => {
         req.userId = userid;
         req.ongId = ongid;
         req.nomeUsuario = nome_usuario;
-        req.token = token;
+        req.token = tokenCookie;
         next();
     } catch (err) {
         //Erro inesperado

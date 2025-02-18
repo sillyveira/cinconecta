@@ -95,10 +95,17 @@ const login = async (req, res) => {
                 console.log(err.message)
               }
 
+              res.cookie('token', tokenGerado, {
+                httpOnly: true, // Impede o acesso do cookie via JavaScript no navegador
+                // secure: true, // Garante que o cookie só seja enviado em conexões HTTPS
+                sameSite: 'lax', // Adiciona proteção contra ataques CSRF
+                expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Define a data de expiração do cookie (1 dia)
+              });
+
               return res.status(200).json({
                 message: "O usuário foi logado e registrado com sucesso.",
                 userid: novoUsuario._id,
-                token: tokenGerado,
+                username: nomeUsuario,
               });
             } catch (err) {
               return res.status(500).json({
@@ -121,10 +128,17 @@ const login = async (req, res) => {
                 tokenGerado = await sessionService.gerarSessao(user._id, ong._id, user.nome);
               } else {
                 // Se a sessão já existe, o token é retornado
+                res.cookie('token', tokenGerado, {
+                  httpOnly: true, // Impede o acesso do cookie via JavaScript no navegador
+                  // secure: true, // Garante que o cookie só seja enviado em conexões HTTPS
+                  sameSite: 'lax', // Adiciona proteção contra ataques CSRF
+                  expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Define a data de expiração do cookie (1 dia)
+                });
+
                 return res.status(200).json({
                   message: "O usuário já está logado.",
                   userid: user._id,
-                  token: tokenGerado,
+                  username: user.nome
                 });
               }
             } catch (err) {
@@ -150,10 +164,18 @@ const login = async (req, res) => {
             // Realizando a checagem da última auditoria para transformar os logs em logs de revisão
             await auditController.checarUltimaAuditoria(user._id, ong._id)
 
+            
+            res.cookie('token', tokenGerado, {
+              httpOnly: true, // Impede o acesso do cookie via JavaScript no navegador
+              // secure: true, // Garante que o cookie só seja enviado em conexões HTTPS
+              sameSite: 'lax', // Adiciona proteção contra ataques CSRF
+              expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Define a data de expiração do cookie (1 dia)
+            });
+
             return res.status(200).json({
               message: "O usuário foi logado.",
               userid: user._id,
-              token: tokenGerado,
+              username: user.nome,
             });
           }
         } else {
@@ -187,7 +209,7 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   try {
     const revogarSessao_ = await sessionService.revogarSessao(req.token);
-
+    res.clearCookie('token');
     return res.status(revogarSessao_.status).json({
       message: revogarSessao_.message,
     });

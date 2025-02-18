@@ -12,7 +12,8 @@ router.post("/criar-produto", authMiddleware, productController.create_product)
 // Rota PUT para atualizar produtos
 router.put("/atualizar-produto/:id", authMiddleware, productController.update_product)
 
-// Rota POST para EXCLUIR produtos
+
+// Rota POST para EXCLUIR produtos. Motivo de não usar DELETE: passar uma lista de IDS no body
 router.post("/deletar-produto", authMiddleware, productController.delete_product)
 
 module.exports = router
