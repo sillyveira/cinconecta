@@ -11,7 +11,7 @@
 /* TODO: Adrielly, adiciona as cores do projeto por favor! */
 @theme {
   /* Definindo breakpoints personalizados */
-
+  --breakpoint-xs: 48rem; 
   /* Definindo tamanhos de fonte personalizados */
   --font-size-xxs: 0.625rem;
 

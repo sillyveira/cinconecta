@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   LineChart,
   Line,
@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { motion } from "framer-motion";
-
+import DataContext from "../contextos/DataContext";
 const ultimosMeses = [
   { name: "Jan", entrada: 21, saida: 3 },
   { name: "Fev", entrada: 12, saida: 2 },
@@ -25,6 +25,7 @@ const ultimosMeses = [
   { name: "Dez", entrada: 30, saida: 9 },
 ];
 export default function EntradaSaida() {
+  const {Dados} = useContext(DataContext);
   return (
     <motion.div
       className="text-black bg-gray-800 shadow-2xl bg-opacity-100 border backdrop-blur-md rounded-md col-span-3"
@@ -36,11 +37,14 @@ export default function EntradaSaida() {
         Gráfico de entrada e saída
       </h2>
       <div className="h-48">
-        <ResponsiveContainer width={"100%"} height={"100%"}>
-          <LineChart data={ultimosMeses} margin={{ right: 40 }}>
-            <CartesianGrid strokeDasharray={"3 3"} stroke="#FFFFFFFF" />
-            <XAxis color="#FFFFFFF" stroke="#EDFFECFF" dataKey={"name"}></XAxis>
-            <YAxis domain={[0, 45]} stroke="#EDFFECFF" dataKey={"entrada"}></YAxis>
+      {(!Dados || Dados.length === 0) ? ( // Verifica se Grafico é null/undefined ou vazio
+        <p>Sem gráfico disponível</p>
+      ) : (
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={Dados.grafico} margin={{ right: 40 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#FFFFFFFF" />
+            <XAxis color="#FFFFFFF" stroke="#EDFFECFF" dataKey="name" />
+            <YAxis domain={[0, 45]} stroke="#EDFFECFF" dataKey="entrada" />
             <Tooltip
               contentStyle={{
                 backgroundColor: "rgba(31,41,55,0.8)",
@@ -56,7 +60,7 @@ export default function EntradaSaida() {
               strokeWidth={3}
               dot={{ fill: "#76F163FF", strokeWidth: 2, r: 6 }}
               activeDot={{ r: 8, strokeWidth: 2 }}
-            ></Line>
+            />
             <Line
               type="monotone"
               dataKey="saida"
@@ -64,9 +68,10 @@ export default function EntradaSaida() {
               strokeWidth={3}
               dot={{ fill: "#F16363FF", strokeWidth: 1, r: 6 }}
               activeDot={{ r: 8, strokeWidth: 2 }}
-            ></Line>
+            />
           </LineChart>
         </ResponsiveContainer>
+      )}
       </div>
     </motion.div>
   );

@@ -1,8 +1,37 @@
-import React from "react";
+import React, {useState} from "react";
 import Header from "../componentes/Header";
 import Textfield from "../componentes/Textfield";
 import Botao from "../componentes/Botao";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contextos/AuthContext";
+import { loginRequest } from "../servicos/AuthAPI"; // Importa a função da API
+import toast from "react-hot-toast";
 const Login = () => {
+  const [dadosLogin, setDadosLogin] = useState({
+    email: "",
+    password: ""
+  })
+
+  const {login} = useAuth();
+
+  const navigate = useNavigate();
+
+  const funcaoLogin = async () => {
+    try {
+      const data = await loginRequest(dadosLogin.email, dadosLogin.password);
+      login(data.username);
+    } catch (error) {
+      if (error.message === "Credenciais inválidas") {
+        toast.error("Credenciais inválidas!");
+      } else if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
+        toast.error("Não foi possível alcançar o servidor!");
+      } else {
+        toast.error("Ocorreu um erro inesperado no login!");
+      }
+      throw error;
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col justify-between w-full h-screen overflow-hidden bg-gray-100">
@@ -18,16 +47,28 @@ const Login = () => {
                 <Textfield
                 titulo={"Email"}
                 tipo={"text"}
+                onChange={(event) => setDadosLogin({
+                  ...dadosLogin,
+                  email: event.target.value
+                })}
                 ></Textfield>
               </div>
               <div className="p-1.5">
                 <Textfield
                 titulo={"Senha"}
                 tipo={"password"}
+                onChange={(event) => setDadosLogin({
+                  ...dadosLogin,
+                  password: event.target.value
+                })}
                 ></Textfield>
               </div>
               <div className="p-1.5">
-                <Botao className={"w-full"} texto="Entrar" onClick={()=>{}}></Botao>
+                <Botao className={"w-full"} texto="Entrar" onClick={(event)=>{
+                  event.preventDefault();
+                  funcaoLogin(dadosLogin.email, dadosLogin.password)
+                  }}
+                ></Botao>
               </div>
               {/* wesley: Por enquanto essa parte está desativada, é referente à esqueci minha senha e lembre-se de mim. */}
               {/* <div className="ml-2">

@@ -45,12 +45,13 @@ const valorEstimadoEstoque = async (ongId, dataInicio) => {
 const produtosProximosValidade = async (ongId) => {
   try {
     const tresMesesAtras = new Date();
-    tresMesesAtras.setMonth(tresMesesAtras.getMonth() - 3);
+
+    tresMesesAtras.setMonth(tresMesesAtras.getMonth() + 3);
 
     const produtosProximos = Product.find({
       id_ong: ongId,
       validade: {
-        $gte: tresMesesAtras,
+        $lte: tresMesesAtras,
       },
     });
 
@@ -81,7 +82,7 @@ const graficoEntradaSaida = async (ongId) => {
       if (!logsPorMes[mesAno]) {
         //Se não existir, cria um novo na lista
         logsPorMes[mesAno] = {
-          nome: getNomeDoMes(mes),
+          name: getNomeDoMes(mes),
           entrada: 0,
           saida: 0,
         };
@@ -171,7 +172,7 @@ const ProdutosPorCategoria = async (idOng) => {
         nomeCategoria: {
           $cond: {
             if: { $gt: [{ $size: "$categoria" }, 0] },
-            then: { $arrayElemAt: ["$categoria.nome", 0] },
+            then: { $arrayElemAt: ["$categoria.nome_categoria", 0] },
             else: "Outros",
           },
         },
@@ -191,7 +192,7 @@ const ProdutosPorCategoria = async (idOng) => {
       },
     },
   ]);
-  return produtosCategoria;
+  return produtosProximos;
 };
 
 module.exports = {

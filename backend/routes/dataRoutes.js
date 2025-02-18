@@ -98,4 +98,30 @@ router.get("/grafico-valor", authMiddleware, async(req, res) => {
     }
 })
 
+router.get("/dados", authMiddleware, async (req, res) => {
+    try{
+        const entradaSaida = await dataController.graficoEntradaSaida(req.ongId);
+        const resultadoGraficoValor = await dataController.graficoValor(req.ongId);
+        const produtosProximos = await dataController.produtosProximosValidade(req.ongId);
+        const valorEstoque = await dataController.valorEstimadoEstoque(req.ongId, '2024-01-01')
+        const quantidadeTotal = await dataController.retornarQuantidadeTotalItens(req.ongId)
+        const produtoPorCategoria = await dataController.ProdutosPorCategoria(req.ongId);
+
+        return res.status(200).json({
+            message: 'Análise feita com sucesso.',
+            graficovalor: resultadoGraficoValor,
+            grafico: entradaSaida,
+            produtosproximos: produtosProximos,
+            valorestoque: valorEstoque,
+            quantidadetotal: quantidadeTotal,
+            produtoporcategoria: produtoPorCategoria
+        })
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).json({
+            message: 'Erro no retorno dos dados.',
+            error: err.message
+        })
+    }
+})
 module.exports = router
