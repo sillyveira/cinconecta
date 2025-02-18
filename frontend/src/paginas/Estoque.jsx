@@ -181,7 +181,6 @@ function Estoque() {
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
   const dataContext = useContext(DataContext);
   const { Estoque = [], carregando, erro, carregarEstoque } = dataContext;
-
   const [estoqueFiltrado, setEstoqueFiltrado] = useState([]);
   useEffect(() => {
     if (Estoque && Estoque.length > 0) {

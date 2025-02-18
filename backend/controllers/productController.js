@@ -68,16 +68,14 @@ exports.create_product = async (req, res) => {
       console.log("Não foi possível salvar o log do usuário.");
     }
 
-    return res
-      .status(201)
-      .json({ success: true, message: "Produto criado com sucesso." });
+    return res.status(200).json({ success: true, message: "Produto criado com sucesso." });
   } catch (error) {
     console.error("Erro ao criar produto:", error);
     res.status(500).json({
-      success: false,
-      message: "Erro ao criar produto.",
-      error: error.message,
-    });
+        success: false,
+        message: "Erro ao criar produto.",
+        error: error.message,
+      });
   }
 };
 

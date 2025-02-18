@@ -45,6 +45,7 @@ const valorEstimadoEstoque = async (ongId, dataInicio) => {
 const produtosProximosValidade = async (ongId) => {
   try {
     const tresMesesAtras = new Date();
+
     tresMesesAtras.setMonth(tresMesesAtras.getMonth() + 3);
 
     const produtosProximos = Product.find({
