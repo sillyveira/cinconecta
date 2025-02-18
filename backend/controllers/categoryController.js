@@ -27,7 +27,6 @@ class CategoryController{
             }
 
             const categorias = new categories({
-                id_categoria: new mongoose.Types.ObjectId,
                 nome_categoria: nome_categoria,
                 id_ong: id_ong
             })
@@ -56,7 +55,7 @@ class CategoryController{
             }
 
            await categories.findOneAndUpdate( 
-            {id_categoria, id_ong},
+            {_id: id_categoria, id_ong: id_ong},
             {$set: {nome_categoria: nome_categoria}},
             {new: true}
         )
@@ -79,7 +78,7 @@ class CategoryController{
                 return res.status(404).end('Não foi possível identificar a ong.')
             }
 
-            await categories.findOneAndDelete({id_categoria, id_ong})
+            await categories.findOneAndDelete({_id: id_categoria, id_ong: id_ong})
             return res.status(200).end('Categoria deletada com sucesso.')
 
         }catch(error){
