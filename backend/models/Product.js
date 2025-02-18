@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   descricao: { type: String, required: false },
   quantidade: { type: Number, required: true },
   validade: { type: Date, required: false },
-  valor: { type: Double, required: false },
+  valor: { type: Number, required: false },
   codbarras: { type: String, required: false }
 });
 
