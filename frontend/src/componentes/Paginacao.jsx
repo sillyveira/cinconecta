@@ -11,7 +11,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
         {/* BOTÕES PARA ESQUERDA */}
         <div className="flex gap-2">
           <motion.button
-            className="rounded-full bg-amber-300 p-2 text-2xl flex items-center text-black hover:cursor-pointer"
+            className="rounded-full bg-[#B6B6B6] p-2 text-2xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={()=>setPagina(1)}
           >
@@ -19,7 +19,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
           </motion.button>
 
           <motion.button
-            className="rounded-full bg-amber-300 p-2 text-xl flex items-center text-black hover:cursor-pointer"
+            className="rounded-full bg-[#B6B6B6] p-2 text-xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
               if (paginaAtual - 5 > 0) {
@@ -31,7 +31,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
           </motion.button>
 
           <motion.button
-            className="rounded-full bg-amber-300 p-2 text-2xl flex items-center text-black hover:cursor-pointer"
+            className="rounded-full bg-[#B6B6B6] p-2 text-2xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
               if (paginaAtual - 1 > 0) {
@@ -48,7 +48,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
             {paginaAtual}/{paginasTotais}
           </h1>
           <hr />
-          <h1>pág</h1>
+          <h1 className="text-black">pág</h1>
         </div>
 
         {/* BOTÕES PARA DIREITA */}
@@ -56,7 +56,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
         {/* botão: Avançar 1 página  */}
         <div className="flex gap-2">
           <motion.button
-            className="rounded-full bg-amber-300 p-2 text-2xl flex items-center text-black hover:cursor-pointer"
+            className="rounded-full bg-[#B6B6B6] p-2 text-2xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
               if (paginaAtual + 1 <= paginasTotais) {
@@ -69,7 +69,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
 
           {/* botão: Avançar 5 páginas  */}
           <motion.button
-            className="rounded-full bg-amber-300 p-2 text-xl flex items-center text-black hover:cursor-pointer"
+            className="rounded-full bg-[#B6B6B6] p-2 text-xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
               if (paginaAtual + 5 <= paginasTotais) {
@@ -82,7 +82,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
 
           {/* botão: Passar todas as páginas  */}
           <motion.button
-            className="rounded-full bg-amber-300 p-2 text-2xl flex items-center text-black hover:cursor-pointer"
+            className="rounded-full bg-[#B6B6B6] p-2 text-2xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
                 setPagina(paginasTotais);

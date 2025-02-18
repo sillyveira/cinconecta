@@ -8,11 +8,9 @@ export default function FiltroAuditoria({
 }) {
   
   return (
-    <div
-      className={`max-w-sm w-full flex flex-col items-center border rounded-xl shadow-lg h-fit pb-14 px-4 ${className}`}
-    >
-      <h1 className="text-2xl text-black">Filtro</h1>
-      <hr className="border-t-2 border-gray-300 w-full" />
+    <div className={`bg-gray-100 max-w-sm w-full flex flex-col items-center border rounded-xl shadow-lg h-fit pb-14 px-4 ${className}`}>
+      <h1 className="text-2xl text-black font-bold">Filtro</h1>
+      <hr className="border-t-2 border-[#B6B6B6] w-full" />
         <div className="flex gap-4 pt-4">
           {/* Filtros de data */}
           <div>
@@ -37,16 +35,16 @@ export default function FiltroAuditoria({
           </div>
           {/* ------------------ */}
         </div>
-      <div className="pt-5">
-      <DropDownMenu
-            variant="gray"
-            label="Selecione..."
-            opcoes={info.categorias}
-            className={"w-54"}
-            onChange={(value) => setInfo(prev => ({...prev, categoria: value})) }
-        />
-    
-      </div>
+        <div className="pt-4">
+        <label htmlFor="filtrar-por-acao" className="text-black pl-2">Filtrar por Ação:</label>
+          <DropDownMenu
+              variant="gray"
+              label="Selecione..."
+              opcoes={info.categorias}
+              className={"w-86"}
+              onChange={(value) => setInfo(prev => ({...prev, categoria: value})) }
+          />
+        </div>
     </div>
   );
 }
