@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Category = require("../models/Category")
 const mongoose = require("mongoose");
 const auditController = require("../controllers/auditController");
 
@@ -304,6 +305,7 @@ exports.view_product = async (req, res) => {
 
   try {
     const filtros = {}; // Os filtros serão armazenados nessa constante
+    const categoriasCache = new Map();
 
     if (validade) {
       const dataValidade = new Date(validade);
@@ -312,7 +314,20 @@ exports.view_product = async (req, res) => {
       }
     }
 
-    if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria)) {
+    const categoriaQuery = await Category.find({id_ong: id_ong});
+
+    categoriaQuery.forEach(categoria => {
+      if (!categoriasCache.get(categoria._id.toString())){ // Se no dicionário não houver uma categoria com o nome, adicionar
+        categoriasCache.set(categoria._id.toString(), categoria.nome_categoria);
+      }
+    });
+
+    console.log("Cache:")
+    console.log(categoriasCache);
+    console.log(categoriasCache.get("67a547ce3ca16568a40b6c9b"));
+    console.log("-----------")
+
+    if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria) && categoria) {
       filtros.id_categoria = id_categoria;
     }
 
@@ -321,9 +336,11 @@ exports.view_product = async (req, res) => {
     const visualizar_produto = await Product.find(filtros);
 
     const produtosComValoresPadrao = visualizar_produto.map((produto) => {
+      const idcategoria = produto.id_categoria || ""
       return {
         _id: produto._id, // Mantém o _id do MongoDB
         id_categoria: produto.id_categoria || "", // "" se não existir
+        nome_categoria: categoriasCache.get(idcategoria.toString()) || "",
         id_ong: produto.id_ong, // Não altera o id_ong
         // TODO: incluir nome da categoria
         nome: produto.nome || "",

@@ -45,12 +45,12 @@ const valorEstimadoEstoque = async (ongId, dataInicio) => {
 const produtosProximosValidade = async (ongId) => {
   try {
     const tresMesesAtras = new Date();
-    tresMesesAtras.setMonth(tresMesesAtras.getMonth() - 3);
+    tresMesesAtras.setMonth(tresMesesAtras.getMonth() + 3);
 
     const produtosProximos = Product.find({
       id_ong: ongId,
       validade: {
-        $gte: tresMesesAtras,
+        $lte: tresMesesAtras,
       },
     });
 
@@ -171,7 +171,7 @@ const ProdutosPorCategoria = async (idOng) => {
         nomeCategoria: {
           $cond: {
             if: { $gt: [{ $size: "$categoria" }, 0] },
-            then: { $arrayElemAt: ["$categoria.nome", 0] },
+            then: { $arrayElemAt: ["$categoria.nome_categoria", 0] },
             else: "Outros",
           },
         },

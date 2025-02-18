@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import ModalCC from "./Modal";
 import React from "react";
 
 const ModalInfo = ({ isOpen, onClose, produto }) => {
@@ -15,7 +16,7 @@ const ModalInfo = ({ isOpen, onClose, produto }) => {
           <strong>Nome:</strong> {produto.nome}
         </p>
         <p>
-          <strong>Categoria:</strong> {produto.categoria}
+          <strong>Categoria:</strong> {produto.nome_categoria}
         </p>
         <p>
           <strong>Quantidade:</strong> {produto.quantidade}
@@ -28,7 +29,7 @@ const ModalInfo = ({ isOpen, onClose, produto }) => {
           <strong>Validade:</strong> {produto.validade}
         </p>
         <p>
-          <strong>Código:</strong> {produto.codbarras || "N/A"}
+          <strong>Código de barras:</strong> {produto.codbarras || "N/A"}
         </p>
         <p>
           <strong>Descrição:</strong> {produto.descricao || "N/A"}

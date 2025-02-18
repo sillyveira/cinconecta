@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 export const analiseDados = async (logout) => {
   try {
     const resposta = await fetch("http://localhost:3000/analise-dados/dados", {
@@ -46,7 +47,9 @@ export const buscarEstoque = async (logout) => {
       });
   
       if (!resposta.ok) {
-        throw new Error(`Erro na requisição: ${resposta.status}`);
+        console.log(resposta.json());
+        logout("Timeout");
+        throw new Error(`Erro na requisição: ${resposta.status}. ${resposta.message}. ${resposta.body}.`);
       }
   
       const dados = await resposta.json();
@@ -58,10 +61,11 @@ export const buscarEstoque = async (logout) => {
         logout("Expirado");
         return [];
       }
-  
+      
+      
       return dados.produtos;
     } catch (error) {
-        console.error("Erro ao buscar estoque:", error);
+        console.log("Erro ao buscar estoque:", error.message);
     
         // Verifica se o erro está relacionado a falha de conexão (erro de rede)
         if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
@@ -123,7 +127,7 @@ export const buscarEstoque = async (logout) => {
     valor,
     codbarras,*/
 
-  export const adicionarProduto = async (logout, produto) => {
+  export const adicionarProduto = async (logout, produto, carregarEstoque) => {
     try {
       const resposta = await fetch("http://localhost:3000/produtos/criar-produto", {
         method: "POST",
@@ -133,8 +137,9 @@ export const buscarEstoque = async (logout) => {
         },
         body: JSON.stringify(produto)
       });
-  
+
       if (!resposta.ok) {
+        toast.error('Ocorreu um erro ao adicionar um produto.');
         throw new Error(`Erro na requisição: ${resposta.status}`);
       }
   
@@ -147,7 +152,9 @@ export const buscarEstoque = async (logout) => {
         logout("Expirado");
         return [];
       }
-  
+      
+      toast.success('O produto foi adicionado com sucesso.')
+      await carregarEstoque();
       return dados.message;
     } catch (error) {
         console.error("Erro ao buscar estoque:", error);

@@ -11,7 +11,6 @@ import StockBar from "../componentes/Stockbar";
 // Definição das colunas
 const dataHoje = new Date();
 
-
 const customStyles = {
   pagination: {
     style: {
@@ -91,7 +90,7 @@ function Estoque() {
     },
     {
       name: "Categoria",
-      selector: (row) => row.categoria,
+      selector: (row) => row.nome_categoria,
       sortable: true,
       minWidth: "140px",
       style: {
@@ -132,6 +131,7 @@ function Estoque() {
         return (
           <div className="flex items-center">
             <span className="sm:text-[12px]">{row.validade}</span>
+            <Info className={`md:size-4 md:ml-1 ${getColor(row.validade)}`} />
           </div>
         );
       },
@@ -156,7 +156,10 @@ function Estoque() {
       cell: (row) => (
         <div className="flex flex-row gap-2">
           <Edit onClick={() => alert(`Ação clicada para ${row.nome}`)}></Edit>
-          <Info className="cursor-pointer" onClick={() => toggleModalInfo(row)}></Info>
+          <Info
+            className="cursor-pointer"
+            onClick={() => toggleModalInfo(row)}
+          ></Info>
         </div>
       ),
       style: {
@@ -176,15 +179,15 @@ function Estoque() {
 
   const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
-  const { Estoque, carregando, erro, carregarEstoque } =
-    useContext(DataContext);
+  const dataContext = useContext(DataContext);
+  const { Estoque = [], carregando, erro, carregarEstoque } = dataContext;
 
   const [estoqueFiltrado, setEstoqueFiltrado] = useState([]);
-  if (Estoque && Estoque.length > 0) {
-    useEffect(() => {
+  useEffect(() => {
+    if (Estoque && Estoque.length > 0) {
       setEstoqueFiltrado(Estoque);
-    }, [Estoque]);
-  }
+    }
+  }, [Estoque]);
   const [openModalInfo, setOpenModalInfo] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -201,8 +204,7 @@ function Estoque() {
       }
     }
     return resultados;
-  }
-
+  };
 
   return (
     <>
@@ -220,7 +222,7 @@ function Estoque() {
               setEstoqueFiltrado(Estoque);
             }
           }}
-          onClickRefresh={()=>{
+          onClickRefresh={() => {
             carregarEstoque();
           }}
         />
@@ -270,7 +272,11 @@ function Estoque() {
         isOpen={openModalNovoProduto}
         onClose={toggleModalNovoProduto}
       ></ModalNovoProduto>
-      <ModalInfo isOpen={openModalInfo} onClose={() => setOpenModalInfo((prev) => !prev)} product={selectedProduct} />
+      <ModalInfo
+        isOpen={openModalInfo}
+        onClose={() => {setOpenModalInfo((prev) => !prev)}}
+        produto={selectedProduct}
+      />
     </>
   );
 }
