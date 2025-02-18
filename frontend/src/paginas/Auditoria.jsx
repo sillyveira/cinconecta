@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AuditCard from "../componentes/AuditCard";
 import Header from "../componentes/Header";
 import Paginacao from "../componentes/Paginacao";
 import FiltroAuditoria from "../componentes/FiltroAuditoria";
-/*import ModalCC from "../componentes/Modal";*/
+import DataContext from "../contextos/DataContext";
+import ModalCC from "../componentes/Modal";
 
 function Auditoria() {
   const data = [
@@ -92,16 +93,14 @@ function Auditoria() {
       detalhes: "Detalhes sobre a atualização do produto..."
     },
   ];
+  const [dadosAuditoria, setDadosAuditoria] = useState([]);
   const [itensAtuais, setItensAtuais] = useState([]);
   const [numeroPag, setNumeroPag] = useState(1);
   const itemPorPagina = 10;
-  const pagTotais = Math.ceil(data.length / itemPorPagina);
-  const itensDaPagina = data.slice(
-    (numeroPag - 1) * itemPorPagina,
-    numeroPag * itemPorPagina
-  );
+  const [pagTotais, setPagTotais] = useState(1);
+  const [itensDaPagina, setItensDaPagina] = useState([]);
 
-  {/*
+  
   const [modalAberto, setModalAberto] = useState(false);
   const [infoAtual, setInfoAtual] = useState(null);
   const abrirModal = (info) => {
@@ -111,11 +110,11 @@ function Auditoria() {
   const fecharModal = () => {
     setModalAberto(false);
     setInfoAtual(null);
-  };*/}
+  };
   const [Info, setInfo] = useState({
     dataInicial: "",
     dataFinal: "",
-    categoria: null,
+    acao: null,
     categorias: [
       { key: "a", value: "Login", title: "Login" },
       { key: "b", value: "Registro", title: "Registro" },
@@ -142,6 +141,26 @@ function Auditoria() {
   //   }
   // }
 
+  const {Auditoria} = useContext(DataContext);
+  useEffect(() => {
+    if (Auditoria && Auditoria.length > 0) {
+      setDadosAuditoria(Auditoria);
+      console.log(Auditoria);
+      setItensDaPagina(Auditoria.slice(
+        (numeroPag - 1) * itemPorPagina,
+        numeroPag * itemPorPagina
+      ))
+      setPagTotais(Math.ceil(Auditoria.length / itemPorPagina));
+      console.log(itensDaPagina);
+    }
+  }, [Auditoria]);
+
+  useEffect(()=>{
+    setItensDaPagina(Auditoria.slice(
+        (numeroPag - 1) * itemPorPagina,
+        numeroPag * itemPorPagina
+      ))
+  }, [numeroPag])
   return (
     <>
       <Header titulo={"Auditoria"}></Header>
@@ -171,10 +190,11 @@ function Auditoria() {
               itensDaPagina.map((item, index) => (
                 <AuditCard
                   key={index}
-                  titulo={item.titulo}
+                  titulo={item.acao}
                   horario={item.horario}
                   data={item.data}
-                  funcaoClique={() => alert(`Clicou em: ${item.titulo}`)}
+                  
+                  funcaoClique={() => abrirModal(item)}
                 />
               ))
             )}
@@ -192,14 +212,14 @@ function Auditoria() {
       </div>
       
       {/* Modal de Informações */}
-      {/*infoAtual && (
+      {infoAtual && (
         <ModalCC titulo="Detalhes do Produto" isOpen={modalAberto} onClose={fecharModal}>
-          <p><strong>Título:</strong> {infoAtual.titulo}</p>
+          <p><strong>Título:</strong> {infoAtual.acao}</p>
           <p><strong>Horário:</strong> {infoAtual.horario}</p>
           <p><strong>Data:</strong> {infoAtual.data}</p>
-          <p><strong>Detalhes:</strong> {infoAtual.detalhes}</p>
+          <p><strong>Detalhes:</strong> {infoAtual.desc.produto}</p>
         </ModalCC>
-      )*/}
+      )}
     </>
   );
 }

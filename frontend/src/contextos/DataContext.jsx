@@ -1,14 +1,18 @@
 import { createContext, useState, useEffect } from "react";
 import {useAuth} from "./AuthContext"
-import { analiseDados, buscarEstoque} from "../servicos/DataAPI";
+import { analiseDados, buscarAuditoria, buscarEstoque} from "../servicos/DataAPI";
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
     const [Estoque, setEstoque] = useState([]);
-    const [Dados, setDados] = useState([]);
     const [carregando, setCarregando] = useState(false);
     // const [carregandoGrafico, setCarregandoGrafico] = useState(false);
+    const [Dados, setDados] = useState([]);
     const [carregandoDados, setCarregandoDados] = useState(false);
+
+    const [Auditoria, setAuditoria] = useState([]);
+    const [carregandoAuditoria, setCarregandoAuditoria] = useState(false);
+
     const [Grafico, setGrafico] = useState([]);
     const [erro, setErro] = useState(null);
     const {isAuthenticated, logout} = useAuth();
@@ -18,6 +22,7 @@ export const DataProvider = ({ children }) => {
         setEstoque([]);
         setGrafico([]);
         setDados([]);
+        setAuditoria([]);
       }
     }, [isAuthenticated]); // useEffect para reiniciar o estoque quando o usuário se desloga e loga novamente.
   
@@ -42,6 +47,18 @@ export const DataProvider = ({ children }) => {
         setErro(error.message);
       } finally {
         setCarregandoDados(false);
+      }
+    };
+
+    const carregarAuditoria = async () => {
+      try {
+        setCarregandoAuditoria(true);
+        const dados = await buscarAuditoria(logout);
+        setAuditoria(dados);
+      } catch (error) {
+        setErro(error.message);
+      } finally {
+        setCarregandoAuditoria(false);
       }
     };
   
@@ -69,11 +86,15 @@ export const DataProvider = ({ children }) => {
       if (Dados && Dados.length === 0 && !carregandoDados) {
         carregarDados();
       }
-    }, [isAuthenticated, Estoque, Dados, carregando, carregandoDados]); // Evita chamadas repetidas
+
+      if (Auditoria && Auditoria.length === 0 && !carregandoAuditoria) {
+        carregarAuditoria();
+      }
+    }, [isAuthenticated, Estoque, Dados, carregando, carregandoDados, Auditoria, carregandoAuditoria]); // Evita chamadas repetidas
     
   
     return (
-      <DataContext.Provider value={{ Estoque, carregando, erro, carregarEstoque, Grafico, Dados }}>
+      <DataContext.Provider value={{ Estoque, carregando, erro, carregarEstoque, Grafico, Dados, Auditoria}}>
         {children}
       </DataContext.Provider>
     );

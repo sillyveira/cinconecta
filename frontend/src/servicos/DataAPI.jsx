@@ -75,6 +75,46 @@ export const buscarEstoque = async (logout) => {
         throw error; // Deixa o erro ser tratado pelo contexto
       }
   };
+
+export const buscarAuditoria = async (logout) => {
+    try {
+      const resposta = await fetch("http://localhost:3000/auditoria/receber-logs", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!resposta.ok) {
+        console.log(resposta.json());
+        logout("Timeout");
+        throw new Error(`Erro na requisição: ${resposta.status}. ${resposta.message}. ${resposta.body}.`);
+      }
+  
+      const dados = await resposta.json();
+  
+      if (
+        dados.message === "Token não está presente na solicitação." ||
+        dados.message === "O token é inválido ou está expirado."
+      ) {
+        logout("Expirado");
+        return [];
+      }
+      
+      
+      return dados.logs;
+    } catch (error) {
+        console.log("Erro ao buscar estoque:", error.message);
+    
+        // Verifica se o erro está relacionado a falha de conexão (erro de rede)
+        if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
+          logout("Timeout");
+        }
+    
+        throw error; // Deixa o erro ser tratado pelo contexto
+      }
+  };
   
   // export const graficoEntradaSaida = async (logout) => {
   //   try {

@@ -1,6 +1,6 @@
 import React from "react";
 import DropDownMenu from "./Dropdown";
-
+import Botao from "./Botao";
 export default function FiltroAuditoria({
   info,
   setInfo,
@@ -42,9 +42,14 @@ export default function FiltroAuditoria({
               label="Selecione..."
               opcoes={info.categorias}
               className={"w-86"}
-              onChange={(value) => setInfo(prev => ({...prev, categoria: value})) }
+              onChange={(value) => setInfo(prev => ({...prev, acao: value})) }
           />
         </div>
+        <Botao texto={"Salvar"} className={"mt-6"} onClick={()=>{
+          
+        }} >
+          
+        </Botao>
     </div>
   );
 }
