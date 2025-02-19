@@ -94,7 +94,7 @@ export const DataProvider = ({ children }) => {
     
   
     return (
-      <DataContext.Provider value={{ Estoque, carregando, erro, carregarEstoque, Grafico, Dados, Auditoria}}>
+      <DataContext.Provider value={{ Estoque, carregando, erro, carregarEstoque, Grafico, Dados, Auditoria, setAuditoria}}>
         {children}
       </DataContext.Provider>
     );

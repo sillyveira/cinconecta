@@ -5,7 +5,8 @@ import Paginacao from "../componentes/Paginacao";
 import FiltroAuditoria from "../componentes/FiltroAuditoria";
 import DataContext from "../contextos/DataContext";
 import ModalCC from "../componentes/Modal";
-
+import { buscarAuditoria } from "../servicos/DataAPI";
+import { useAuth } from "../contextos/AuthContext";
 function Auditoria() {
   const data = [
     {
@@ -100,6 +101,43 @@ function Auditoria() {
   const [pagTotais, setPagTotais] = useState(1);
   const [itensDaPagina, setItensDaPagina] = useState([]);
 
+  const funcaoFiltroQuery = (acao, dataInicio, dataFinal) => {
+    let query = "";
+    query += "?acao="
+    if(acao != null){
+      query += acao;
+    } else {
+      query+="null"
+    }
+    
+    
+    query+="&"
+    if(dataInicio){
+      query+="dataInicial="
+    }
+    query+=dataInicio
+    
+
+    
+    query+="&"
+    if(dataFinal){
+      query+="dataFinal="
+    }
+    query+=dataFinal
+    
+
+    return query;
+  }
+
+  const {logout} = useAuth();
+  const setarFiltro = async(acao, dataInicio, dataFinal) => {
+    const qry = funcaoFiltroQuery(acao, dataInicio, dataFinal);
+    console.log("QUERY:");
+    console.log(qry);
+    const auditoriaQuery = await buscarAuditoria(logout, qry)
+    setAuditoria(auditoriaQuery);
+  }
+  
   
   const [modalAberto, setModalAberto] = useState(false);
   const [infoAtual, setInfoAtual] = useState(null);
@@ -116,6 +154,7 @@ function Auditoria() {
     dataFinal: "",
     acao: null,
     categorias: [
+      { key: "z", value: "null", title: "Tudo"},
       { key: "a", value: "Login", title: "Login" },
       { key: "b", value: "Registro", title: "Registro" },
       { key: "c", value: "Revisão", title: "Revisão" },
@@ -141,7 +180,7 @@ function Auditoria() {
   //   }
   // }
 
-  const {Auditoria} = useContext(DataContext);
+  const {Auditoria, setAuditoria} = useContext(DataContext);
   useEffect(() => {
     if (Auditoria && Auditoria.length > 0) {
       setDadosAuditoria(Auditoria);
@@ -171,7 +210,11 @@ function Auditoria() {
         <FiltroAuditoria
         className={""}
         info={Info}
-        setInfo={setInfo} >
+        setInfo={setInfo}
+        aplicarFiltro={()=>{
+          setarFiltro(Info.acao, Info.dataInicial, Info.dataFinal)
+          
+          }}>
         </FiltroAuditoria>
         
         {/* TODO: Aqui deve ser implementado o componente de filtro para Mobile*/}

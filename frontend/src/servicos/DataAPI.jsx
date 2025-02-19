@@ -76,16 +76,17 @@ export const buscarEstoque = async (logout) => {
       }
   };
 
-export const buscarAuditoria = async (logout) => {
+export const buscarAuditoria = async (logout, query = "") => {
     try {
-      const resposta = await fetch("http://localhost:3000/auditoria/receber-logs", {
+      const resposta = await fetch(`http://localhost:3000/auditoria/receber-logs${query}`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+      
+      console.log(`http://localhost:3000/auditoria/receber-logs${query}`);
       if (!resposta.ok) {
         console.log(resposta.json());
         logout("Timeout");
