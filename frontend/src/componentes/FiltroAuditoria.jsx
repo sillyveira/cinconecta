@@ -46,7 +46,7 @@ export default function FiltroAuditoria({
               onChange={(value) => setInfo(prev => ({...prev, acao: value})) }
           />
         </div>
-        <Botao texto={"Salvar"} className={"mt-6"} onClick={aplicarFiltro}/>
+        <Botao texto={"Salvar"} className={"mt-6 w-24 p-4"} onClick={aplicarFiltro}/>
     </div>
   );
 }

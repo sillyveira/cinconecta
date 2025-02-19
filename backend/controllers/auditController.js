@@ -62,7 +62,7 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
         acao: documento.acao,
         desc: documento.desc,
         data: documento.data.toLocaleDateString('pt-BR'),
-        horario: new Date(documento.data.getTime() - 3 *60*60*1000).toLocaleTimeString('pt-BR', {hour12:false}) // Subtrai 3 horas pois é o fuso de brasilia (-03:00)
+        horario: documento.data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
     };
 });
 

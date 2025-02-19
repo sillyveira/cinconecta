@@ -101,6 +101,8 @@ function Auditoria() {
   const [pagTotais, setPagTotais] = useState(1);
   const [itensDaPagina, setItensDaPagina] = useState([]);
 
+  const {Auditoria, setAuditoria, aplicarFiltro} = useContext(DataContext);
+
   const funcaoFiltroQuery = (acao, dataInicio, dataFinal) => {
     let query = "";
     query += "?acao="
@@ -134,8 +136,7 @@ function Auditoria() {
     const qry = funcaoFiltroQuery(acao, dataInicio, dataFinal);
     console.log("QUERY:");
     console.log(qry);
-    const auditoriaQuery = await buscarAuditoria(logout, qry)
-    setAuditoria(auditoriaQuery);
+    aplicarFiltro(qry)
   }
   
   
@@ -154,14 +155,14 @@ function Auditoria() {
     dataFinal: "",
     acao: null,
     categorias: [
-      { key: "z", value: "null", title: "Tudo"},
-      { key: "a", value: "Login", title: "Login" },
-      { key: "b", value: "Registro", title: "Registro" },
-      { key: "c", value: "Revisão", title: "Revisão" },
-      { key: "d", value: "Produtos", title: "Produtos" },
-      { key: "e", value: "Adição", title: "Adição" },
-      { key: "f", value: "Remoção", title: "Remoção" },
-      { key: "g", value: "Atualização", title: "Atualização" },
+      { key: "z", value: "", title: "Tudo"},
+      { key: "a", value: "log", title: "Login" },
+      { key: "b", value: "reg", title: "Registro" },
+      { key: "c", value: "rev", title: "Revisão" },
+      { key: "d", value: "", title: "Produtos" },
+      { key: "e", value: "add", title: "Adição" },
+      { key: "f", value: "rem", title: "Remoção" },
+      { key: "g", value: "att", title: "Atualização" },
     ],
   });
 
@@ -180,7 +181,7 @@ function Auditoria() {
   //   }
   // }
 
-  const {Auditoria, setAuditoria} = useContext(DataContext);
+  
   useEffect(() => {
     if (Auditoria && Auditoria.length > 0) {
       setDadosAuditoria(Auditoria);
@@ -190,7 +191,13 @@ function Auditoria() {
         numeroPag * itemPorPagina
       ))
       setPagTotais(Math.ceil(Auditoria.length / itemPorPagina));
+      setNumeroPag(1);
       console.log(itensDaPagina);
+    } else {
+      setDadosAuditoria([]);
+      setItensDaPagina([]);
+      setPagTotais(0);
+      setNumeroPag(0);
     }
   }, [Auditoria]);
 

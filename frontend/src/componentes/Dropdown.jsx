@@ -34,8 +34,8 @@ function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
       >
         <option value=""> {label} </option>
         {opcoes.map((optione) =>(
-            <option key={optione.valore} 
-            value={optione.valore}>
+            <option key={optione.title} 
+            value={optione.value}>
               {optione.title}
             </option>
           ))}
