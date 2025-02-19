@@ -8,92 +8,6 @@ import ModalCC from "../componentes/Modal";
 import { buscarAuditoria } from "../servicos/DataAPI";
 import { useAuth } from "../contextos/AuthContext";
 function Auditoria() {
-  const data = [
-    {
-      titulo: "'Nome do produto' foi removido do estoque",
-      horario: "10:00",
-      data: "2025-02-01",
-      detalhes: "Detalhes sobre a remoção do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi adicionado no estoque",
-      horario: "11:30",
-      data: "2025-02-01",
-      detalhes: "Detalhes sobre a adição do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-  ];
   const [dadosAuditoria, setDadosAuditoria] = useState([]);
   const [itensAtuais, setItensAtuais] = useState([]);
   const [numeroPag, setNumeroPag] = useState(1);
@@ -111,23 +25,19 @@ function Auditoria() {
     } else {
       query+="null"
     }
-    
-    
+
     query+="&"
     if(dataInicio){
       query+="dataInicial="
     }
     query+=dataInicio
-    
-
-    
+ 
     query+="&"
     if(dataFinal){
       query+="dataFinal="
     }
     query+=dataFinal
     
-
     return query;
   }
 
@@ -166,22 +76,6 @@ function Auditoria() {
     ],
   });
 
-  // Para buscar dados quando tivermos acesso à API.
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch("https://jsonplaceholder.typicode.com/comments");
-  //     const jsonData = await response.json();
-  //     setItensAtuais(jsonData);
-  //   } catch (error) {
-  //     console.error(`Erro ao buscar dados: ${error}`)
-  //   }
-  // }
-
-  
   useEffect(() => {
     if (Auditoria && Auditoria.length > 0) {
       setDadosAuditoria(Auditoria);
@@ -231,7 +125,6 @@ function Auditoria() {
              <div className="hidden md:block">Componente para tela desktop</div> */}
         {/* Quando a tela for maior que o "md", o componente para desktop aparece ^. Qualquer dúvida, só me perguntar ~ Wesley. */}
 
-        {/* Componente da lista de itens */}
         <div>
           <div className="border rounded-xl flex flex-col gap-3 items-center max-h-[calc(100vh-300px)] overflow-y-auto py-5 p-4">
             {itensDaPagina.length === 0 ? (
@@ -240,7 +133,7 @@ function Auditoria() {
               itensDaPagina.map((item, index) => (
                 <AuditCard
                   key={index}
-                  titulo={item.acao}
+                  titulo={item.titulo}
                   horario={item.horario}
                   data={item.data}
                   
@@ -275,64 +168,3 @@ function Auditoria() {
 }
 
 export default Auditoria;
-
-// Código para integrar a auditoria com o backend
-// function Auditoria() {
-//   const [logs, setlogs] = useState([]);
-//   useEffect(() => {
-//     async function receberLogs() {
-//       try {
-//         const response = await fetch(
-//           "http://localhost:3000/auditoria/receber-logs",
-//           {
-//             method: "GET",
-//             credentials: "include",
-//             headers: {
-//               "Content-Type": "application/json",
-//             },
-//           }
-//         );
-
-//         if (response.ok) {
-//           const info = await response.json();
-//           setlogs(info.logs);
-//           console.log(info);
-//         } else {
-//           // Lide com erros de login (exiba uma mensagem de erro, etc.)
-//           console.error("Erro ao fazer a requisição.");
-//           return [];
-//         }
-//       } catch (error) {
-//         console.error("Erro ao fazer a req:", error);
-//       }
-//     }
-//     const receberL = receberLogs();
-//   }, []);
-
-//         <FiltroAuditoria
-//           className={""}
-//           info={Info}
-//           setInfo={setInfo}
-//         ></FiltroAuditoria>
-
-//             {logs?.length > 0 && // Verifica se logs existe e tem pelo menos um elemento
-//               logs.map((item, index) => (
-//                 <AuditCard
-//                   key={index}
-//                   titulo={item.nome_usuario}
-//                   horario={item.data}
-//                   data={item.acao}
-//                   funcaoClique={() => alert(`Clicou em: ${item.nome_usuario}`)}
-//                 />
-
-//           {/* -------------- */}
-
-//           {/* Componente de paginação */}
-//           {logs?.length > 0 && (
-//                         <Paginacao
-//                             paginaAtual={numeroPag}
-//                             paginasTotais={pagTotais}
-//                             setPagina={setNumeroPag}
-//                         />
-//                     )}
-//           {/* ----------------- */}

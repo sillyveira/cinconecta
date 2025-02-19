@@ -16,6 +16,30 @@ const criarLog = async (acao, userid, nomeusuario, ongid, descricao = {}) => {
   await novoLog.save();
 };
 
+function criarTitulo(acao, item) {
+  switch (acao) {
+    case 'add':
+      return `${item?.desc?.novoProduto?.nome || "Produto desconhecido"} foi adicionado.`;
+    case 'rem':
+      if (item?.desc?.produtos?.length === 1) {
+        return `${item.desc.produtos[0]?.nome || "Produto desconhecido"} foi removido.`;
+      } else {
+        return 'Múltiplos produtos foram removidos.';
+      }
+    case 'att':
+      return `O ${item?.desc?.atualizar_produto?.nome || "Produto desconhecido"} foi editado.`;
+    case 'log':
+      return `${item?.nome_usuario || "Usuário desconhecido"} logou em sua conta.`;
+    case 'reg':
+      return `${item?.nome_usuario || "Usuário desconhecido"} se registrou.`;
+    case 'rev':
+      return 'Log de revisão';
+    default:
+      return 'Ação desconhecida.';
+  }
+}
+
+
 const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
 
   // Se a diferença da data inicial par a data final for maior que um ano, setar para um ano apenas.
@@ -62,7 +86,8 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
         acao: documento.acao,
         desc: documento.desc,
         data: documento.data.toLocaleDateString('pt-BR'),
-        horario: documento.data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        horario: documento.data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        titulo: criarTitulo(documento.acao, documento)
     };
 });
 

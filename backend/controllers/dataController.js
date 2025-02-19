@@ -34,7 +34,7 @@ const valorEstimadoEstoque = async (ongId, dataInicio) => {
     ]);
 
     console.log(resultado[0]?.total);
-    return resultado[0]?.total;
+    return resultado[0]?.total.toFixed(2);
   } catch (err) {
     // Em caso de erro
     console.log("[Erro]: ", err.message);
