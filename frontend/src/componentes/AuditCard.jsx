@@ -14,7 +14,7 @@ function AuditCard({titulo, horario, data, funcaoClique}) {
       <div className="border-1 h-8 border-[#B6B6B6]" />
 
       {/*DIV DO TITULO */}
-      <h1 className='px-6 max-w-[368px] text-center'>{titulo}</h1>
+      <h1 className='px-6 min-w-[248px] max-w-[248px] lg:min-w-[308px] lg:max-w-348px text-center overflow-ellipsis'>{titulo}</h1>
 
       <motion.button
             whileHover={{ scale: 1.1 }}

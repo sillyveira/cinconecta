@@ -320,11 +320,6 @@ exports.view_product = async (req, res) => {
       }
     });
 
-    console.log("Cache:")
-    console.log(categoriasCache);
-    console.log(categoriasCache.get("67a547ce3ca16568a40b6c9b"));
-    console.log("-----------")
-
     if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria) && categoria) {
       filtros.id_categoria = id_categoria;
     }
