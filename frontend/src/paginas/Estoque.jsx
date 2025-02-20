@@ -198,7 +198,7 @@ function Estoque() {
   const funcaoPesquisar = (nomeBusca) => {
     const resultados = [];
     for (const produto of Estoque) {
-      if (nomeBusca.toLowerCase().includes(produto.nome.toLowerCase())) {
+      if (produto.nome.toLowerCase().includes(nomeBusca.toLowerCase())) {
         resultados.push(produto);
       }
     }
