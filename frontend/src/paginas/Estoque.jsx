@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Header from "../componentes/Header";
 import ModalFiltro from "../componentes/ModalFiltro";
 import ModalInfo from "../componentes/ModalInfo";
+import ModalConfirmacao from "../componentes/ModalConfirmacao";
 import ModalNovoProduto from "../componentes/ModalNovoProduto";
 import DataContext from "../contextos/DataContext";
 import StockBar from "../componentes/Stockbar";
@@ -177,6 +178,16 @@ function Estoque() {
   const [openModalFiltro, setOpenModalFiltro] = useState(false);
   const toggleModalFiltro = () => setOpenModalFiltro((prev) => !prev);
 
+  const [listaDeIdsSelecionados, setListaDeIdsSelecionados] = useState([]);
+  const [modalConfirmacaoAberto, setModalConfirmacaoAberto] = useState(false);
+  const abrirModalConfirmacao = () => {
+    setModalConfirmacaoAberto(true);
+  };
+  const fecharModalConfirmacao = (quantidade) => {
+    console.log(`Modal fechado. ${quantidade} itens seriam apagados.`);
+    setModalConfirmacaoAberto(false);
+  };
+  
   const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
   const dataContext = useContext(DataContext);
@@ -198,12 +209,14 @@ function Estoque() {
   const funcaoPesquisar = (nomeBusca) => {
     const resultados = [];
     for (const produto of Estoque) {
-      if (produto.nome.toLowerCase().includes(nomeBusca.toLowerCase())) {
+      if (nomeBusca.toLowerCase().includes(produto.nome.toLowerCase())) {
         resultados.push(produto);
       }
     }
     return resultados;
   };
+
+  
 
   return (
     <>
@@ -221,9 +234,9 @@ function Estoque() {
               setEstoqueFiltrado(Estoque);
             }
           }}
-          onClickRefresh={() => {
-            carregarEstoque();
-          }}
+          onClickRefresh={() => carregarEstoque()}
+          onClickRemover={abrirModalConfirmacao}
+          ids={listaDeIdsSelecionados}  // Abre o modal ao clicar no botão de remover
         />
       </div>
 
@@ -248,9 +261,11 @@ function Estoque() {
               pagination
               paginationPerPage={10}
               selectableRowsHighlight
-              onSelectedRowsChange={({ selectedRows }) =>
-                setSelectedRows(selectedRows)
-              }
+              onSelectedRowsChange={({ selectedRows }) => {
+                setSelectedRows(selectedRows);
+                setListaDeIdsSelecionados(selectedRows.map((row) => row._id)); // Guarda os IDs selecionados
+            }}
+            
               paginationComponentOptions={{
                 rowsPerPageText: "Linhas por página",
                 rangeSeparatorText: "de",
@@ -276,6 +291,15 @@ function Estoque() {
         onClose={() => {setOpenModalInfo((prev) => !prev)}}
         produto={selectedProduct}
       />
+      <ModalConfirmacao
+        isOpen={modalConfirmacaoAberto}
+        onClose={fecharModalConfirmacao}
+        onConfirm={() => {
+          fecharModalConfirmacao();
+          alert("Função de remover produtos será chamada aqui!");
+        }}
+      />
+
     </>
   );
 }
