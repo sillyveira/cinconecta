@@ -14,6 +14,7 @@ import { useState } from 'react';
 function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
 
   const [valor,setValor] = useState("")
+  const keywords = "categoria" | "categorias" | "Categoria" | "Categorias"; 
 
   const handleChange = (event) => {
     const newValue = event.target.value;
@@ -37,7 +38,7 @@ function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
           `appearance-none p-2 bg-[#F7F7F7] w-[${largura}] ${className} h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]`}
       >
         <option value="" className='hover:none'> -------- {label} -------- </option>
-        <option onClick={onClick} value="" className='text-blue-400' > ➕ Adicionar nova categoria </option>
+        {!label == keywords && <option onClick={onClick} value="" className='text-blue-400' > ➕ Adicionar nova categoria </option>}
         {opcoes.map((optione) =>(
             <option key={optione.valore} 
             value={optione.valore}>
