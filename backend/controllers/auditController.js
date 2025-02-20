@@ -70,7 +70,7 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
     query.nome_usuario = nomeMembro
   }
 
-  if (acao & acao != null) {
+  if (acao && acao != null) {
     query.acao = acao 
   }
 
