@@ -1,12 +1,9 @@
-import { ListFilter, CirclePlus, Search, RefreshCcw } from "lucide-react";
+import { ListFilter, CirclePlus, Search, RefreshCcw, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function StockBar({onClickFiltrar, onChangePesquisar, onClickAdicionar, onClickPesquisar, onClickRefresh}){
+export default function StockBar({onClickFiltrar, onChangePesquisar, onClickAdicionar, onClickPesquisar, onClickRefresh, onClickRemover, ids = [] }){
 
-    const clicou = () =>{
-        console.log("Clicou!")
-        alert("Clicou mds 😱")
-    }
+    
 
     return (
         <div className="flex flex-row gap-4 mr-25 mt-2 pl-5 sm:pl-0">
@@ -46,8 +43,22 @@ export default function StockBar({onClickFiltrar, onChangePesquisar, onClickAdic
             className="cursor-pointer flex flex-row justify-start h-[43px] rounded-[24px] border-2 border-black gap-2 p-4"
             whileHover={{scale: 1.02}}
             >
-            <RefreshCcw className="self-center" color="black"/>
-                
+            <RefreshCcw className="self-center" color="black"/>  
+            </motion.button>
+
+            {/* Botão de remover */}
+            <motion.button
+                onClick={onClickRemover}
+                disabled={ids.length === 0} // Desativa o botão se a lista estiver vazia
+                className={`flex flex-row justify-start sm:w-[120px] h-[43px] rounded-[24px] border-2 gap-2 p-4 transition-all
+                    ${ids.length === 0 
+                        ? "border-gray-400 text-gray-400 cursor-not-allowed" 
+                        : "border-red-500 text-red-500 cursor-pointer hover:bg-red-100"
+                    }`}
+                whileHover={ids.length > 0 ? { scale: 1.02 } : {}}
+            >
+                <Trash2 className="self-center" color={ids.length === 0 ? "gray" : "red"} />
+                <h1 className="self-center hidden sm:block">Apagar</h1>
             </motion.button>
         </div>
     )
