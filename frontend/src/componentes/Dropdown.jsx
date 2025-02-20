@@ -47,7 +47,6 @@ function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
 
       </select>
   )
-  console.log(valor)
 }
 
 export default DropDownMenu;
