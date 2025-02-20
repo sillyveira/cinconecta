@@ -23,6 +23,10 @@ function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
     }
   };
 
+  const onClick = () =>{
+    alert("Clicou!!");
+  }
+
   return(
       <select
         id="opcoes"
@@ -32,7 +36,8 @@ function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
           `appearance-none p-2 bg-[#B6B6B6] w-[${largura}] ${className} h-[46px] text-[#F7F7F7] text-left pt-2 border rounded-[15px]` : 
           `appearance-none p-2 bg-[#F7F7F7] w-[${largura}] ${className} h-[46px] text-[#B6B6B6] text-left pt-2 border rounded-[15px]`}
       >
-        <option value=""> {label} </option>
+        <option value="" className='hover:none'> -------- {label} -------- </option>
+        <option onClick={onClick} value="" className='text-blue-400' > ➕ Adicionar nova categoria </option>
         {opcoes.map((optione) =>(
             <option key={optione.valore} 
             value={optione.valore}>
