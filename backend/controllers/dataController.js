@@ -55,7 +55,6 @@ const produtosProximosValidade = async (ongId) => {
       },
     });
 
-    console.log(tresMesesAtras);
     return produtosProximos;
   } catch (err) {
     console.log("[Erro no cálculo da validade] ", err.message);

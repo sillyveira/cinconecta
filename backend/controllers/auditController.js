@@ -2,7 +2,7 @@ const Audit = require("../models/Audit");
 const User = require("../models/User");
 const Ong = require("../models/Ong");
 const { response } = require("express");
-const criarLog = async (acao, userid, nomeusuario, ongid, descricao = {}) => {
+const criarLog = async (acao, userid, nomeusuario, ongid, descricao = {}, data = new Date()) => {
 
   const novoLog = new Audit({
     id_usuario: userid || null,
@@ -10,7 +10,7 @@ const criarLog = async (acao, userid, nomeusuario, ongid, descricao = {}) => {
     id_ong: ongid,
     acao: acao,
     desc: descricao || {},
-    data: new Date(),
+    data: data || new Date(),
   });
 
   await novoLog.save();
@@ -70,7 +70,7 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
     query.nome_usuario = nomeMembro
   }
 
-  if (acao) {
+  if (acao & acao != null) {
     query.acao = acao 
   }
 
@@ -100,13 +100,14 @@ const checarNovosLogs = async ( ongid, dataInicio) => {
     // Busca os registros nos últimos x dias
     const logs = await Audit.find({
       id_ong: ongid,
-      acao: { $nin: ['rev', 'log', 'reg'] }, // Não inclui os logs de revisão, login e registro.
+      acao: { $nin: ['rev'] }, // Não inclui os logs de revisão, login e registro.
       //data: { $gte: dataInicio, $lte: new Date() }, //Da data de início até a data atual.
       // TODO: remover esse comentário ^^ É apenas para teste da função checar_logs 
     }).sort({ data: 1 });
 
     const logsPorData = [];
-  
+    const idsParaRemover = [];
+
     logs.forEach((log) => {
       const dataCompleta = new Date(log.data.setHours(0, 0, 0, 0)); //Para agrupar apenas por data! Se os horários estiverem diferentes, o agrupamento dará errado.
 
@@ -128,13 +129,15 @@ const checarNovosLogs = async ( ongid, dataInicio) => {
         entrada[1] = entradaAtual + (parseInt(log.desc.entrada, 10) || 0); //soma a quantidade de itens que já temos com o do log
         entrada[2] = saidaAtual + (parseInt(log.desc.saida, 10) || 0);
         entrada[3] = valorAtual + (parseFloat(log.desc.valor, 10) || 0);
+      } else if (log.acao == "log" || log.acao == "reg") {
+        idsParaRemover.push(log._id); // Remove os logs de login e registro
       }
       entrada[4].push(log); // [data, 0, 0, [registro_adicionado]]
     });
 
     // [data, 0, 0, [registro_adicionado]]
 
-    const idsParaRemover = [];
+    
 
     logsPorData.forEach((item) => {
       const descricaoLog = {
@@ -143,7 +146,7 @@ const checarNovosLogs = async ( ongid, dataInicio) => {
         valor: item[3],
       };
 
-      criarLog("rev", null, null, ongid, descricaoLog);
+      criarLog("rev", null, null, ongid, descricaoLog, item[0]);
     
       item[4].forEach((log) => {
         idsParaRemover.push(log._id);
@@ -181,8 +184,7 @@ const checarUltimaAuditoria = async (userid, ongid) => {
     tresDiasAtras.setDate(tresDiasAtras.getDate() - 3);
     
     if (ultimaAuditoria <= tresDiasAtras) {
-      //Última auditoria desatualizada. Checando novos logs.
-      await checarNovosLogs(userid, ong_._id, ong_.ultima_auditoria);
+      await checarNovosLogs(ong_._id, ong_.ultima_auditoria);
       ong_.ultima_auditoria = new Date();
       await ong_.save();
     }

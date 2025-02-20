@@ -8,11 +8,11 @@ router.get('/receber-logs', authMiddleware, async (req, res) =>{
     const tresDiasAtras = new Date()
     tresDiasAtras.setDate(tresDiasAtras.getDate() - 3)
     const acao = req.query.acao || false;
-    const dataInicial = req.query.dataInicio || tresDiasAtras;
+    const dataInicial = req.query.dataInicial || tresDiasAtras;
     const dataFinal = req.query.dataFinal || new Date();
     const nomeUsuario = req.query.nomeUsuario || false; 
     const idong = req.ongId; // Recebido pelo middleware de autenticação
-    
+
     // Os parâmetros padrões são: todos os logs de três dias atrás.
 
     try {
