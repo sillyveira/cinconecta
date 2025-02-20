@@ -1,7 +1,7 @@
   import React from "react";
 import { motion } from "framer-motion";
 import { Clipboard } from "lucide-react";
-function StatCard({titulo, icone, valor, expandirFunction}) {
+function StatCard({titulo, valor, expandirFunction}) {
   return (
     <motion.div
       className="text-black bg-gray-800 shadow-2xl bg-opacity-100 border backdrop-blur-md rounded-md w-64 h-24"
@@ -11,7 +11,6 @@ function StatCard({titulo, icone, valor, expandirFunction}) {
         {/* Coluna do texto [Quantidade total] + Ícone */}
         <div className="pt-3 pl-3 flex flex-row items-center gap-1">
           <p className="text-white font-medium text-sm">{titulo}</p>
-          <icone className="text-white" size="16px"/>
         </div>
         {/* Número */}
         <p className="text-white font-medium text-3xl pl-3">{valor}</p>

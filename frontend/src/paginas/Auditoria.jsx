@@ -19,36 +19,33 @@ function Auditoria() {
 
   const funcaoFiltroQuery = (acao, dataInicio, dataFinal) => {
     let query = "";
-    query += "?acao="
+    query += "?acao=";
     if (acao != null) {
       query += acao;
     } else {
-      query += "null"
+      query += "null";
     }
 
-    query += "&"
+    query += "&";
     if (dataInicio) {
-      query += "dataInicial="
+      query += "dataInicial=";
     }
-    query += dataInicio
+    query += dataInicio;
 
-    query += "&"
+    query += "&";
     if (dataFinal) {
-      query += "dataFinal="
+      query += "dataFinal=";
     }
-    query += dataFinal
+    query += dataFinal;
 
     return query;
-  }
+  };
 
   const { logout } = useAuth();
   const setarFiltro = async (acao, dataInicio, dataFinal) => {
     const qry = funcaoFiltroQuery(acao, dataInicio, dataFinal);
-    console.log("QUERY:");
-    console.log(qry);
-    aplicarFiltro(qry)
-  }
-
+    aplicarFiltro(qry);
+  };
 
   const [modalAberto, setModalAberto] = useState(false);
   const [infoAtual, setInfoAtual] = useState(null);
@@ -69,7 +66,7 @@ function Auditoria() {
       { key: "a", value: "log", title: "Login" },
       { key: "b", value: "reg", title: "Registro" },
       { key: "c", value: "rev", title: "Revisão" },
-      { key: "d", value: "", title: "Produtos" },
+      //{ key: "d", value: "", title: "Produtos" },
       { key: "e", value: "add", title: "Adição" },
       { key: "f", value: "rem", title: "Remoção" },
       { key: "g", value: "att", title: "Atualização" },
@@ -80,10 +77,12 @@ function Auditoria() {
     if (Auditoria && Auditoria.length > 0) {
       setDadosAuditoria(Auditoria);
       console.log(Auditoria);
-      setItensDaPagina(Auditoria.slice(
-        (numeroPag - 1) * itemPorPagina,
-        numeroPag * itemPorPagina
-      ))
+      setItensDaPagina(
+        Auditoria.slice(
+          (numeroPag - 1) * itemPorPagina,
+          numeroPag * itemPorPagina
+        )
+      );
       setPagTotais(Math.ceil(Auditoria.length / itemPorPagina));
       setNumeroPag(1);
       console.log(itensDaPagina);
@@ -96,117 +95,246 @@ function Auditoria() {
   }, [Auditoria]);
 
   useEffect(() => {
-    setItensDaPagina(Auditoria.slice(
-      (numeroPag - 1) * itemPorPagina,
-      numeroPag * itemPorPagina
-    ))
-  }, [numeroPag])
+    setItensDaPagina(
+      Auditoria.slice(
+        (numeroPag - 1) * itemPorPagina,
+        numeroPag * itemPorPagina
+      )
+    );
+  }, [numeroPag]);
 
   function criarDescricao(acao, item) {
     let descricao = null;
 
     switch (acao) {
-      case 'reg':
+      case "reg":
         descricao = (
           <div>
-            <p><strong>Informações do registro:</strong></p>
-            <p><strong>Usuário:</strong> {item?.nome_usuario || "Usuário desconhecido"}</p>
-            <p><strong>Data:</strong> {item?.data || "Data desconhecida"}</p>
-            <p><strong>Horário:</strong> {item?.horario || "Horário desconhecido"}</p>
+            <p>
+              <strong>Informações do registro:</strong>
+            </p>
+            <p>
+              <strong>Usuário:</strong>{" "}
+              {item?.nome_usuario || "Usuário desconhecido"}
+            </p>
+            <p>
+              <strong>Data:</strong> {item?.data || "Data desconhecida"}
+            </p>
+            <p>
+              <strong>Horário:</strong>{" "}
+              {item?.horario || "Horário desconhecido"}
+            </p>
           </div>
         );
         break;
 
-      case 'log':
+      case "log":
         descricao = (
           <div>
-            <p><strong>Informações do login:</strong></p>
-            <p><strong>Usuário:</strong> {item?.nome_usuario || "Usuário desconhecido"}</p>
-            <p><strong>Data:</strong> {item?.data || "Data desconhecida"}</p>
-            <p><strong>Horário:</strong> {item?.horario || "Horário desconhecido"}</p>
+            <p>
+              <strong>Informações do login:</strong>
+            </p>
+            <p>
+              <strong>Usuário:</strong>{" "}
+              {item?.nome_usuario || "Usuário desconhecido"}
+            </p>
+            <p>
+              <strong>Data:</strong> {item?.data || "Data desconhecida"}
+            </p>
+            <p>
+              <strong>Horário:</strong>{" "}
+              {item?.horario || "Horário desconhecido"}
+            </p>
           </div>
         );
         break;
 
-      case 'add':
+      case "rev":
         descricao = (
           <div>
-
-            <p><strong>Informações do produto adicionado:</strong></p>
-
-            <p><strong>ID:</strong> {item?.desc?.novoProduto?._id || "ID desconhecido"}</p>
-            <p><strong>Nome:</strong> {item?.desc?.novoProduto?.nome || "Nome desconhecido"}</p>
-            <p><strong>Categoria:</strong> {item?.desc?.novoProduto?.categoria || "Categoria desconhecida"}</p>
-            <p><strong>Quantidade:</strong> {item?.desc?.novoProduto?.quantidade || "Quantidade desconhecida"}</p>
-            <p><strong>Preço:</strong> {item?.desc?.novoProduto?.valor || "Preço desconhecido"}</p>
-            <p><strong>Validade:</strong> {item?.desc?.novoProduto?.validade || "Validade desconhecida"}</p>
-            <p><strong>Código de barras:</strong> {item?.desc?.novoProduto?.codbarras || "Código de barras desconhecido"}</p>
-            <p><strong>Descrição:</strong> {item?.desc?.novoProduto?.descricao || "Descrição desconhecida"}</p>
+            <p>
+              <strong>Informações do log de revisão:</strong>
+            </p>
+            <p>
+              <strong>Data da revisão:</strong>{" "}
+              {item?.data || "Data desconhecida"}
+            </p>
+            <p>
+              <strong>Entrada de produtos:</strong>{" "}
+              {item?.desc?.entrada || "Sem entradas"}
+            </p>
+            <p>
+              <strong>Saída de produtos:</strong>{" "}
+              {item?.desc?.saida || "Sem saídas"}
+            </p>
+            <p>
+              <strong>Valor arrecadado:</strong> R$ {item?.desc?.valor || "0,00"}
+            </p>
           </div>
         );
         break;
 
-      case 'rem':
-        if (item?.desc?.produtos?.length > 1) {
-          descricao = (
-            <div>
-              <p><strong>Informações do produto removido:</strong></p>
-              <p><strong>ID:</strong> {item?.desc?.produtos[0]?._id || "ID desconhecido"}</p>
-              <p><strong>Nome:</strong> {item?.desc?.produtos[0]?.nome || "Nome desconhecido"}</p>
-              <p><strong>Categoria:</strong> {item?.desc?.produtos[0]?.categoria || "Categoria desconhecida"}</p>
-              <p><strong>Quantidade:</strong> {item?.desc?.produtos[0]?.quantidade || "Quantidade desconhecida"}</p>
-              <p><strong>Preço:</strong> {item?.desc?.produtos[0]?.valor || "Preço desconhecido"}</p>
-              <p><strong>Validade:</strong> {item?.desc?.produtos[0]?.validade || "Validade desconhecida"}</p>
-              <p><strong>Código de barras:</strong> {item?.desc?.produtos[0]?.codbarras || "Código de barras desconhecido"}</p>
-              <p><strong>Descrição:</strong> {item?.desc?.produtos[0]?.descricao || "Descrição desconhecida"}</p>
-            </div>
-          );
-        } else {
-          descricao = <p><strong>Múltiplos produtos foram removidos.</strong></p>;
-        }
-        break;
-
-      case 'att':
+      case "add":
         descricao = (
           <div>
-            <p><strong>Informações do produto atualizado:</strong></p>
-            <p><strong>ID:</strong> {item?.desc?.atualizar_produto?._id || "ID desconhecido"}</p>
-            <p><strong>Nome:</strong> {item?.desc?.atualizar_produto?.nome || "Nome desconhecido"}</p>
-            <p><strong>Categoria:</strong> {item?.desc?.atualizar_produto?.categoria || "Categoria desconhecida"}</p>
-            <p><strong>Quantidade:</strong> {item?.desc?.atualizar_produto?.quantidade || "Quantidade desconhecida"}</p>
-            <p><strong>Preço:</strong> {item?.desc?.atualizar_produto?.valor || "Preço desconhecido"}</p>
-            <p><strong>Validade:</strong> {item?.desc?.atualizar_produto?.validade || "Validade desconhecida"}</p>
-            <p><strong>Código de barras:</strong> {item?.desc?.atualizar_produto?.codbarras || "Código de barras desconhecido"}</p>
-            <p><strong>Descrição:</strong> {item?.desc?.atualizar_produto?.descricao || "Descrição desconhecida"}</p>
+            <p>
+              <strong>Informações do produto adicionado:</strong>
+            </p>
+            <p>
+              <strong>ID:</strong>{" "}
+              {item?.desc?.novoProduto?._id || "ID desconhecido"}
+            </p>
+            <p>
+              <strong>Nome:</strong>{" "}
+              {item?.desc?.novoProduto?.nome || "Nome desconhecido"}
+            </p>
+            <p>
+              <strong>Categoria:</strong>{" "}
+              {item?.desc?.novoProduto?.categoria || "Categoria desconhecida"}
+            </p>
+            <p>
+              <strong>Quantidade:</strong>{" "}
+              {item?.desc?.novoProduto?.quantidade || "Quantidade desconhecida"}
+            </p>
+            <p>
+              <strong>Preço:</strong>{" "}
+              {item?.desc?.novoProduto?.valor || "Preço desconhecido"}
+            </p>
+            <p>
+              <strong>Validade:</strong>{" "}
+              {item?.desc?.novoProduto?.validade || "Validade desconhecida"}
+            </p>
+            <p>
+              <strong>Código de barras:</strong>{" "}
+              {item?.desc?.novoProduto?.codbarras ||
+                "Código de barras desconhecido"}
+            </p>
+            <p>
+              <strong>Descrição:</strong>{" "}
+              {item?.desc?.novoProduto?.descricao || "Descrição desconhecida"}
+            </p>
+          </div>
+        );
+        break;
+
+      case "rem":
+        descricao = (
+          <div>
+            <p>
+              <strong>Informações dos produtos removidos:</strong>
+            </p>
+            {item?.desc?.produtos?.map((produto, index) => (
+              <div key={index}>
+                <p>
+                  <strong>ID:</strong> {produto?._id || "ID desconhecido"}
+                </p>
+                <p>
+                  <strong>Nome:</strong> {produto?.nome || "Nome desconhecido"}
+                </p>
+                <p>
+                  <strong>Categoria:</strong>{" "}
+                  {produto?.categoria || "Categoria desconhecida"}
+                </p>
+                <p>
+                  <strong>Quantidade:</strong>{" "}
+                  {produto?.quantidade || "Quantidade desconhecida"}
+                </p>
+                <p>
+                  <strong>Preço:</strong>{" "}
+                  {produto?.valor || "Preço desconhecido"}
+                </p>
+                <p>
+                  <strong>Validade:</strong>{" "}
+                  {produto?.validade || "Validade desconhecida"}
+                </p>
+                <p>
+                  <strong>Código de barras:</strong>{" "}
+                  {produto?.codbarras || "Código de barras desconhecido"}
+                </p>
+                <p>
+                  <strong>Descrição:</strong>{" "}
+                  {produto?.descricao || "Descrição desconhecida"}
+                </p>
+                <hr />
+              </div>
+            ))}
+          </div>
+        );
+        break;
+
+      case "att":
+        descricao = (
+          <div>
+            <p>
+              <strong>Informações do produto atualizado:</strong>
+            </p>
+            <p>
+              <strong>ID:</strong>{" "}
+              {item?.desc?.atualizar_produto?._id || "ID desconhecido"}
+            </p>
+            <p>
+              <strong>Nome:</strong>{" "}
+              {item?.desc?.atualizar_produto?.nome || "Nome desconhecido"}
+            </p>
+            <p>
+              <strong>Categoria:</strong>{" "}
+              {item?.desc?.atualizar_produto?.categoria ||
+                "Categoria desconhecida"}
+            </p>
+            <p>
+              <strong>Quantidade:</strong>{" "}
+              {item?.desc?.atualizar_produto?.quantidade ||
+                "Quantidade desconhecida"}
+            </p>
+            <p>
+              <strong>Preço:</strong>{" "}
+              {item?.desc?.atualizar_produto?.valor || "Preço desconhecido"}
+            </p>
+            <p>
+              <strong>Validade:</strong>{" "}
+              {item?.desc?.atualizar_produto?.validade ||
+                "Validade desconhecida"}
+            </p>
+            <p>
+              <strong>Código de barras:</strong>{" "}
+              {item?.desc?.atualizar_produto?.codbarras ||
+                "Código de barras desconhecido"}
+            </p>
+            <p>
+              <strong>Descrição:</strong>{" "}
+              {item?.desc?.atualizar_produto?.descricao ||
+                "Descrição desconhecida"}
+            </p>
           </div>
         );
         break;
 
       default:
-        descricao = <p><strong>Ação desconhecida.</strong></p>;
+        descricao = (
+          <p>
+            <strong>Ação desconhecida.</strong>
+          </p>
+        );
         break;
     }
 
     return descricao;
   }
 
-
   return (
     <>
       <Header titulo={"Auditoria"}></Header>
 
       <div className="flex flex-row-reverse justify-center gap-4 pt-10">
-
         {/* Componente de filtro para PC */}
         <FiltroAuditoria
           className={""}
           info={Info}
           setInfo={setInfo}
           aplicarFiltro={() => {
-            setarFiltro(Info.acao, Info.dataInicial, Info.dataFinal)
-
-          }}>
-        </FiltroAuditoria>
+            setarFiltro(Info.acao, Info.dataInicial, Info.dataFinal);
+          }}
+        ></FiltroAuditoria>
 
         {/* TODO: Aqui deve ser implementado o componente de filtro para Mobile*/}
 
@@ -226,7 +354,6 @@ function Auditoria() {
                   titulo={item.titulo}
                   horario={item.horario}
                   data={item.data}
-
                   funcaoClique={() => abrirModal(item)}
                 />
               ))
@@ -246,7 +373,11 @@ function Auditoria() {
 
       {/* Modal de Informações */}
       {infoAtual && (
-        <ModalCC titulo="Detalhes do Log" isOpen={modalAberto} onClose={fecharModal}>
+        <ModalCC
+          titulo="Detalhes do Log"
+          isOpen={modalAberto}
+          onClose={fecharModal}
+        >
           <p>{criarDescricao(infoAtual.acao, infoAtual)}</p>
         </ModalCC>
       )}
