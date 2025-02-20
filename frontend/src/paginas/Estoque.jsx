@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Edit, Info, RefreshCcw } from "lucide-react";
 import { motion } from "framer-motion";
+import { removerProduto } from "../servicos/DataAPI";
+import { useAuth } from "../contextos/AuthContext";
 import Header from "../componentes/Header";
 import ModalFiltro from "../componentes/ModalFiltro";
 import ModalInfo from "../componentes/ModalInfo";
@@ -63,6 +65,8 @@ const customStyles = {
 };
 
 function Estoque() {
+  const { logout } = useAuth();
+
   const columns = [
     {
       name: "ID",
@@ -181,12 +185,9 @@ function Estoque() {
   const [listaDeIdsSelecionados, setListaDeIdsSelecionados] = useState([]);
   const [modalConfirmacaoAberto, setModalConfirmacaoAberto] = useState(false);
   const abrirModalConfirmacao = () => {
-    setModalConfirmacaoAberto(true);
+    setModalConfirmacaoAberto((prev) => !prev);
   };
-  const fecharModalConfirmacao = (quantidade) => {
-    console.log(`Modal fechado. ${quantidade} itens seriam apagados.`);
-    setModalConfirmacaoAberto(false);
-  };
+
   
   const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
@@ -293,11 +294,12 @@ function Estoque() {
       />
       <ModalConfirmacao
         isOpen={modalConfirmacaoAberto}
-        onClose={fecharModalConfirmacao}
+        onClose={abrirModalConfirmacao}
         onConfirm={() => {
-          fecharModalConfirmacao();
-          alert("Função de remover produtos será chamada aqui!");
+          removerProduto(logout, listaDeIdsSelecionados, carregarEstoque)
+          abrirModalConfirmacao();
         }}
+        quantidadeItens={listaDeIdsSelecionados.length}
       />
 
     </>
