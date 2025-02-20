@@ -11,7 +11,7 @@ import { useState } from 'react';
  */
 
 
-function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
+function DropDownMenu({variant,largura,label,opcoes,onChange,className, onClick}){
 
   const [valor,setValor] = useState("")
   const keywords = "categoria" | "categorias" | "Categoria" | "Categorias"; 
@@ -24,9 +24,6 @@ function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
     }
   };
 
-  const onClick = () =>{
-    alert("Clicou!!");
-  }
 
   return(
       <select

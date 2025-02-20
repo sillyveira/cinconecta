@@ -4,12 +4,11 @@ import Botao from './Botao';
 import { useState } from 'react';
 
 
-export default function ModalCategoria(){
+export default function ModalCategoria(open, close){
 
         const[valor, setValor] = useState("");
         const [savedValue, setSavedValue] = useState("");
         const [error, setError] = useState("");
-        const [open, setOpen] = useState(true);
         
         const handleChange = (event) =>{
             setValor(event.target.value);
@@ -25,19 +24,12 @@ export default function ModalCategoria(){
             setSavedValue("");
         }
 
-        const openModal = () => {
-            setOpen(true);
-        }
-        const closeModal = () =>{
-            setOpen(false);
-        }
-
     return(
         <>
         <ModalCC 
         titulo="Adicionar categoria"
         isOpen={open}
-        onClose={closeModal}
+        onClose={close}
         >
             <div className='flex flex-col gap-5 items-end'>
                 <input type="text"
