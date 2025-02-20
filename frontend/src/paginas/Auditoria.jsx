@@ -103,6 +103,12 @@ function Auditoria() {
     );
   }, [numeroPag]);
 
+  const formatarData = (data) => {
+    if (!data) return "Data desconhecida";
+    const dataObj = new Date(data);
+    return isNaN(dataObj) ? "Data desconhecida" : dataObj.toLocaleDateString("pt-BR");
+  };
+
   function criarDescricao(acao, item) {
     let descricao = null;
 
@@ -202,7 +208,7 @@ function Auditoria() {
             </p>
             <p>
               <strong>Validade:</strong>{" "}
-              {item?.desc?.novoProduto?.validade || "Validade desconhecida"}
+              {formatarData(item?.desc?.novoProduto?.validade)}
             </p>
             <p>
               <strong>Código de barras:</strong>{" "}
@@ -245,7 +251,7 @@ function Auditoria() {
                 </p>
                 <p>
                   <strong>Validade:</strong>{" "}
-                  {produto?.validade || "Validade desconhecida"}
+                  {formatarData(produto?.validade)}
                 </p>
                 <p>
                   <strong>Código de barras:</strong>{" "}
@@ -292,8 +298,7 @@ function Auditoria() {
             </p>
             <p>
               <strong>Validade:</strong>{" "}
-              {item?.desc?.atualizar_produto?.validade ||
-                "Validade desconhecida"}
+              {formatarData(item?.desc?.atualizar_produto?.validade)}
             </p>
             <p>
               <strong>Código de barras:</strong>{" "}

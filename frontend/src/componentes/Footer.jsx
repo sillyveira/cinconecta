@@ -15,14 +15,15 @@ function Footer() {
 
   return (
     <div className="w-full flex-col place-items-center flex">
+        <hr className="h-2 text-[#bbbbbb] w-200"/>
     
     <footer className="text-black flex items-center justify-center flex-row gap-10 p-4">
       <div>
         <a href="/" className="underline">Política de Privacidade</a>
       </div>
 
-      <div>
-        <p className="text-lg flex items-center gap-2">
+      <div className="w-60 flex justify-center">
+        <p className="text-lg flex items-center w-68">
           Feito com ❤
           <AnimatePresence mode="wait">
             <motion.span
