@@ -6,6 +6,7 @@ import Header from "../componentes/Header";
 import ModalFiltro from "../componentes/ModalFiltro";
 import ModalInfo from "../componentes/ModalInfo";
 import ModalNovoProduto from "../componentes/ModalNovoProduto";
+import ModalEdicao from "../componentes/ModalEdicao";
 import DataContext from "../contextos/DataContext";
 import StockBar from "../componentes/Stockbar";
 // Definição das colunas
@@ -155,7 +156,12 @@ function Estoque() {
       name: "Ações", // Coluna de botões
       cell: (row) => (
         <div className="flex flex-row gap-2">
-          <Edit onClick={() => alert(`Ação clicada para ${row.nome}`)}></Edit>
+          <Edit 
+            onClick={() => {
+            setEdicao(row) 
+            setOpenModalEdicao((prev) => !prev)
+          }}
+          ></Edit>
           <Info
             className="cursor-pointer"
             onClick={() => toggleModalInfo(row)}
@@ -172,13 +178,18 @@ function Estoque() {
   ];
 
   const [Pesquisa, setPesquisa] = useState("");
+  const [edicaoProduto, setEdicao] = useState({});
 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [openModalFiltro, setOpenModalFiltro] = useState(false);
   const toggleModalFiltro = () => setOpenModalFiltro((prev) => !prev);
 
+  const [openModalEdicao, setOpenModalEdicao] = useState(false);
+  const toggleModalEdicao = () => setOpenModalEdicao((prev) => !prev);
+
   const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
+
   const dataContext = useContext(DataContext);
   const { Estoque = [], carregando, erro, carregarEstoque } = dataContext;
   const [estoqueFiltrado, setEstoqueFiltrado] = useState([]);
@@ -276,6 +287,11 @@ function Estoque() {
         onClose={() => {setOpenModalInfo((prev) => !prev)}}
         produto={selectedProduct}
       />
+      <ModalEdicao
+        isOpen={openModalEdicao}
+        onClose={() => {setOpenModalEdicao((prev) => !prev)}}
+        produto={edicaoProduto}
+      ></ModalEdicao>
     </>
   );
 }

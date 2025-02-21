@@ -1,29 +1,40 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import DropDownMenu from "./Dropdown";
 import Botao from "./Botao";
-import { adicionarProduto } from "../servicos/DataAPI";
+import {adicionarProduto, editarProduto } from "../servicos/DataAPI";
 import { useAuth } from "../contextos/AuthContext";
 import DataContext from "../contextos/DataContext";
 
 Modal.setAppElement("#root");
 
-export default function ModalNovoProduto({ isOpen, onClose }) {
+export default function ModalEdicao({ isOpen, onClose, produto }) {
   const { carregarEstoque } = useContext(DataContext);
   const { logout } = useAuth();
+  if (!isOpen || !produto) return null;
 
-  const adicionar = (formData) => {
-    adicionarProduto(logout, formData, carregarEstoque);
+  const editar = (formData) => {
+    editarProduto(logout, formData, carregarEstoque);
   };
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    setFormData({
+        nome: produto.nome,
+        id_categoria: produto.id_categoria,
+        quantidade: produto.quantidade,
+        valor: produto.valor,
+        validade: produto.validade,
+        codbarras: produto.codbarras,
+        descricao: produto.descricao,
+        _id : produto._id,
+      })
+  }, [produto]);
+
+  const [erros, setErros] = useState({
     nome: "",
-    id_categoria: "",
-    quantidade: "",
     valor: "",
-    validade: "",
-    codbarras: "",
-    descricao: "",
   });
 
   function converterData(dataString) {
@@ -39,11 +50,6 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
   
     return `${anoFormatado}-${mesFormatado}-${diaFormatado}`;
   }
-
-  const [erros, setErros] = useState({
-    nome: "",
-    valor: "",
-  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -73,15 +79,6 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const isFormValid = () => {
-    return (
-      formData.nome.length > 0 &&
-      formData.nome.length <= 40 &&
-      formData.quantidade &&
-      !erros.valor
-    );
-  };
-
   return (
     <Modal
       isOpen={isOpen}
@@ -91,7 +88,7 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
     >
       {/* Cabeçalho */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Novo produto</h2>
+        <h2 className="text-xl font-semibold">Editar Produto</h2>
         <button
           className="text-xl font-bold cursor-pointer"
           onClick={onClose}
@@ -190,11 +187,10 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
       <div className="flex justify-end w-full mt-4">
         <div className="flex">
           <Botao
-            texto="Adicionar"
-            disabled={!isFormValid()}
+            texto="Salvar"
             className="text-white px-6 py-3 rounded-xl"
             onClick={() => {
-              adicionar(formData);
+              editar(formData)
               onClose();
             }}
           />
