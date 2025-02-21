@@ -1,49 +1,40 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import DropDownMenu from "./Dropdown";
 import Botao from "./Botao";
-import { adicionarProduto } from "../servicos/DataAPI";
+import {adicionarProduto, editarProduto } from "../servicos/DataAPI";
 import { useAuth } from "../contextos/AuthContext";
 import DataContext from "../contextos/DataContext";
-import ModalCategoria from "./ModalCategoria";
-import { Edit, Settings } from "lucide-react";
 
 Modal.setAppElement("#root");
 
-export default function ModalNovoProduto({ isOpen, onClose }) {
-  
+export default function ModalEdicao({ isOpen, onClose, produto }) {
+  const { carregarEstoque } = useContext(DataContext);
   const { logout } = useAuth();
+  if (!isOpen || !produto) return null;
 
-  const { carregarEstoque, carregarCategorias, Categorias } = useContext(DataContext);
-  const [categorias, setCategorias] = useState({title:"", value:""});
-
-  function mapearParaLista(array) {
-    return array.map((item) => ({
-      title: item.nome_categoria,
-      value: item._id,
-    }));
-  }
-
-  useEffect(() => {
-    carregarCategorias();
-    setCategorias(mapearParaLista(Categorias));
-  }, []);
-
-  useEffect(() => {
-    setCategorias(mapearParaLista(Categorias));
-  }, [Categorias]);
-
-  const adicionar = (formData) => {
-    adicionarProduto(logout, formData, carregarEstoque);
+  const editar = (formData) => {
+    editarProduto(logout, formData, carregarEstoque);
   };
-  const [formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    setFormData({
+        nome: produto.nome,
+        id_categoria: produto.id_categoria,
+        quantidade: produto.quantidade,
+        valor: produto.valor,
+        validade: produto.validade,
+        codbarras: produto.codbarras,
+        descricao: produto.descricao,
+        _id : produto._id,
+      })
+  }, [produto]);
+
+  const [erros, setErros] = useState({
     nome: "",
-    id_categoria: "",
-    quantidade: "",
     valor: "",
-    validade: "",
-    codbarras: "",
-    descricao: "",
   });
 
   function converterData(dataString) {
@@ -59,13 +50,6 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
   
     return `${anoFormatado}-${mesFormatado}-${diaFormatado}`;
   }
-
-  const [erros, setErros] = useState({
-    nome: "",
-    valor: "",
-  });
-
-  const [openModalCategoria, setModalCategoria] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,15 +79,6 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const isFormValid = () => {
-    return (
-      formData.nome.length > 0 &&
-      formData.nome.length <= 40 &&
-      formData.quantidade &&
-      !erros.valor
-    );
-  };
-
   return (
     <Modal
       isOpen={isOpen}
@@ -113,7 +88,7 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
     >
       {/* Cabeçalho */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Novo produto</h2>
+        <h2 className="text-xl font-semibold">Editar Produto</h2>
         <button
           className="text-xl font-bold cursor-pointer"
           onClick={onClose}
@@ -139,21 +114,18 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
           <p className="text-red-500 text-sm min-h-[20px]">{erros.nome}</p>
         </div>
 
-        <div className="">
         <DropDownMenu
           variant="gray"
           label="Categoria"
-          opcoes={categorias}
-          className="bg-[#B6B6B6] text-white rounded-xl max-h-[50px] w-full p-3"
+          opcoes={[
+            { value: "eletronico", title: "Eletrônico" },
+            { value: "vestuario", title: "Vestuário" },
+          ]}
+          className="p-3 bg-[#B6B6B6] text-white rounded-xl max-h-[50px]"
           onChange={(value) =>
             setFormData({ ...formData, id_categoria: value })
           }
         />
-        <Edit
-        className="cursor-pointer relative bottom-[2.15rem] left-29 hover:bg-white hover:rounded-lg hover:p-1 transition-colors"
-        onClick={()=>setModalCategoria(true)}
-        />
-        </div>
 
         <div>
           <input
@@ -215,18 +187,15 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
       <div className="flex justify-end w-full mt-4">
         <div className="flex">
           <Botao
-            texto="Adicionar"
-            disabled={!isFormValid()}
+            texto="Salvar"
             className="text-white px-6 py-3 rounded-xl"
             onClick={() => {
-              adicionar(formData);
+              editar(formData)
               onClose();
             }}
           />
         </div>
       </div>
-      
-      <ModalCategoria open={openModalCategoria} onRequestClose={()=>setModalCategoria(false)}></ModalCategoria>
-      </Modal>
+    </Modal>
   );
 }

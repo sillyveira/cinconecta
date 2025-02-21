@@ -397,8 +397,7 @@ export const deletarCategoria = async (logout, idCategoria, carregarCategorias) 
         headers: {
           "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
     if (!resposta.ok) {
       toast.error("Ocorreu um erro ao adicionar um produto.");
@@ -432,3 +431,46 @@ export const deletarCategoria = async (logout, idCategoria, carregarCategorias) 
     throw error; // Deixa o erro ser tratado pelo contexto
   }
 };
+
+
+  export const editarProduto = async (logout, produto, carregarEstoque) => {
+    try {
+      const resposta = await fetch(`http://localhost:3000/produtos/atualizar-produto/${produto._id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(produto)
+      });
+
+      if (!resposta.ok) {
+        toast.error('Ocorreu um erro ao adicionar um produto.');
+        throw new Error(`Erro na requisição: ${resposta.status}`);
+      }
+  
+      const dados = await resposta.json();
+  
+      if (
+        dados.message === "Token não está presente na solicitação." ||
+        dados.message === "O token é inválido ou está expirado."
+      ) {
+        logout("Expirado");
+        return [];
+      }
+      
+      toast.success('O produto foi atualizado com sucesso.')
+      await carregarEstoque();
+      return dados.message;
+    } catch (error) {
+        console.error("Erro ao buscar estoque:", error);
+    
+        // Verifica se o erro está relacionado a falha de conexão (erro de rede)
+        if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
+          logout("Timeout");
+        }
+    
+        throw error; // Deixa o erro ser tratado pelo contexto
+      }
+  };
+

@@ -3,11 +3,6 @@ import { motion } from "framer-motion";
 
 export default function StockBar({onClickFiltrar, onChangePesquisar, onClickAdicionar, onClickPesquisar, onClickRefresh, onClickRemover, ids = [] }){
 
-    const clicou = () =>{
-        console.log("Clicou!")
-        alert("Clicou mds 😱")
-    }
-
     return (
         <div className="flex flex-row gap-4 mr-25 mt-2 pl-5 sm:pl-0">
             <motion.button
