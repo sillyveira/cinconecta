@@ -17,7 +17,7 @@ function DropDownMenu({variant,largura,label,opcoes,onChange,className}){
 
   const handleChange = (event) => {
     const newValue = event.target.value;
-    setValor(newValue);
+    setValor(newValue);    
     if (onChange) {
       onChange(newValue);
     }

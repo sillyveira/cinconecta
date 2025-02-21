@@ -282,6 +282,7 @@ function Estoque() {
       <ModalFiltro
         isOpen={openModalFiltro}
         onClose={toggleModalFiltro}
+        setItensFiltrados={setEstoqueFiltrado}
       ></ModalFiltro>
       <ModalNovoProduto
         isOpen={openModalNovoProduto}

@@ -17,7 +17,7 @@ export default function ModalCC({ titulo, isOpen, onClose, children }) {
       {/* Linha horizontal */}
       <hr className="mt-2" />
       {/* Aqui fica o conteúdo do modal que é passado dentro da tag do modal. Exemplo no perfil.jsx */}
-      <div className="overflow-y-auto max-h-[300px]">
+      <div className="max-h-[400px] overflow-y-auto">
       {children}
       </div>
     </Modal>

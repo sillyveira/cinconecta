@@ -1,91 +1,89 @@
-const categories = require('../models/Category')
-const mongoose = require('mongoose')
+const categories = require('../models/Category');
+const mongoose = require('mongoose');
 
-class CategoryController{
+class CategoryController {
+    async getCategories(req, res) {
+        try {
+            const id_ong = req.ongId;
+            const categorias = await categories.find({ id_ong });
 
-    async getCategories(req, res){
-      
-        try{
-            const id_ong = req.ongId 
-
-            const categorias = await categories.find({id_ong: id_ong})
-            return res.end(JSON.stringify(categorias))
-
-        }catch(error){
-            res.status(400).send(error.message)
+            return res.status(200).json({
+                message: 'Categorias retornadas com sucesso',
+                categorias
+            });
+        } catch (error) {
+            return res.status(400).json({ message: error.message });
         }
     }
 
-    async createCategories(req, res){
-        
-        try{
-            const { nome_categoria } = req.body
-            const id_ong = req.ongId
+    async createCategories(req, res) {
+        try {
+            const { nome_categoria } = req.body;
+            const id_ong = req.ongId;
 
-            if(!nome_categoria || !id_ong ){
-                return res.status(401).end('nome e/ou id ong nulos.')
+            if (!nome_categoria || !id_ong) {
+                return res.status(400).json({ message: 'Nome e/ou ID da ONG não podem ser nulos.' });
             }
 
-            const categorias = new categories({
-                nome_categoria: nome_categoria,
-                id_ong: id_ong
-            })
-            await categorias.save()
-            return res.status(201).end('Categoria criada com sucesso!')
+            const novaCategoria = new categories({
+                nome_categoria,
+                id_ong
+            });
+            await novaCategoria.save();
 
-        }catch(error){
-            res.status(400).send(error.message)
+            return res.status(200).json({ message: 'Categoria criada com sucesso!' });
+        } catch (error) {
+            return res.status(400).json({ message: error.message });
         }
     }
 
-    async updateCategories(req, res){
-         try{
-            const {nome_categoria} = req.body
-            const {id_categoria} = req.params
-            const id_ong = req.ongId
-    
-            if(!mongoose.Types.ObjectId.isValid(id_categoria)){
-                return res.status(400).end('ID inválido.')
+    async updateCategories(req, res) {
+        try {
+            const { nome_categoria } = req.body;
+            const { id_categoria } = req.params;
+            const id_ong = req.ongId;
+
+            if (!mongoose.Types.ObjectId.isValid(id_categoria)) {
+                return res.status(400).json({ message: 'ID inválido.' });
             }
-            if(!id_ong){
-                return res.status(404).end('Não foi possível identificar a ong.')
+            if (!id_ong) {
+                return res.status(400).json({ message: 'Não foi possível identificar a ONG.' });
             }
-            if(!nome_categoria){
-                return res.status(401).end('Nome precisa ser preenchido.')
+            if (!nome_categoria) {
+                return res.status(400).json({ message: 'Nome precisa ser preenchido.' });
             }
 
-           await categories.findOneAndUpdate( 
-            {_id: id_categoria, id_ong: id_ong},
-            {$set: {nome_categoria: nome_categoria}},
-            {new: true}
-        )
-            return res.status(200).end('Categoria atualizada com sucesso!')
-        }catch(error){
-            res.status(400).send(error.message)
+            await categories.findOneAndUpdate(
+                { _id: id_categoria, id_ong },
+                { $set: { nome_categoria } },
+                { new: true }
+            );
+
+            return res.status(200).json({ message: 'Categoria atualizada com sucesso!' });
+        } catch (error) {
+            return res.status(400).json({ message: error.message });
         }
     }
 
-    async deleteCategories(req,res){
-        
-        try{
-            const {id_categoria} = req.params
-            const id_ong = req.ongId
+    async deleteCategories(req, res) {
+        try {
+            const { id_categoria } = req.params;
+            const id_ong = req.ongId;
 
-            if(!mongoose.Types.ObjectId.isValid(id_categoria)){
-                return res.status(400).end('ID inválido.')
+            if (!mongoose.Types.ObjectId.isValid(id_categoria)) {
+                return res.status(400).json({ message: 'ID inválido.' });
             }
-            if(!id_ong){
-                return res.status(404).end('Não foi possível identificar a ong.')
+            if (!id_ong) {
+                return res.status(400).json({ message: 'Não foi possível identificar a ONG.' });
             }
 
-            await categories.findOneAndDelete({_id: id_categoria, id_ong: id_ong})
-            return res.status(200).end('Categoria deletada com sucesso.')
+            await categories.findOneAndDelete({ _id: id_categoria, id_ong });
 
-        }catch(error){
-            res.status(400).end(error.message)
+            return res.status(200).json({ message: 'Categoria deletada com sucesso.' });
+        } catch (error) {
+            return res.status(400).json({ message: error.message });
         }
     }
-
 }
 
-module.exports = new CategoryController()
+module.exports = new CategoryController();

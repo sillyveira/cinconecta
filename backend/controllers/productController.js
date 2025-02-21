@@ -320,7 +320,7 @@ exports.view_product = async (req, res) => {
       }
     });
 
-    if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria) && categoria) {
+    if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria)) {
       filtros.id_categoria = id_categoria;
     }
 

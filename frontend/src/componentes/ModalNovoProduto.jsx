@@ -1,21 +1,41 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Modal from "react-modal";
 import DropDownMenu from "./Dropdown";
 import Botao from "./Botao";
 import { adicionarProduto } from "../servicos/DataAPI";
 import { useAuth } from "../contextos/AuthContext";
 import DataContext from "../contextos/DataContext";
+import ModalCategoria from "./ModalCategoria";
+import { Edit, Settings } from "lucide-react";
 
 Modal.setAppElement("#root");
 
 export default function ModalNovoProduto({ isOpen, onClose }) {
-  const { carregarEstoque } = useContext(DataContext);
+  
   const { logout } = useAuth();
+
+  const { carregarEstoque, carregarCategorias, Categorias } = useContext(DataContext);
+  const [categorias, setCategorias] = useState({title:"", value:""});
+
+  function mapearParaLista(array) {
+    return array.map((item) => ({
+      title: item.nome_categoria,
+      value: item._id,
+    }));
+  }
+
+  useEffect(() => {
+    carregarCategorias();
+    setCategorias(mapearParaLista(Categorias));
+  }, []);
+
+  useEffect(() => {
+    setCategorias(mapearParaLista(Categorias));
+  }, [Categorias]);
 
   const adicionar = (formData) => {
     adicionarProduto(logout, formData, carregarEstoque);
   };
-
   const [formData, setFormData] = useState({
     nome: "",
     id_categoria: "",
@@ -30,6 +50,8 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
     nome: "",
     valor: "",
   });
+
+  const [openModalCategoria, setModalCategoria] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,18 +125,21 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
           <p className="text-red-500 text-sm min-h-[20px]">{erros.nome}</p>
         </div>
 
+        <div className="">
         <DropDownMenu
           variant="gray"
           label="Categoria"
-          opcoes={[
-            { value: "eletronico", title: "Eletrônico" },
-            { value: "vestuario", title: "Vestuário" },
-          ]}
-          className="p-3 bg-[#B6B6B6] text-white rounded-xl max-h-[50px]"
+          opcoes={categorias}
+          className="bg-[#B6B6B6] text-white rounded-xl max-h-[50px] w-full p-3"
           onChange={(value) =>
             setFormData({ ...formData, id_categoria: value })
           }
         />
+        <Edit
+        className="cursor-pointer relative bottom-[2.15rem] left-29 hover:bg-white hover:rounded-lg hover:p-1 transition-colors"
+        onClick={()=>setModalCategoria(true)}
+        />
+        </div>
 
         <div>
           <input
@@ -186,6 +211,8 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
           />
         </div>
       </div>
-    </Modal>
+      
+      <ModalCategoria open={openModalCategoria} onRequestClose={()=>setModalCategoria(false)}></ModalCategoria>
+      </Modal>
   );
 }

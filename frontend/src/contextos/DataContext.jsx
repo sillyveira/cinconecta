@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
-import { analiseDados, buscarAuditoria, buscarEstoque } from "../servicos/DataAPI";
+import { analiseDados, buscarAuditoria, buscarCategorias, buscarEstoque } from "../servicos/DataAPI";
 
 const DataContext = createContext();
 
@@ -14,6 +14,9 @@ export const DataProvider = ({ children }) => {
   const [Auditoria, setAuditoria] = useState([]);
   const [carregandoAuditoria, setCarregandoAuditoria] = useState(false);
 
+  const [Categorias, setCategorias] = useState([]);
+  const [carregandoCategorias, setCarregandoCategorias] = useState(false);
+  
 
   const [erro, setErro] = useState(null);
   const { isAuthenticated, logout } = useAuth();
@@ -25,10 +28,14 @@ export const DataProvider = ({ children }) => {
       setEstoque([]);
       setDados([]);
       setAuditoria([]);
+      setCategorias([]);
+
       setFiltroAtivo(false);
+      
       setCarregando(false);
       setCarregandoAuditoria(false);
       setCarregandoDados(false);
+      setCarregandoCategorias(false);
     }
   }, [isAuthenticated]);
 
@@ -67,6 +74,19 @@ export const DataProvider = ({ children }) => {
       setCarregandoAuditoria(false);
     }
   };
+
+  const carregarCategorias = async() => {
+    try {
+      console.log("As categorias serão carregadas.")
+      setCarregandoCategorias(true);
+      const dados = await buscarCategorias(logout);
+      setCategorias(dados);
+    } catch (error) {
+      setErro(error.message)
+    } finally {
+      setCarregandoCategorias(false);
+    }
+  }
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -121,6 +141,8 @@ export const DataProvider = ({ children }) => {
         Auditoria,
         setAuditoria,
         aplicarFiltro, // Expondo a função de filtro
+        carregarCategorias,
+        Categorias
       }}
     >
       {children}
