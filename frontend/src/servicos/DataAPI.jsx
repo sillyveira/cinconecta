@@ -49,7 +49,6 @@ export const buscarEstoque = async (logout, query = "") => {
       },
     });
     
-    console.log(`QUERY: http://localhost:3000/produtos${query}`)
     if (!resposta.ok) {
       console.log(resposta.json());
       logout("Timeout");

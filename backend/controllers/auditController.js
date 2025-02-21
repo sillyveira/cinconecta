@@ -51,10 +51,8 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
   const diferencaMs = dataInicial - dataFinal
   // Convertendo a diferença de milissegundos para anos (aproximadamente)
   const diferencaAnos = diferencaMs / (1000 * 60 * 60 * 24 * 365);
-  console.log(diferencaAnos);
   if (diferencaAnos > 1 || diferencaAnos <= -1){
     dataInicial.setFullYear(dataFinal.getFullYear() - 1)
-    console.log("A diferença é maior que um ano, setando para um ano apenas");
   }
 
   const query = {

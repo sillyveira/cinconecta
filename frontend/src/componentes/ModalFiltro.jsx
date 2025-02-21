@@ -90,9 +90,6 @@ function ModalFiltro({ isOpen, onClose, setItensFiltrados }) {
             className={"w-28 mt-4"}
             onClick={() => {
               const qry = filtroQuery(formData.categoria, formData.validade);
-              console.log("QUERY FEITA ",qry);
-              console.log(formData.categoria);
-              console.log(formData.validade);
               aplicarFiltro(qry);
               setFormData({
                 categoria: "",

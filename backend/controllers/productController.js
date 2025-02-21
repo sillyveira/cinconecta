@@ -118,7 +118,7 @@ exports.delete_product = async (req, res) => {
       _id: { $in: ids_validos },
       id_ong: id_ong,
     });
-    console.log(infoDeletados);
+
     if (deletados.deletedCount === 0) {
       return res
         .status(404)

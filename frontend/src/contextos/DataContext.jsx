@@ -116,7 +116,6 @@ export const DataProvider = ({ children }) => {
     try {
       setCarregandoAuditoria(true); // Ou outro estado se for outro tipo de dado
       const dadosFiltrados = await buscarAuditoria(logout, filtro); // Aqui você passa o filtro para o backend
-      console.log("Dados Filtrados:");
       console.log(dadosFiltrados);
       if (dadosFiltrados.length === 0) {
         setAuditoria([]); // Se o filtro não retornar nada, limpa o estado
