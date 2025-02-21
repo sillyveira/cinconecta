@@ -1,107 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AuditCard from "../componentes/AuditCard";
 import Header from "../componentes/Header";
 import Paginacao from "../componentes/Paginacao";
 import FiltroAuditoria from "../componentes/FiltroAuditoria";
-/*import ModalCC from "../componentes/Modal";*/
-
+import DataContext from "../contextos/DataContext";
+import ModalCC from "../componentes/Modal";
+import { buscarAuditoria } from "../servicos/DataAPI";
+import { useAuth } from "../contextos/AuthContext";
 function Auditoria() {
-  const data = [
-    {
-      titulo: "'Nome do produto' foi removido do estoque",
-      horario: "10:00",
-      data: "2025-02-01",
-      detalhes: "Detalhes sobre a remoção do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi adicionado no estoque",
-      horario: "11:30",
-      data: "2025-02-01",
-      detalhes: "Detalhes sobre a adição do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-    {
-      titulo: "'Nome do produto' foi atualizado no estoque ",
-      horario: "14:00",
-      data: "2025-02-02",
-      detalhes: "Detalhes sobre a atualização do produto..."
-    },
-  ];
+  const [dadosAuditoria, setDadosAuditoria] = useState([]);
   const [itensAtuais, setItensAtuais] = useState([]);
   const [numeroPag, setNumeroPag] = useState(1);
   const itemPorPagina = 10;
-  const pagTotais = Math.ceil(data.length / itemPorPagina);
-  const itensDaPagina = data.slice(
-    (numeroPag - 1) * itemPorPagina,
-    numeroPag * itemPorPagina
-  );
+  const [pagTotais, setPagTotais] = useState(1);
+  const [itensDaPagina, setItensDaPagina] = useState([]);
 
-  {/*
+  const { Auditoria, setAuditoria, aplicarFiltro } = useContext(DataContext);
+
+  const funcaoFiltroQuery = (acao, dataInicio, dataFinal) => {
+    let query = "";
+    query += "?acao=";
+    if (acao != null) {
+      query += acao;
+    } else {
+      query += "null";
+    }
+
+    query += "&";
+    if (dataInicio) {
+      query += "dataInicial=";
+    }
+    query += dataInicio;
+
+    query += "&";
+    if (dataFinal) {
+      query += "dataFinal=";
+    }
+    query += dataFinal;
+
+    return query;
+  };
+
+  const { logout } = useAuth();
+  const setarFiltro = async (acao, dataInicio, dataFinal) => {
+    const qry = funcaoFiltroQuery(acao, dataInicio, dataFinal);
+    aplicarFiltro(qry);
+  };
+
   const [modalAberto, setModalAberto] = useState(false);
   const [infoAtual, setInfoAtual] = useState(null);
   const abrirModal = (info) => {
@@ -111,50 +56,291 @@ function Auditoria() {
   const fecharModal = () => {
     setModalAberto(false);
     setInfoAtual(null);
-  };*/}
+  };
   const [Info, setInfo] = useState({
     dataInicial: "",
     dataFinal: "",
-    categoria: null,
+    acao: null,
     categorias: [
-      { key: "a", value: "Login", title: "Login" },
-      { key: "b", value: "Registro", title: "Registro" },
-      { key: "c", value: "Revisão", title: "Revisão" },
-      { key: "d", value: "Produtos", title: "Produtos" },
-      { key: "e", value: "Adição", title: "Adição" },
-      { key: "f", value: "Remoção", title: "Remoção" },
-      { key: "g", value: "Atualização", title: "Atualização" },
+      { key: "z", value: "", title: "Tudo" },
+      { key: "a", value: "log", title: "Login" },
+      { key: "b", value: "reg", title: "Registro" },
+      { key: "c", value: "rev", title: "Revisão" },
+      //{ key: "d", value: "", title: "Produtos" },
+      { key: "e", value: "add", title: "Adição" },
+      { key: "f", value: "rem", title: "Remoção" },
+      { key: "g", value: "att", title: "Atualização" },
     ],
   });
 
-  // Para buscar dados quando tivermos acesso à API.
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    if (Auditoria && Auditoria.length > 0) {
+      setDadosAuditoria(Auditoria);
+      console.log(Auditoria);
+      setItensDaPagina(
+        Auditoria.slice(
+          (numeroPag - 1) * itemPorPagina,
+          numeroPag * itemPorPagina
+        )
+      );
+      setPagTotais(Math.ceil(Auditoria.length / itemPorPagina));
+      setNumeroPag(1);
+      console.log(itensDaPagina);
+    } else {
+      setDadosAuditoria([]);
+      setItensDaPagina([]);
+      setPagTotais(0);
+      setNumeroPag(0);
+    }
+  }, [Auditoria]);
 
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch("https://jsonplaceholder.typicode.com/comments");
-  //     const jsonData = await response.json();
-  //     setItensAtuais(jsonData);
-  //   } catch (error) {
-  //     console.error(`Erro ao buscar dados: ${error}`)
-  //   }
-  // }
+  useEffect(() => {
+    setItensDaPagina(
+      Auditoria.slice(
+        (numeroPag - 1) * itemPorPagina,
+        numeroPag * itemPorPagina
+      )
+    );
+  }, [numeroPag]);
+
+  const formatarData = (data) => {
+    if (!data) return "Data desconhecida";
+    const dataObj = new Date(data);
+    return isNaN(dataObj) ? "Data desconhecida" : dataObj.toLocaleDateString("pt-BR");
+  };
+
+  function criarDescricao(acao, item) {
+    let descricao = null;
+
+    switch (acao) {
+      case "reg":
+        descricao = (
+          <div>
+            <p>
+              <strong>Informações do registro:</strong>
+            </p>
+            <p>
+              <strong>Usuário:</strong>{" "}
+              {item?.nome_usuario || "Usuário desconhecido"}
+            </p>
+            <p>
+              <strong>Data:</strong> {item?.data || "Data desconhecida"}
+            </p>
+            <p>
+              <strong>Horário:</strong>{" "}
+              {item?.horario || "Horário desconhecido"}
+            </p>
+          </div>
+        );
+        break;
+
+      case "log":
+        descricao = (
+          <div>
+            <p>
+              <strong>Informações do login:</strong>
+            </p>
+            <p>
+              <strong>Usuário:</strong>{" "}
+              {item?.nome_usuario || "Usuário desconhecido"}
+            </p>
+            <p>
+              <strong>Data:</strong> {item?.data || "Data desconhecida"}
+            </p>
+            <p>
+              <strong>Horário:</strong>{" "}
+              {item?.horario || "Horário desconhecido"}
+            </p>
+          </div>
+        );
+        break;
+
+      case "rev":
+        descricao = (
+          <div>
+            <p>
+              <strong>Informações do log de revisão:</strong>
+            </p>
+            <p>
+              <strong>Data da revisão:</strong>{" "}
+              {item?.data || "Data desconhecida"}
+            </p>
+            <p>
+              <strong>Entrada de produtos:</strong>{" "}
+              {item?.desc?.entrada || "Sem entradas"}
+            </p>
+            <p>
+              <strong>Saída de produtos:</strong>{" "}
+              {item?.desc?.saida || "Sem saídas"}
+            </p>
+            <p>
+              <strong>Valor arrecadado:</strong> R$ {item?.desc?.valor || "0,00"}
+            </p>
+          </div>
+        );
+        break;
+
+      case "add":
+        descricao = (
+          <div>
+            <p>
+              <strong>Informações do produto adicionado:</strong>
+            </p>
+            <p>
+              <strong>ID:</strong>{" "}
+              {item?.desc?.novoProduto?._id || "ID desconhecido"}
+            </p>
+            <p>
+              <strong>Nome:</strong>{" "}
+              {item?.desc?.novoProduto?.nome || "Nome desconhecido"}
+            </p>
+            <p>
+              <strong>Categoria:</strong>{" "}
+              {item?.desc?.novoProduto?.categoria || "Categoria desconhecida"}
+            </p>
+            <p>
+              <strong>Quantidade:</strong>{" "}
+              {item?.desc?.novoProduto?.quantidade || "Quantidade desconhecida"}
+            </p>
+            <p>
+              <strong>Preço:</strong>{" "}
+              {item?.desc?.novoProduto?.valor || "Preço desconhecido"}
+            </p>
+            <p>
+              <strong>Validade:</strong>{" "}
+              {formatarData(item?.desc?.novoProduto?.validade)}
+            </p>
+            <p>
+              <strong>Código de barras:</strong>{" "}
+              {item?.desc?.novoProduto?.codbarras ||
+                "Código de barras desconhecido"}
+            </p>
+            <p>
+              <strong>Descrição:</strong>{" "}
+              {item?.desc?.novoProduto?.descricao || "Descrição desconhecida"}
+            </p>
+          </div>
+        );
+        break;
+
+      case "rem":
+        descricao = (
+          <div>
+            <p>
+              <strong>Informações dos produtos removidos:</strong>
+            </p>
+            {item?.desc?.produtos?.map((produto, index) => (
+              <div key={index}>
+                <p>
+                  <strong>ID:</strong> {produto?._id || "ID desconhecido"}
+                </p>
+                <p>
+                  <strong>Nome:</strong> {produto?.nome || "Nome desconhecido"}
+                </p>
+                <p>
+                  <strong>Categoria:</strong>{" "}
+                  {produto?.categoria || "Categoria desconhecida"}
+                </p>
+                <p>
+                  <strong>Quantidade:</strong>{" "}
+                  {produto?.quantidade || "Quantidade desconhecida"}
+                </p>
+                <p>
+                  <strong>Preço:</strong>{" "}
+                  {produto?.valor || "Preço desconhecido"}
+                </p>
+                <p>
+                  <strong>Validade:</strong>{" "}
+                  {formatarData(produto?.validade)}
+                </p>
+                <p>
+                  <strong>Código de barras:</strong>{" "}
+                  {produto?.codbarras || "Código de barras desconhecido"}
+                </p>
+                <p>
+                  <strong>Descrição:</strong>{" "}
+                  {produto?.descricao || "Descrição desconhecida"}
+                </p>
+                <hr />
+              </div>
+            ))}
+          </div>
+        );
+        break;
+
+      case "att":
+        descricao = (
+          <div>
+            <p>
+              <strong>Informações do produto atualizado:</strong>
+            </p>
+            <p>
+              <strong>ID:</strong>{" "}
+              {item?.desc?.atualizar_produto?._id || "ID desconhecido"}
+            </p>
+            <p>
+              <strong>Nome:</strong>{" "}
+              {item?.desc?.atualizar_produto?.nome || "Nome desconhecido"}
+            </p>
+            <p>
+              <strong>Categoria:</strong>{" "}
+              {item?.desc?.atualizar_produto?.categoria ||
+                "Categoria desconhecida"}
+            </p>
+            <p>
+              <strong>Quantidade:</strong>{" "}
+              {item?.desc?.atualizar_produto?.quantidade ||
+                "Quantidade desconhecida"}
+            </p>
+            <p>
+              <strong>Preço:</strong>{" "}
+              {item?.desc?.atualizar_produto?.valor || "Preço desconhecido"}
+            </p>
+            <p>
+              <strong>Validade:</strong>{" "}
+              {formatarData(item?.desc?.atualizar_produto?.validade)}
+            </p>
+            <p>
+              <strong>Código de barras:</strong>{" "}
+              {item?.desc?.atualizar_produto?.codbarras ||
+                "Código de barras desconhecido"}
+            </p>
+            <p>
+              <strong>Descrição:</strong>{" "}
+              {item?.desc?.atualizar_produto?.descricao ||
+                "Descrição desconhecida"}
+            </p>
+          </div>
+        );
+        break;
+
+      default:
+        descricao = (
+          <p>
+            <strong>Ação desconhecida.</strong>
+          </p>
+        );
+        break;
+    }
+
+    return descricao;
+  }
 
   return (
     <>
       <Header titulo={"Auditoria"}></Header>
 
       <div className="flex flex-row-reverse justify-center gap-4 pt-10">
-        
         {/* Componente de filtro para PC */}
         <FiltroAuditoria
-        className={""}
-        info={Info}
-        setInfo={setInfo} >
-        </FiltroAuditoria>
-        
+          className={""}
+          info={Info}
+          setInfo={setInfo}
+          aplicarFiltro={() => {
+            setarFiltro(Info.acao, Info.dataInicial, Info.dataFinal);
+          }}
+        ></FiltroAuditoria>
+
         {/* TODO: Aqui deve ser implementado o componente de filtro para Mobile*/}
 
         {/* Uma abordagem para fazer essa implementação de diferentes componentes a depender do tamanho da tela é você fazer isso: */}
@@ -162,7 +348,6 @@ function Auditoria() {
              <div className="hidden md:block">Componente para tela desktop</div> */}
         {/* Quando a tela for maior que o "md", o componente para desktop aparece ^. Qualquer dúvida, só me perguntar ~ Wesley. */}
 
-        {/* Componente da lista de itens */}
         <div>
           <div className="border rounded-xl flex flex-col gap-3 items-center max-h-[calc(100vh-300px)] overflow-y-auto py-5 p-4">
             {itensDaPagina.length === 0 ? (
@@ -174,7 +359,7 @@ function Auditoria() {
                   titulo={item.titulo}
                   horario={item.horario}
                   data={item.data}
-                  funcaoClique={() => alert(`Clicou em: ${item.titulo}`)}
+                  funcaoClique={() => abrirModal(item)}
                 />
               ))
             )}
@@ -190,79 +375,19 @@ function Auditoria() {
           {/* ----------------- */}
         </div>
       </div>
-      
+
       {/* Modal de Informações */}
-      {/*infoAtual && (
-        <ModalCC titulo="Detalhes do Produto" isOpen={modalAberto} onClose={fecharModal}>
-          <p><strong>Título:</strong> {infoAtual.titulo}</p>
-          <p><strong>Horário:</strong> {infoAtual.horario}</p>
-          <p><strong>Data:</strong> {infoAtual.data}</p>
-          <p><strong>Detalhes:</strong> {infoAtual.detalhes}</p>
+      {infoAtual && (
+        <ModalCC
+          titulo="Detalhes do Log"
+          isOpen={modalAberto}
+          onClose={fecharModal}
+        >
+          <p>{criarDescricao(infoAtual.acao, infoAtual)}</p>
         </ModalCC>
-      )*/}
+      )}
     </>
   );
 }
 
 export default Auditoria;
-
-// Código para integrar a auditoria com o backend
-// function Auditoria() {
-//   const [logs, setlogs] = useState([]);
-//   useEffect(() => {
-//     async function receberLogs() {
-//       try {
-//         const response = await fetch(
-//           "http://localhost:3000/auditoria/receber-logs",
-//           {
-//             method: "GET",
-//             credentials: "include",
-//             headers: {
-//               "Content-Type": "application/json",
-//             },
-//           }
-//         );
-
-//         if (response.ok) {
-//           const info = await response.json();
-//           setlogs(info.logs);
-//           console.log(info);
-//         } else {
-//           // Lide com erros de login (exiba uma mensagem de erro, etc.)
-//           console.error("Erro ao fazer a requisição.");
-//           return [];
-//         }
-//       } catch (error) {
-//         console.error("Erro ao fazer a req:", error);
-//       }
-//     }
-//     const receberL = receberLogs();
-//   }, []);
-
-//         <FiltroAuditoria
-//           className={""}
-//           info={Info}
-//           setInfo={setInfo}
-//         ></FiltroAuditoria>
-
-//             {logs?.length > 0 && // Verifica se logs existe e tem pelo menos um elemento
-//               logs.map((item, index) => (
-//                 <AuditCard
-//                   key={index}
-//                   titulo={item.nome_usuario}
-//                   horario={item.data}
-//                   data={item.acao}
-//                   funcaoClique={() => alert(`Clicou em: ${item.nome_usuario}`)}
-//                 />
-
-//           {/* -------------- */}
-
-//           {/* Componente de paginação */}
-//           {logs?.length > 0 && (
-//                         <Paginacao
-//                             paginaAtual={numeroPag}
-//                             paginasTotais={pagTotais}
-//                             setPagina={setNumeroPag}
-//                         />
-//                     )}
-//           {/* ----------------- */}

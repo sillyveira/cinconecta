@@ -2,7 +2,7 @@ const Audit = require("../models/Audit");
 const User = require("../models/User");
 const Ong = require("../models/Ong");
 const { response } = require("express");
-const criarLog = async (acao, userid, nomeusuario, ongid, descricao = {}) => {
+const criarLog = async (acao, userid, nomeusuario, ongid, descricao = {}, data = new Date()) => {
 
   const novoLog = new Audit({
     id_usuario: userid || null,
@@ -10,11 +10,35 @@ const criarLog = async (acao, userid, nomeusuario, ongid, descricao = {}) => {
     id_ong: ongid,
     acao: acao,
     desc: descricao || {},
-    data: new Date(),
+    data: data || new Date(),
   });
 
   await novoLog.save();
 };
+
+function criarTitulo(acao, item) {
+  switch (acao) {
+    case 'add':
+      return `${item?.desc?.novoProduto?.nome || "Produto desconhecido"} foi adicionado.`;
+    case 'rem':
+      if (item?.desc?.produtos?.length === 1) {
+        return `${item.desc.produtos[0]?.nome || "Produto desconhecido"} foi removido.`;
+      } else {
+        return 'Múltiplos produtos foram removidos.';
+      }
+    case 'att':
+      return `O ${item?.desc?.atualizar_produto?.nome || "Produto desconhecido"} foi editado.`;
+    case 'log':
+      return `${item?.nome_usuario || "Usuário desconhecido"} logou em sua conta.`;
+    case 'reg':
+      return `${item?.nome_usuario || "Usuário desconhecido"} se registrou.`;
+    case 'rev':
+      return 'Log de revisão';
+    default:
+      return 'Ação desconhecida.';
+  }
+}
+
 
 const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
 
@@ -27,10 +51,8 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
   const diferencaMs = dataInicial - dataFinal
   // Convertendo a diferença de milissegundos para anos (aproximadamente)
   const diferencaAnos = diferencaMs / (1000 * 60 * 60 * 24 * 365);
-  console.log(diferencaAnos);
   if (diferencaAnos > 1 || diferencaAnos <= -1){
     dataInicial.setFullYear(dataFinal.getFullYear() - 1)
-    console.log("A diferença é maior que um ano, setando para um ano apenas");
   }
 
   const query = {
@@ -46,7 +68,7 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
     query.nome_usuario = nomeMembro
   }
 
-  if (acao) {
+  if (acao && acao != "null" && acao != null) {
     query.acao = acao 
   }
 
@@ -62,7 +84,8 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
         acao: documento.acao,
         desc: documento.desc,
         data: documento.data.toLocaleDateString('pt-BR'),
-        horario: new Date(documento.data.getTime() - 3 *60*60*1000).toLocaleTimeString('pt-BR', {hour12:false}) // Subtrai 3 horas pois é o fuso de brasilia (-03:00)
+        horario: documento.data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        titulo: criarTitulo(documento.acao, documento)
     };
 });
 
@@ -75,13 +98,14 @@ const checarNovosLogs = async ( ongid, dataInicio) => {
     // Busca os registros nos últimos x dias
     const logs = await Audit.find({
       id_ong: ongid,
-      acao: { $nin: ['rev', 'log', 'reg'] }, // Não inclui os logs de revisão, login e registro.
+      acao: { $nin: ['rev'] }, // Não inclui os logs de revisão, login e registro.
       //data: { $gte: dataInicio, $lte: new Date() }, //Da data de início até a data atual.
       // TODO: remover esse comentário ^^ É apenas para teste da função checar_logs 
     }).sort({ data: 1 });
 
     const logsPorData = [];
-  
+    const idsParaRemover = [];
+
     logs.forEach((log) => {
       const dataCompleta = new Date(log.data.setHours(0, 0, 0, 0)); //Para agrupar apenas por data! Se os horários estiverem diferentes, o agrupamento dará errado.
 
@@ -103,13 +127,15 @@ const checarNovosLogs = async ( ongid, dataInicio) => {
         entrada[1] = entradaAtual + (parseInt(log.desc.entrada, 10) || 0); //soma a quantidade de itens que já temos com o do log
         entrada[2] = saidaAtual + (parseInt(log.desc.saida, 10) || 0);
         entrada[3] = valorAtual + (parseFloat(log.desc.valor, 10) || 0);
+      } else if (log.acao == "log" || log.acao == "reg") {
+        idsParaRemover.push(log._id); // Remove os logs de login e registro
       }
       entrada[4].push(log); // [data, 0, 0, [registro_adicionado]]
     });
 
     // [data, 0, 0, [registro_adicionado]]
 
-    const idsParaRemover = [];
+    
 
     logsPorData.forEach((item) => {
       const descricaoLog = {
@@ -118,7 +144,7 @@ const checarNovosLogs = async ( ongid, dataInicio) => {
         valor: item[3],
       };
 
-      criarLog("rev", null, null, ongid, descricaoLog);
+      criarLog("rev", null, null, ongid, descricaoLog, item[0]);
     
       item[4].forEach((log) => {
         idsParaRemover.push(log._id);
@@ -156,8 +182,7 @@ const checarUltimaAuditoria = async (userid, ongid) => {
     tresDiasAtras.setDate(tresDiasAtras.getDate() - 3);
     
     if (ultimaAuditoria <= tresDiasAtras) {
-      //Última auditoria desatualizada. Checando novos logs.
-      await checarNovosLogs(userid, ong_._id, ong_.ultima_auditoria);
+      await checarNovosLogs(ong_._id, ong_.ultima_auditoria);
       ong_.ultima_auditoria = new Date();
       await ong_.save();
     }

@@ -2,9 +2,12 @@ import React, { useState, useContext, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Edit, Info, RefreshCcw } from "lucide-react";
 import { motion } from "framer-motion";
+import { removerProduto } from "../servicos/DataAPI";
+import { useAuth } from "../contextos/AuthContext";
 import Header from "../componentes/Header";
 import ModalFiltro from "../componentes/ModalFiltro";
 import ModalInfo from "../componentes/ModalInfo";
+import ModalConfirmacao from "../componentes/ModalConfirmacao";
 import ModalNovoProduto from "../componentes/ModalNovoProduto";
 import ModalEdicao from "../componentes/ModalEdicao";
 import DataContext from "../contextos/DataContext";
@@ -63,6 +66,8 @@ const customStyles = {
 };
 
 function Estoque() {
+  const { logout } = useAuth();
+
   const columns = [
     {
       name: "ID",
@@ -184,8 +189,17 @@ function Estoque() {
   const [openModalFiltro, setOpenModalFiltro] = useState(false);
   const toggleModalFiltro = () => setOpenModalFiltro((prev) => !prev);
 
+
   const [openModalEdicao, setOpenModalEdicao] = useState(false);
   const toggleModalEdicao = () => setOpenModalEdicao((prev) => !prev);
+
+  const [listaDeIdsSelecionados, setListaDeIdsSelecionados] = useState([]);
+  const [modalConfirmacaoAberto, setModalConfirmacaoAberto] = useState(false);
+  const abrirModalConfirmacao = () => {
+    setModalConfirmacaoAberto((prev) => !prev);
+  };
+
+  
 
   const [openModalNovoProduto, setOpenModalNovoProduto] = useState(false);
   const toggleModalNovoProduto = () => setOpenModalNovoProduto((prev) => !prev);
@@ -216,6 +230,8 @@ function Estoque() {
     return resultados;
   };
 
+  
+
   return (
     <>
       <Header titulo={"Estoque"} />
@@ -232,9 +248,9 @@ function Estoque() {
               setEstoqueFiltrado(Estoque);
             }
           }}
-          onClickRefresh={() => {
-            carregarEstoque();
-          }}
+          onClickRefresh={() => carregarEstoque()}
+          onClickRemover={abrirModalConfirmacao}
+          ids={listaDeIdsSelecionados}  // Abre o modal ao clicar no botão de remover
         />
       </div>
 
@@ -259,9 +275,11 @@ function Estoque() {
               pagination
               paginationPerPage={10}
               selectableRowsHighlight
-              onSelectedRowsChange={({ selectedRows }) =>
-                setSelectedRows(selectedRows)
-              }
+              onSelectedRowsChange={({ selectedRows }) => {
+                setSelectedRows(selectedRows);
+                setListaDeIdsSelecionados(selectedRows.map((row) => row._id)); // Guarda os IDs selecionados
+            }}
+            
               paginationComponentOptions={{
                 rowsPerPageText: "Linhas por página",
                 rangeSeparatorText: "de",
@@ -277,6 +295,7 @@ function Estoque() {
       <ModalFiltro
         isOpen={openModalFiltro}
         onClose={toggleModalFiltro}
+        setItensFiltrados={setEstoqueFiltrado}
       ></ModalFiltro>
       <ModalNovoProduto
         isOpen={openModalNovoProduto}
@@ -287,11 +306,24 @@ function Estoque() {
         onClose={() => {setOpenModalInfo((prev) => !prev)}}
         produto={selectedProduct}
       />
+
       <ModalEdicao
         isOpen={openModalEdicao}
         onClose={() => {setOpenModalEdicao((prev) => !prev)}}
         produto={edicaoProduto}
       ></ModalEdicao>
+
+      <ModalConfirmacao
+        isOpen={modalConfirmacaoAberto}
+        onClose={abrirModalConfirmacao}
+        onConfirm={() => {
+          removerProduto(logout, listaDeIdsSelecionados, carregarEstoque)
+          abrirModalConfirmacao();
+        }}
+        quantidadeItens={listaDeIdsSelecionados.length}
+      />
+
+
     </>
   );
 }

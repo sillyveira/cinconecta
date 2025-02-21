@@ -118,7 +118,7 @@ exports.delete_product = async (req, res) => {
       _id: { $in: ids_validos },
       id_ong: id_ong,
     });
-    console.log(infoDeletados);
+
     if (deletados.deletedCount === 0) {
       return res
         .status(404)
@@ -320,12 +320,7 @@ exports.view_product = async (req, res) => {
       }
     });
 
-    console.log("Cache:")
-    console.log(categoriasCache);
-    console.log(categoriasCache.get("67a547ce3ca16568a40b6c9b"));
-    console.log("-----------")
-
-    if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria) && categoria) {
+    if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria)) {
       filtros.id_categoria = id_categoria;
     }
 

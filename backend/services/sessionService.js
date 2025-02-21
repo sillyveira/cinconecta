@@ -28,13 +28,15 @@ const checarToken = async (tokenFornecido) => {
 
 const gerarSessao = async (userid, ongid, nome_usuario) => {    
     const novoToken = gerarToken()
+    const dataExpiracao = new Date()
+    dataExpiracao.setHours(dataExpiracao.getHours() + 1);
 
     const novaSessao = new Session({
         id_usuario: userid,
         id_ong: ongid,
         nome_usuario: nome_usuario,
         token: novoToken,
-        expira_em: new Date() 
+        expira_em: dataExpiracao
     })
 
     await novaSessao.save();

@@ -1,14 +1,15 @@
 import React from "react";
 import DropDownMenu from "./Dropdown";
-
+import Botao from "./Botao";
 export default function FiltroAuditoria({
   info,
   setInfo,
   className,
+  aplicarFiltro
 }) {
   
   return (
-    <div className={`bg-gray-100 max-w-sm w-full flex flex-col items-center border rounded-xl shadow-lg h-fit pb-14 px-4 ${className}`}>
+    <div className={`bg-gray-100 max-w-sm w-full flex flex-col items-center border rounded-xl shadow-lg h-fit pb-8 px-4 ${className}`}>
       <h1 className="text-2xl text-black font-bold">Filtro</h1>
       <hr className="border-t-2 border-[#B6B6B6] w-full" />
         <div className="flex gap-4 pt-4">
@@ -42,9 +43,10 @@ export default function FiltroAuditoria({
               label="Selecione..."
               opcoes={info.categorias}
               className={"w-86"}
-              onChange={(value) => setInfo(prev => ({...prev, categoria: value})) }
+              onChange={(value) => setInfo(prev => ({...prev, acao: value})) }
           />
         </div>
+        <Botao texto={"Salvar"} className={"mt-6 w-24 p-4"} onClick={aplicarFiltro}/>
     </div>
   );
 }
