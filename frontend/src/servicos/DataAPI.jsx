@@ -252,7 +252,7 @@ export const removerProduto = async (
     );
 
     if (!resposta.ok) {
-      toast.error("Ocorreu um erro ao adicionar um produto.");
+      toast.error("Ocorreu um erro ao remover produtos.");
       throw new Error(`Erro na requisição: ${resposta.status}`);
     }
 
@@ -306,7 +306,7 @@ export const adicionarCategoria = async (logout, nomeCategoria, carregarCategori
     );
 
     if (!resposta.ok) {
-      toast.error("Ocorreu um erro ao adicionar um produto.");
+      toast.error("Ocorreu um erro ao adicionar uma categoria.");
       throw new Error(`Erro na requisição: ${resposta.status}`);
     }
 
@@ -355,7 +355,7 @@ export const atualizarCategoria = async (logout, idCategoria, nomeCategoria, car
     );
 
     if (!resposta.ok) {
-      toast.error("Ocorreu um erro ao adicionar um produto.");
+      toast.error("Ocorreu um erro ao atualizar uma categoria.");
       throw new Error(`Erro na requisição: ${resposta.status}`);
     }
 
@@ -400,7 +400,7 @@ export const deletarCategoria = async (logout, idCategoria, carregarCategorias) 
       });
 
     if (!resposta.ok) {
-      toast.error("Ocorreu um erro ao adicionar um produto.");
+      toast.error("Ocorreu um erro ao remover uma categoria.");
       throw new Error(`Erro na requisição: ${resposta.status}`);
     }
 
@@ -445,7 +445,7 @@ export const deletarCategoria = async (logout, idCategoria, carregarCategorias) 
       });
 
       if (!resposta.ok) {
-        toast.error('Ocorreu um erro ao adicionar um produto.');
+        toast.error('Ocorreu um erro ao editar uma categoria.');
         throw new Error(`Erro na requisição: ${resposta.status}`);
       }
   
