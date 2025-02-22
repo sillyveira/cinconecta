@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import { useAuth } from "./AuthContext";
 import { analiseDados, buscarAuditoria, buscarCategorias, buscarEstoque } from "../servicos/DataAPI";
 
@@ -23,6 +23,7 @@ export const DataProvider = ({ children }) => {
 
   const [filtroAtivo, setFiltroAtivo] = useState(false); // Nova flag para monitorar se o filtro está ativo
 
+  const estoqueCarregado = useRef(false);
   useEffect(() => {
     if (!isAuthenticated) {
       setEstoque([]);
@@ -92,8 +93,9 @@ export const DataProvider = ({ children }) => {
     if (!isAuthenticated) return;
 
     // Carregar Estoque se estiver vazio
-    if (Estoque.length === 0 && !carregando) {
+    if (!estoqueCarregado.current && Estoque.length === 0 && !carregando) {
       carregarEstoque();
+      estoqueCarregado.current = true
     }
 
     // Carregar Dados se estiver vazio

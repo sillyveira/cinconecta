@@ -1,17 +1,38 @@
 import React, { useContext, useEffect, useState } from "react";
+import ModalCategoria from "./ModalCategoria";
 import Modal from "react-modal";
 import DropDownMenu from "./Dropdown";
 import Botao from "./Botao";
 import {adicionarProduto, editarProduto } from "../servicos/DataAPI";
 import { useAuth } from "../contextos/AuthContext";
 import DataContext from "../contextos/DataContext";
+import { Edit } from "lucide-react";
 
 Modal.setAppElement("#root");
 
 export default function ModalEdicao({ isOpen, onClose, produto }) {
-  const { carregarEstoque } = useContext(DataContext);
   const { logout } = useAuth();
-  if (!isOpen || !produto) return null;
+
+  const { carregarEstoque, carregarCategorias, Categorias } = useContext(DataContext);
+  const [categorias, setCategorias] = useState({title:"", value:""});
+
+  function mapearParaLista(array) {
+    return array.map((item) => ({
+      title: item.nome_categoria,
+      value: item._id,
+    }));
+  }
+
+  useEffect(() => {
+    carregarCategorias();
+    setCategorias(mapearParaLista(Categorias));
+  }, []);
+
+  useEffect(() => {
+    setCategorias(mapearParaLista(Categorias));
+  }, [Categorias]);
+
+  const [openModalCategoria, setModalCategoria] = useState(false);
 
   const editar = (formData) => {
     editarProduto(logout, formData, carregarEstoque);
@@ -36,21 +57,6 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
     nome: "",
     valor: "",
   });
-
-  function converterData(dataString) {
-    if (!dataString) {return}
-    const partes = dataString.split('/');
-    const dia = parseInt(partes[0], 10);
-    const mes = parseInt(partes[1], 10);
-    const ano = parseInt(partes[2], 10);
-    const data = new Date(ano, mes - 1, dia);
-    const anoFormatado = data.getFullYear();
-    const mesFormatado = String(data.getMonth() + 1).padStart(2, '0');
-    const diaFormatado = String(data.getDate()).padStart(2, '0');
-  
-    return `${anoFormatado}-${mesFormatado}-${diaFormatado}`;
-  }
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -79,6 +85,8 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
     setFormData({ ...formData, [name]: value });
   };
 
+  
+  if (!isOpen || !produto) return null;
   return (
     <Modal
       isOpen={isOpen}
@@ -114,18 +122,21 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
           <p className="text-red-500 text-sm min-h-[20px]">{erros.nome}</p>
         </div>
 
+        <div className="">
         <DropDownMenu
           variant="gray"
           label="Categoria"
-          opcoes={[
-            { value: "eletronico", title: "Eletrônico" },
-            { value: "vestuario", title: "Vestuário" },
-          ]}
-          className="p-3 bg-[#B6B6B6] text-white rounded-xl max-h-[50px]"
+          opcoes={categorias}
+          className="bg-[#B6B6B6] text-white rounded-xl max-h-[50px] w-full p-3"
           onChange={(value) =>
             setFormData({ ...formData, id_categoria: value })
           }
         />
+        <Edit
+        className="cursor-pointer relative bottom-[2.15rem] left-29 hover:bg-white hover:rounded-lg hover:p-1 transition-colors"
+        onClick={()=>setModalCategoria(true)}
+        />
+        </div>
 
         <div>
           <input
@@ -156,7 +167,7 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
           type={formData.validade ? "date" : "text"}
           name="validade"
           placeholder="Validade"
-          value={converterData(formData.validade)}
+          value={formData.validade}
           onFocus={(e) => (e.target.type = "date")}
           onBlur={(e) =>
             e.target.value === "" ? (e.target.type = "text") : null
@@ -196,6 +207,7 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
           />
         </div>
       </div>
+      <ModalCategoria open={openModalCategoria} onRequestClose={()=>setModalCategoria(false)}></ModalCategoria>
     </Modal>
   );
 }

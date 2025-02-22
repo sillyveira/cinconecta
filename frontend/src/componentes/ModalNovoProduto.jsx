@@ -46,20 +46,6 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
     descricao: "",
   });
 
-  function converterData(dataString) {
-    if (!dataString) {return}
-    const partes = dataString.split('/');
-    const dia = parseInt(partes[0], 10);
-    const mes = parseInt(partes[1], 10);
-    const ano = parseInt(partes[2], 10);
-    const data = new Date(ano, mes - 1, dia);
-    const anoFormatado = data.getFullYear();
-    const mesFormatado = String(data.getMonth() + 1).padStart(2, '0');
-    const diaFormatado = String(data.getDate()).padStart(2, '0');
-  
-    return `${anoFormatado}-${mesFormatado}-${diaFormatado}`;
-  }
-
   const [erros, setErros] = useState({
     nome: "",
     valor: "",
@@ -184,7 +170,7 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
           type={formData.validade ? "date" : "text"}
           name="validade"
           placeholder="Validade"
-          value={converterData(formData.validade)}
+          value={formData.validade}
           onFocus={(e) => (e.target.type = "date")}
           onBlur={(e) =>
             e.target.value === "" ? (e.target.type = "text") : null

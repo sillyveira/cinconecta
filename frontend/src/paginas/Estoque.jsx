@@ -161,7 +161,8 @@ function Estoque() {
       name: "Ações", // Coluna de botões
       cell: (row) => (
         <div className="flex flex-row gap-2">
-          <Edit 
+          <Edit
+            className="cursor-pointer" 
             onClick={() => {
             setEdicao(row) 
             setOpenModalEdicao((prev) => !prev)
