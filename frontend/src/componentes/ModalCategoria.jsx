@@ -14,10 +14,9 @@ import toast from "react-hot-toast";
 
 export default function ModalCategoria({ open, onRequestClose }) {
   const [modo, setModo] = useState("criar"); // 'criar', 'editar', 'remover'
-  const [valor, setValor] = useState("");
 
   const [categorias, setCategorias] = useState([{ title: "", value: "" }]);
-  const [error, setError] = useState("");
+
 
   const [infoCategoria, setInfoCategoria] = useState([
     { criarCategoria: "" },

@@ -209,7 +209,7 @@ function Estoque() {
   const { Estoque = [], carregando, erro, carregarEstoque } = dataContext;
   const [estoqueFiltrado, setEstoqueFiltrado] = useState([]);
   useEffect(() => {
-    if (Estoque && Estoque.length > 0) {
+    if (Estoque) {
       setEstoqueFiltrado(Estoque);
     }
   }, [Estoque]);
@@ -289,7 +289,7 @@ function Estoque() {
               }}
             />
           ) : (
-            <p className="text-center text-black">Nenhum item encontrado.</p>
+            <p className="text-center text-black p-4">Nenhum item encontrado. Clique no botão de atualizar.</p>
           )}
         </div>
       </div>
