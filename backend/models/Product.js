@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 // Definindo esquema do produto
 const productSchema = new mongoose.Schema({
   id_categoria: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: false },
+  nome_categoria: {type: String, required: false},
   id_ong: { type: mongoose.Schema.Types.ObjectId, ref: 'Ong', required: true },
   nome: { type: String, required: true, maxlength: [40, "O nome do produto não pode ter mais que 40 caracteres."] },
   descricao: { type: String, required: false, maxlength:[200, "A descrição do produto não pode ultrapassar 200 caracteres."] },

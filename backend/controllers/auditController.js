@@ -27,7 +27,7 @@ function criarTitulo(acao, item) {
         return 'Múltiplos produtos foram removidos.';
       }
     case 'att':
-      return `O ${item?.desc?.atualizar_produto?.nome || "Produto desconhecido"} foi editado.`;
+      return `O ${item?.desc?.produto?.nome || "Produto desconhecido"} foi editado.`;
     case 'log':
       return `${item?.nome_usuario || "Usuário desconhecido"} logou em sua conta.`;
     case 'reg':

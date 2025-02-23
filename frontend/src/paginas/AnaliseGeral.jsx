@@ -27,7 +27,7 @@ export default function AnaliseGeral() {
           />
           <StatCard
             titulo={"Valor estimado do estoque"}
-            valor={`R$ ${(!Dados || Dados.length === 0) ? "Sem dados" : Dados.valorestoque}`}
+            valor={`${(!Dados || Dados.length === 0 || Dados.valorestoque !== "undefined") ? "Sem dados" : `R$ ${Dados.valorestoque}`}`}
             icone={CircleDollarSign}
             expandirFunction={toggleModal}
           />

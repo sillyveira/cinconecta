@@ -7,6 +7,7 @@ import DataContext from "../contextos/DataContext";
 import ModalCC from "../componentes/Modal";
 import { buscarAuditoria } from "../servicos/DataAPI";
 import { useAuth } from "../contextos/AuthContext";
+import toast from "react-hot-toast";
 function Auditoria() {
   const [dadosAuditoria, setDadosAuditoria] = useState([]);
   const [itensAtuais, setItensAtuais] = useState([]);
@@ -106,7 +107,9 @@ function Auditoria() {
   const formatarData = (data) => {
     if (!data) return "Data desconhecida";
     const dataObj = new Date(data);
-    return isNaN(dataObj) ? "Data desconhecida" : dataObj.toLocaleDateString("pt-BR");
+    return isNaN(dataObj)
+      ? "Data desconhecida"
+      : dataObj.toLocaleDateString("pt-BR");
   };
 
   function criarDescricao(acao, item) {
@@ -174,7 +177,8 @@ function Auditoria() {
               {item?.desc?.saida || "Sem saídas"}
             </p>
             <p>
-              <strong>Valor arrecadado:</strong> R$ {item?.desc?.valor || "0,00"}
+              <strong>Valor arrecadado:</strong> R${" "}
+              {item?.desc?.valor || "0,00"}
             </p>
           </div>
         );
@@ -196,7 +200,7 @@ function Auditoria() {
             </p>
             <p>
               <strong>Categoria:</strong>{" "}
-              {item?.desc?.novoProduto?.categoria || "Categoria desconhecida"}
+              {item?.desc?.novoProduto?.nome_categoria || "Categoria desconhecida"}
             </p>
             <p>
               <strong>Quantidade:</strong>{" "}
@@ -239,7 +243,7 @@ function Auditoria() {
                 </p>
                 <p>
                   <strong>Categoria:</strong>{" "}
-                  {produto?.categoria || "Categoria desconhecida"}
+                  {produto?.nome_categoria || "Categoria desconhecida"}
                 </p>
                 <p>
                   <strong>Quantidade:</strong>{" "}
@@ -250,8 +254,7 @@ function Auditoria() {
                   {produto?.valor || "Preço desconhecido"}
                 </p>
                 <p>
-                  <strong>Validade:</strong>{" "}
-                  {formatarData(produto?.validade)}
+                  <strong>Validade:</strong> {formatarData(produto?.validade)}
                 </p>
                 <p>
                   <strong>Código de barras:</strong>{" "}
@@ -276,40 +279,58 @@ function Auditoria() {
             </p>
             <p>
               <strong>ID:</strong>{" "}
-              {item?.desc?.atualizar_produto?._id || "ID desconhecido"}
+              {item?.desc?.produto?._id || "ID desconhecido"}
             </p>
             <p>
               <strong>Nome:</strong>{" "}
-              {item?.desc?.atualizar_produto?.nome || "Nome desconhecido"}
+              {item?.desc?.produto?.nome || "Nome desconhecido"}
             </p>
             <p>
               <strong>Categoria:</strong>{" "}
-              {item?.desc?.atualizar_produto?.categoria ||
-                "Categoria desconhecida"}
+              {item?.desc?.produto?.nome_categoria || "Categoria desconhecida"}
             </p>
             <p>
               <strong>Quantidade:</strong>{" "}
-              {item?.desc?.atualizar_produto?.quantidade ||
-                "Quantidade desconhecida"}
+              {item?.desc?.produto?.quantidade || "Quantidade desconhecida"}
             </p>
             <p>
               <strong>Preço:</strong>{" "}
-              {item?.desc?.atualizar_produto?.valor || "Preço desconhecido"}
+              {item?.desc?.produto?.valor || "Preço desconhecido"}
             </p>
             <p>
               <strong>Validade:</strong>{" "}
-              {formatarData(item?.desc?.atualizar_produto?.validade)}
+              {formatarData(item?.desc?.produto?.validade)}
             </p>
             <p>
               <strong>Código de barras:</strong>{" "}
-              {item?.desc?.atualizar_produto?.codbarras ||
+              {item?.desc?.produto?.codbarras ||
                 "Código de barras desconhecido"}
             </p>
             <p>
               <strong>Descrição:</strong>{" "}
-              {item?.desc?.atualizar_produto?.descricao ||
-                "Descrição desconhecida"}
+              {item?.desc?.produto?.descricao || "Descrição desconhecida"}
             </p>
+
+            {/* Se houver alterações, mapear todas as chaves e valores */}
+            {item?.desc?.alteracoes && (
+              <div>
+                <hr />
+                <br />
+                <p>
+                  <strong>Alterações:</strong>
+                </p>
+                {Object.entries(item.desc.alteracoes).map(([chave, valor]) => (
+                  <p key={chave}>
+                    <strong>
+                      {chave.charAt(0).toUpperCase() + chave.slice(1)}:
+                    </strong>{" "}
+                    {chave === "validade"
+                      ? new Date(valor).toLocaleDateString("pt-BR")
+                      : valor}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
         );
         break;
@@ -338,6 +359,11 @@ function Auditoria() {
           setInfo={setInfo}
           aplicarFiltro={() => {
             setarFiltro(Info.acao, Info.dataInicial, Info.dataFinal);
+            toast.success("O filtro foi aplicado com sucesso");
+          }}
+          refreshFunction={()=>{
+            aplicarFiltro("")
+            toast.success("A auditoria foi atualizada com sucesso.");
           }}
         ></FiltroAuditoria>
 
