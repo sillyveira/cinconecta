@@ -1,21 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import ModalCategoria from "./ModalCategoria";
+import React, { useContext, useState, useEffect } from "react";
 import Modal from "react-modal";
 import DropDownMenu from "./Dropdown";
 import Botao from "./Botao";
-import {adicionarProduto, editarProduto } from "../servicos/DataAPI";
+import { editarProduto } from "../servicos/DataAPI";
 import { useAuth } from "../contextos/AuthContext";
 import DataContext from "../contextos/DataContext";
-import { Edit } from "lucide-react";
+import ModalCategoria from "./ModalCategoria";
+import { Edit} from "lucide-react";
 
 Modal.setAppElement("#root");
 
 export default function ModalEdicao({ isOpen, onClose, produto }) {
+  
   const { logout } = useAuth();
 
   const { carregarEstoque, carregarCategorias, Categorias } = useContext(DataContext);
   const [categorias, setCategorias] = useState({title:"", value:""});
-
+  const [valorCategoria, setValorCategoria] = useState("")
   function mapearParaLista(array) {
     return array.map((item) => ({
       title: item.nome_categoria,
@@ -32,13 +33,20 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
     setCategorias(mapearParaLista(Categorias));
   }, [Categorias]);
 
-  const [openModalCategoria, setModalCategoria] = useState(false);
-
   const editar = (formData) => {
     editarProduto(logout, formData, carregarEstoque);
   };
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ // valores padrão para não haver erro
+    nome: "",
+    id_categoria: "",
+    quantidade: "",
+    valor: "",
+    validade: "",
+    codbarras: "",
+    descricao: "",
+    _id: "",
+  });
 
   useEffect(() => {
     setFormData({
@@ -46,60 +54,133 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
         id_categoria: produto.id_categoria,
         quantidade: produto.quantidade,
         valor: produto.valor,
-        validade: produto.validade,
+        validade: produto.validade ? converterData(produto.validade) : undefined,
         codbarras: produto.codbarras,
         descricao: produto.descricao,
         _id : produto._id,
       })
+      setValorCategoria(produto.id_categoria);
   }, [produto]);
 
+  useEffect(()=>{
+    setValorCategoria(produto.id_categoria);
+  },[isOpen])
+
+  const [openModalCategoria, setModalCategoria] = useState(false);
+
+  
   const [erros, setErros] = useState({
     nome: "",
     valor: "",
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+  
     if (name === "nome") {
-      if (value.length > 40) {
-        setErros((prev) => ({
-          ...prev,
-          nome: "O nome pode ter no máximo 40 caracteres.",
-        }));
-      } else {
-        setErros((prev) => ({ ...prev, nome: "" }));
-      }
+      setErros((prev) => ({
+        ...prev,
+        nome: value.length > 40 ? "O nome pode ter no máximo 40 caracteres." : "",
+      }));
     }
-
+  
     if (name === "valor") {
-      let formattedValue = value.replace(",", "."); // Substitui vírgulas por pontos
-      if (!/^\d*\.?\d*$/.test(formattedValue)) {
-        setErros((prev) => ({ ...prev, valor: "Preço inválido." }));
-      } else {
-        setErros((prev) => ({ ...prev, valor: "" }));
-      }
+      let formattedValue = value.replace(",", ".");
+      setErros((prev) => ({
+        ...prev,
+        valor: !/^\d*\.?\d*$/.test(formattedValue) ? "Preço inválido." : "",
+      }));
       setFormData({ ...formData, [name]: formattedValue });
       return;
     }
+  
+    if (name === "descricao") {
+      setErros((prev) => ({
+        ...prev,
+        descricao: value.length > 200 ? "A descrição pode ter no máximo 200 caracteres." : "",
+      }));
+    }
+  
+    if (name === "codbarras") {
+      setErros((prev) => ({
+        ...prev,
+        codbarras: value.length > 128 ? "O código de barras pode ter no máximo 128 caracteres." : "",
+      }));
+    }
+  
+    if (name === "quantidade") {
+      if (!/^\d+$/.test(value)) {
+        setErros((prev) => ({
+          ...prev,
+          quantidade: "A quantidade deve ser um número inteiro.",
+        }));
+      } else {
+        setErros((prev) => ({
+          ...prev,
+          quantidade: "",
+        }));
+      }
+    }
 
+    if (name === "validade") {
+      // Se o campo estiver vazio, definir como undefined e limpar o erro
+      if (value.trim() === "") {
+        setFormData((prev) => ({ ...prev, validade: undefined }));
+        setErros((prev) => ({ ...prev, validade: "" }));
+        return;
+      }
+      const [ano, mes, dia] = value.split("-").map(Number);
+      const dateValue = new Date(value);
+    
+      // Verifica se os valores são válidos
+      if (
+        ano < 2000 || ano > 2100 || // Limita entre 2000 e 2100
+        mes < 1 || mes > 12 || // Mês inválido
+        dia < 1 || dia > 31 || // Dia inválido
+        isNaN(dateValue.getTime()) // Verifica se o objeto Date é válido
+      ) {
+        setErros((prev) => ({
+          ...prev,
+          validade: "Data inválida. Escolha entre 01/01/2000 e 31/12/2100.",
+        }));
+      } else {
+        setErros((prev) => ({ ...prev, validade: "" }));
+      }
+    }
     setFormData({ ...formData, [name]: value });
   };
 
-  
-  if (!isOpen || !produto) return null;
+  const isFormValid = () => {
+    return (
+      formData?.nome?.length > 0 &&
+      formData?.nome?.length <= 40 &&
+      formData?.quantidade &&
+      formData?.descricao?.length <= 200 &&
+      formData?.codbarras?.length <= 128 && 
+      !erros.valor &&
+      !erros.quantidade &&
+      !erros.validade
+    );
+  };
+
+  function converterData(data) {
+    const [dia, mes, ano] = data.split("/");
+    const dataFormatada = new Date(`${ano}-${mes}-${dia}T00:00:00`);
+    return dataFormatada.toISOString().split("T")[0]; // Retorna yyyy-mm-dd
+  }
+
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={onClose}
+      onRequestClose={()=>{onClose(); setValorCategoria("");}}
       className="bg-white rounded-2xl p-6 shadow-lg max-w-lg w-full z-50"
       overlayClassName="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-40"
     >
       {/* Cabeçalho */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Editar Produto</h2>
+        <h2 className="text-xl font-semibold">Editar produto</h2>
         <button
           className="text-xl font-bold cursor-pointer"
-          onClick={onClose}
+          onClick={()=>{onClose(); setValorCategoria("");}}
           aria-label="Fechar modal"
         >
           ×
@@ -126,6 +207,9 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
         <DropDownMenu
           variant="gray"
           label="Categoria"
+          isValorC={true}
+          valorC={valorCategoria}
+          setValorC={setValorCategoria}
           opcoes={categorias}
           className="bg-[#B6B6B6] text-white rounded-xl max-h-[50px] w-full p-3"
           onChange={(value) =>
@@ -148,7 +232,7 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
             className="p-3 bg-[#B6B6B6] text-white rounded-xl w-full max-h-[50px]"
             required
           />
-          <p className="text-red-500 text-sm min-h-[20px]"></p>
+          <p className="text-red-500 text-sm min-h-[20px]">{erros.quantidade}</p>
         </div>
 
         <div>
@@ -163,6 +247,7 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
           <p className="text-red-500 text-sm min-h-[20px]">{erros.valor}</p>
         </div>
 
+        <div>
         <input
           type={formData.validade ? "date" : "text"}
           name="validade"
@@ -175,7 +260,10 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
           onChange={handleChange}
           className="p-3 bg-[#B6B6B6] text-white rounded-xl w-full max-h-[50px]"
         />
+        <p className="text-red-500 text-sm min-h-[20px]">{erros.validade}</p>
+        </div>
 
+        <div>
         <input
           type="text"
           name="codbarras"
@@ -184,8 +272,11 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
           onChange={handleChange}
           className="p-3 bg-[#B6B6B6] text-white rounded-xl w-full max-h-[50px]"
         />
+        <p className="text-red-500 text-sm min-h-[20px]">{erros.codbarras}</p>
+        </div>
       </div>
 
+      <div>
       <textarea
         name="descricao"
         placeholder="Descrição"
@@ -193,21 +284,26 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
         onChange={handleChange}
         className="w-full mt-3 p-3 bg-[#B6B6B6] text-white rounded-xl h-24 max-h-[100px]"
       ></textarea>
+      <p className="text-red-500 text-sm min-h-[20px]">{erros.descricao}</p>
+      </div>
 
       {/* Botão */}
       <div className="flex justify-end w-full mt-4">
         <div className="flex">
           <Botao
-            texto="Salvar"
+            texto="Editar"
+            disabled={!isFormValid()}
             className="text-white px-6 py-3 rounded-xl"
             onClick={() => {
-              editar(formData)
+              editar(formData);
+              setValorCategoria("");
               onClose();
             }}
           />
         </div>
       </div>
+      
       <ModalCategoria open={openModalCategoria} onRequestClose={()=>setModalCategoria(false)}></ModalCategoria>
-    </Modal>
+      </Modal>
   );
 }

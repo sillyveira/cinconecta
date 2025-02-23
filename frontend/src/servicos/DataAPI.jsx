@@ -131,14 +131,6 @@ export const buscarAuditoria = async (logout, query = "") => {
   }
 };
 
-/*id_categoria,
-    nome,
-    descricao,
-    quantidade,
-    validade,
-    valor,
-    codbarras,*/
-
 export const buscarCategorias = async (logout) => {
   try {
     const resposta = await fetch(
@@ -270,7 +262,7 @@ export const removerProduto = async (
     await carregarEstoque();
     return dados.message;
   } catch (error) {
-    console.error("Erro ao buscar estoque:", error);
+    console.error("Erro ao apagar ou buscar o estoque:", error);
 
     // Verifica se o erro está relacionado a falha de conexão (erro de rede)
     if (

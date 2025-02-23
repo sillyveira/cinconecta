@@ -11,14 +11,6 @@ const middlewareAutenticacao = async (req, res, next) => {
                 message: 'Token não está presente na solicitação.'
             })
         }
-
-        // const token = tokenHeader.split(' ')[1]; //Remove da solicitação o Bearer: "Bearer <token>".
-
-        // if (!token){
-        //     return res.status(401).json({
-        //         message: 'Token inválido.'
-        //     });
-        // }
         
         const {userid, ongid, nome_usuario} = await sessionService.checarToken(tokenCookie);
 

@@ -13,7 +13,7 @@ function StatCard({titulo, valor, expandirFunction}) {
           <p className="text-white font-medium text-sm">{titulo}</p>
         </div>
         {/* Número */}
-        <p className="text-white font-medium text-3xl pl-3">{valor}</p>
+        <p className="text-white font-medium text-3xl pl-3">{valor ? valor : "Sem dados"}</p>
       </div>
 
       <p className="text-blue-400 ml-auto cursor-pointer underline mr-1 w-16 group" onClick={expandirFunction} >Expandir</p>
