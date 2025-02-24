@@ -23,4 +23,6 @@ router.post('/checar-logs', authMiddleware, async (req, res) => {
     }
   });
 
+router.get("/membros", authMiddleware, userController.members);
+
 module.exports = router

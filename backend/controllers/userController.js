@@ -42,6 +42,7 @@ const login = async (req, res) => {
               // Caso 1.1: Verificar se a ONG já existe, se não, deve ser criada.
               
               let _idOng = null;
+              let _nomeOng = "";
               if(!ong){
                 try{
                 
@@ -52,7 +53,7 @@ const login = async (req, res) => {
                   await novaOng.save();
                 
                   _idOng = novaOng._id; // Salvando o ID da nova ONG para atribuir ao usuário 
-                
+                  _nomeOng = novaOng.nome
                 } catch (err){
                   // Se não foi possível criar uma nova ONG:
                   return res.status(500).json({
@@ -63,6 +64,7 @@ const login = async (req, res) => {
               } else if(ong){
               // Caso 1.2: A ONG já existe.
                 _idOng = ong._id;
+                _nomeOng = ong.nome
             }
 
             // Criação do usuário com o ID da ONG em mãos:
@@ -106,6 +108,8 @@ const login = async (req, res) => {
                 message: "O usuário foi logado e registrado com sucesso.",
                 userid: novoUsuario._id,
                 username: nomeUsuario,
+                email: novoUsuario.email,
+                ongname: _nomeOng
               });
             } catch (err) {
               return res.status(500).json({
@@ -138,7 +142,9 @@ const login = async (req, res) => {
                 return res.status(200).json({
                   message: "O usuário já está logado.",
                   userid: user._id,
-                  username: user.nome
+                  username: user.nome,
+                  email: user.email,
+                  ongname: ong.nome
                 });
               }
             } catch (err) {
@@ -176,6 +182,8 @@ const login = async (req, res) => {
               message: "O usuário foi logado.",
               userid: user._id,
               username: user.nome,
+              email: user.email,
+              ongname: ong.nome
             });
           }
         } else {
@@ -215,4 +223,28 @@ const logout = async (req, res) => {
     });
   } catch (err) {}
 };
-module.exports = { login, logout };
+
+const members = async(req, res) => {
+  // 1. Pegar o id da ong do usuário
+  // 2. Fazer a busca nos usuários que remetem à ong
+  // 3. Retornar a lista
+  const id_ong = req.ongId;
+
+  try {
+    
+    const membros_ong = await User.find({id_ong: id_ong});
+    
+    return res.status(200).json({
+      message: 'Os membros foram retornados com sucesso.',
+      membros: membros_ong
+    })
+
+  } catch (err) {
+    return res.status(400).json({
+      message: 'Houve um erro ao retornar os membros da ong.',
+      membros: [],
+      erro: err.message
+    })
+  }
+}
+module.exports = { login, logout, members };
