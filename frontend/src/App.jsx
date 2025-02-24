@@ -6,8 +6,10 @@ import Estoque from "./paginas/Estoque.jsx";
 import Perfil from "./paginas/Perfil.jsx";
 import Auditoria from "./paginas/Auditoria.jsx";
 import Login from "./paginas/Login.jsx";
+import PoliticaPrivacidade from "./paginas/PoliticaPrivacidade.jsx";
 import { AuthProvider, useAuth } from "./contextos/AuthContext.jsx";
 import { DataProvider } from "./contextos/DataContext.jsx";
+import TermosCondicoes from "./paginas/TermosCondicoes.jsx";
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
 
@@ -17,6 +19,8 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={isAuthenticated ? <Inicio /> : <Navigate to="/login" />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
+          <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade/>} />
+          <Route path="/termos-condicoes-uso" element={<TermosCondicoes/>} ></Route>
           <Route path="/perfil" element={isAuthenticated ? <Perfil /> : <Navigate to="/login" />} />
           <Route path="/analise-geral" element={isAuthenticated ? <AnaliseGeral /> : <Navigate to="/login" />} />
           <Route path="/estoque" element={isAuthenticated ? <Estoque /> : <Navigate to="/login" />} />

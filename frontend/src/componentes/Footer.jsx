@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { Link } from "react-router-dom";
 function Footer() {
   const listaTexto = ["por estudantes", "para ONGs", "pelo Recife"];
   const [index, setIndex] = useState(0);
@@ -18,8 +18,9 @@ function Footer() {
         <hr className="h-2 text-[#bbbbbb] w-200"/>
     
     <footer className="text-black flex items-center justify-center flex-row gap-10 p-4">
-      <div>
-        <a href="/" className="underline">Política de Privacidade</a>
+      <div className="flex flex-col items-center">
+        <Link className="underline" to={"/politica-de-privacidade"}>Política de privacidade</Link>
+        <Link className="underline" to={"/termos-condicoes-uso"}>Termos e condições de uso</Link>
       </div>
 
       <div className="w-60 flex justify-center">
