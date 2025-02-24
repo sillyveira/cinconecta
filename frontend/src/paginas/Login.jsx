@@ -20,7 +20,7 @@ const Login = () => {
   const funcaoLogin = async () => {
     try {
       const data = await loginRequest(dadosLogin.email, dadosLogin.password);
-      login(data.username);
+      login(data.username, data.ongname, data.email);
     } catch (error) {
       if (error.message === "Credenciais inválidas") {
         toast.error("Credenciais inválidas!");
@@ -39,6 +39,7 @@ const Login = () => {
   return (
     <>
       <div className="flex flex-col justify-between w-full h-screen overflow-hidden bg-gray-100">
+        <img src="./src/imagens/primarylogo.png" className="w-30 fixed top-4 left-6" />
         <main className="p-10 flex flex-col h-screen justify-center items-center flex-grow [@media(max-height:600px)]:flex-row">
           <div className="flex flex-row justify-around items-center min-h-full min-w-full bg-gray-100 bd">
             <div className=" max-w-xl ">
