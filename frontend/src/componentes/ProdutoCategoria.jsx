@@ -87,10 +87,10 @@ export default function ProdutoCategoria() {
                       100
                     ).toFixed(2);
                     return (
-                      <div className="bg-gray-800 text-white p-2 rounded shadow-md">
+                      <div className="bg-gray-800 text-white p-2 rounded shadow-md backdrop-blur-2xl opacity-90">
                         <p>{data.categoria}</p>
-                        <p>Quantidade: {data.quantidade}</p>
-                        <p>Porcentagem: {porcentagem}%</p>
+                        <p className="text-xs">Quantidade: {data.quantidade}</p>
+                        <p className="text-xs">Porcentagem: {porcentagem}%</p>
                       </div>
                     );
                   }
@@ -102,12 +102,12 @@ export default function ProdutoCategoria() {
         </div>
         <div className="w-1/3 flex flex-col gap-2">
           {Dados.produtoporcategoria.map((entry, index) => (
-            <div key={index} className="flex items-center gap-2">
+            <div key={index} className="flex items-center gap-1">
               <div
-                className="w-4 h-4"
+                className="w-2 h-2"
                 style={{ backgroundColor: COLORS[index % COLORS.length] }}
               />
-              <span className="text-white text-sm">{entry.categoria}</span>
+              <span className="text-white text-xs overflow-clip max-w-17">{entry.categoria}</span>
             </div>
           ))}
         </div>

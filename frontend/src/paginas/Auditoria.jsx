@@ -5,9 +5,10 @@ import Paginacao from "../componentes/Paginacao";
 import FiltroAuditoria from "../componentes/FiltroAuditoria";
 import DataContext from "../contextos/DataContext";
 import ModalCC from "../componentes/Modal";
-import { buscarAuditoria } from "../servicos/DataAPI";
 import { useAuth } from "../contextos/AuthContext";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+
 function Auditoria() {
   const [dadosAuditoria, setDadosAuditoria] = useState([]);
   const [itensAtuais, setItensAtuais] = useState([]);
@@ -351,7 +352,10 @@ function Auditoria() {
     <>
       <Header titulo={"Auditoria"}></Header>
 
-      <div className="flex flex-row-reverse justify-center gap-4 pt-10">
+      <motion.div
+      initial={{x:-70}}
+      animate={{x:0}}
+      className="flex flex-row-reverse justify-center gap-4 pt-10">
         {/* Componente de filtro para PC */}
         <FiltroAuditoria
           className={""}
@@ -365,7 +369,7 @@ function Auditoria() {
             aplicarFiltro("")
             toast.success("A auditoria foi atualizada com sucesso.");
           }}
-        ></FiltroAuditoria>
+        />
 
         {/* TODO: Aqui deve ser implementado o componente de filtro para Mobile*/}
 
@@ -400,7 +404,7 @@ function Auditoria() {
           />
           {/* ----------------- */}
         </div>
-      </div>
+      </motion.div>
 
       {/* Modal de Informações */}
       {infoAtual && (
