@@ -28,10 +28,12 @@ export default function ModalCategoria({ open, onRequestClose }) {
   const { carregarCategorias, Categorias } = useContext(DataContext);
 
   function mapearParaLista(array) {
-    return array.map((item) => ({
-      title: item.nome_categoria,
-      value: item._id,
-    }));
+    if (array) {
+      return array.map((item) => ({
+        title: item.nome_categoria,
+        value: item._id,
+      }));
+    }
   }
 
   useEffect(() => {
@@ -230,11 +232,11 @@ export default function ModalCategoria({ open, onRequestClose }) {
           texto="Criar"
           onClick={() => {
             setInfoCategoria((prev) => [
-              { ...prev[0], criarCategoria: "" }, 
+              { ...prev[0], criarCategoria: "" },
               prev[1],
               prev[2],
             ]);
-            setErros({titulo: "", categoria: ""})
+            setErros({ titulo: "", categoria: "" })
             setModo("criar");
           }}
         />
@@ -246,7 +248,7 @@ export default function ModalCategoria({ open, onRequestClose }) {
               { ...prev[1], editarCategoria: "", _idCategoriaEditar: "" }, // Atualiza apenas editarCategoria
               prev[2], // Mantém o terceiro objeto inalterado
             ]);
-            setErros({titulo: "", categoria: ""})
+            setErros({ titulo: "", categoria: "" })
             setModo("editar");
           }}
         />
@@ -258,7 +260,7 @@ export default function ModalCategoria({ open, onRequestClose }) {
               prev[1], // Atualiza apenas editarCategoria
               { ...prev[2], _idCategoriaRemover: "" }, // Mantém o terceiro objeto inalterado
             ]);
-            setErros({titulo: "", categoria: ""})
+            setErros({ titulo: "", categoria: "" })
             setModo("remover");
           }}
         />

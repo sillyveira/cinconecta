@@ -18,11 +18,14 @@ export default function ModalEdicao({ isOpen, onClose, produto }) {
   const [categorias, setCategorias] = useState({title:"", value:""});
   const [valorCategoria, setValorCategoria] = useState("")
   function mapearParaLista(array) {
-    return array.map((item) => ({
-      title: item.nome_categoria,
-      value: item._id,
-    }));
+    if (array) {
+      return array.map((item) => ({
+        title: item.nome_categoria,
+        value: item._id,
+      }));
+    }
   }
+
 
   useEffect(() => {
     carregarCategorias();

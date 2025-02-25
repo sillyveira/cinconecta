@@ -18,10 +18,12 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
   const [categorias, setCategorias] = useState({title:"", value:""});
 
   function mapearParaLista(array) {
-    return array.map((item) => ({
-      title: item.nome_categoria,
-      value: item._id,
-    }));
+    if (array) {
+      return array.map((item) => ({
+        title: item.nome_categoria,
+        value: item._id,
+      }));
+    }
   }
 
   useEffect(() => {
