@@ -46,14 +46,34 @@ const produtosProximosValidade = async (ongId) => {
 
     tresMesesAtras.setMonth(tresMesesAtras.getMonth() + 3);
 
-    const produtosProximos = Product.find({
+    const produtosProximos = await Product.find({
       id_ong: ongId,
       validade: {
         $lte: tresMesesAtras,
       },
     });
 
-    return produtosProximos;
+    const produtoPadronizado = produtosProximos.map((produto) => {
+
+      return {
+        _id: produto._id, 
+        id_categoria: produto.id_categoria || "",
+        nome_categoria: produto.nome_categoria || "",
+        id_ong: produto.id_ong, 
+        nome: produto.nome || "",
+        descricao: produto.descricao || "",
+        quantidade: produto.quantidade || 0, 
+        validade:
+          (produto.validade &&
+            new Date(produto.validade)
+              .toLocaleDateString('pt-BR')) ||
+          "", // "" se não existir
+        valor: produto.valor || 0, // 0 se não existir
+        codbarras: produto.codbarras || "",
+      };
+    });
+
+    return produtoPadronizado;
   } catch (err) {
     console.log("[Erro no cálculo da validade] ", err.message);
     return {};

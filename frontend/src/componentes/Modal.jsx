@@ -6,7 +6,7 @@ export default function ModalCC({ titulo, isOpen, onClose, children }) {
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      className="bg-white rounded-lg p-5 shadow-lg max-w-md w-full z-50 backdrop-blur-sm"
+      className="bg-white rounded-lg p-5 shadow-lg max-w-lg w-full z-50 backdrop-blur-sm"
       overlayClassName="fixed inset-0 bg-black/30 b backdrop-blur-sm flex justify-center items-center z-40"
     >
       <div className="flex justify-between items-center">

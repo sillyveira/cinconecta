@@ -392,11 +392,7 @@ exports.view_product = async (req, res) => {
         validade:
           (produto.validade &&
             new Date(produto.validade)
-              .toISOString()
-              .split("T")[0]
-              .split("-")
-              .reverse()
-              .join("/")) ||
+              .toLocaleDateString('pt-BR')) ||
           "", // "" se não existir
         valor: produto.valor || 0, // 0 se não existir
         codbarras: produto.codbarras || "",

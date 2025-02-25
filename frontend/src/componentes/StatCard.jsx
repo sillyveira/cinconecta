@@ -1,7 +1,7 @@
-  import React from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Clipboard } from "lucide-react";
-function StatCard({titulo, valor, expandirFunction}) {
+function StatCard({ titulo, valor, isExpandable, expandirFunction }) {
   return (
     <motion.div
       className="text-black bg-gray-800 shadow-2xl bg-opacity-100 border backdrop-blur-md rounded-md w-64 h-24"
@@ -13,11 +13,20 @@ function StatCard({titulo, valor, expandirFunction}) {
           <p className="text-white font-medium text-sm">{titulo}</p>
         </div>
         {/* Número */}
-        <p className="text-white font-medium text-3xl pl-3">{valor ? valor : "Sem dados"}</p>
+        <p className="text-white font-medium text-3xl pl-3">
+          {valor ? valor : "Sem dados"}
+        </p>
       </div>
 
-      <p className="text-blue-400 ml-auto cursor-pointer underline mr-1 w-16 group" onClick={expandirFunction} >Expandir</p>
-
+      {
+      isExpandable ?       
+        <p
+          className="text-blue-400 ml-auto cursor-pointer underline mr-1 w-16 group"
+          onClick={expandirFunction}
+        >
+          Expandir
+        </p> : null
+      }
     </motion.div>
   );
 }
