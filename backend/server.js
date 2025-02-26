@@ -15,7 +15,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 
 // Importação do scheduler (timer programado para realizar ações automáticas)
 const scheduler = require('./services/timerService');
-scheduler.iniciarScheduler(10);
+scheduler.iniciarScheduler(60);
 
 // Middleware para interpretar JSON
 app.use(express.json());
