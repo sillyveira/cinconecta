@@ -1,12 +1,21 @@
 const Session = require("./sessionService");
-const Audit = require("../controllers/auditController")
+
+let intervalId; // Armazena o ID do intervalo
 
 function iniciarScheduler(tempoMinutos) {
-    setInterval(executarTarefa, 1000 * 60 * tempoMinutos)
+    pararScheduler(); // Garante que nenhum outro timer esteja rodando antes de iniciar
+    intervalId = setInterval(executarTarefa, 1000 * 60 * tempoMinutos);
 }
 
-const executarTarefa = async() => {
-    Session.apagarSessoesExpiradas();
+function pararScheduler() {
+    if (intervalId) {
+        clearInterval(intervalId);
+        console.log("Scheduler interrompido.");
+    }
 }
 
-module.exports = {iniciarScheduler, executarTarefa};
+const executarTarefa = async () => {
+    await Session.apagarSessoesExpiradas();
+};
+
+module.exports = { iniciarScheduler, pararScheduler, executarTarefa };

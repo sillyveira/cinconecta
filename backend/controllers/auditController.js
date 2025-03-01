@@ -92,14 +92,14 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
 return logsFormatado;
 }
 
-const checarNovosLogs = async ( ongid, dataInicio) => {
+const criarLogRevisao = async ( ongid, dataInicio) => {
   try {
     
     // Busca os registros nos últimos x dias
     const logs = await Audit.find({
       id_ong: ongid,
       acao: { $nin: ['rev'] }, // Não inclui os logs de revisão, login e registro.
-      //data: { $gte: dataInicio, $lte: new Date() }, //Da data de início até a data atual.
+      data: { $gte: dataInicio, $lte: new Date() }, //Da data de início até a data atual.
       // TODO: remover esse comentário ^^ É apenas para teste da função checar_logs 
     }).sort({ data: 1 });
 
@@ -172,7 +172,7 @@ const checarUltimaAuditoria = async (userid, ongid) => {
     const ultimaAuditoria = ong_.ultima_auditoria;
 
     if (!ultimaAuditoria) { //Por algum motivo inesperado, a última auditoria não existe
-      await checarNovosLogs(userid, ong_, new Date(2025, 1, 1));
+      await criarLogRevisao(userid, ong_, new Date(2025, 1, 1));
       ong_.ultima_auditoria = new Date();
       await ong_.save();
       return;
@@ -182,7 +182,7 @@ const checarUltimaAuditoria = async (userid, ongid) => {
     tresDiasAtras.setDate(tresDiasAtras.getDate() - 3);
     
     if (ultimaAuditoria <= tresDiasAtras) {
-      await checarNovosLogs(ong_._id, ong_.ultima_auditoria);
+      await criarLogRevisao(ong_._id, ong_.ultima_auditoria);
       ong_.ultima_auditoria = new Date();
       await ong_.save();
     }
@@ -208,4 +208,4 @@ const checarUltimaAuditoria = async (userid, ongid) => {
 //   };
   
 
-module.exports = { criarLog, checarNovosLogs, checarUltimaAuditoria, getLogs };
+module.exports = { criarLog, criarLogRevisao, checarUltimaAuditoria, getLogs };

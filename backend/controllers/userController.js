@@ -196,9 +196,8 @@ const login = async (req, res) => {
   } catch (error) {
     if (error.response) {
       // Captura erro com resposta do servidor (status HTTP > 400)
-      return res.status(error.response.status).json({
-        message:
-          error.response.data.message || "Erro desconhecido na resposta.",
+      return res.status(error.response?.status).json({
+        message: error.response?.data?.message || "Erro desconhecido na resposta.",
       });
     } else if (error.request) {
       // Captura erro sem resposta do servidor (problema na requisição)

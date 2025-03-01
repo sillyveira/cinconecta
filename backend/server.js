@@ -41,8 +41,8 @@ app.use('/categorias', categoryRoutes); //Rotas categorias
 
 // Inicia o servidor
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`[SERVIDOR RODANDO] na porta ${PORT}`);
 });
 
-module.exports = app;
+module.exports = {app, server};
