@@ -3,7 +3,7 @@ import { ChevronRight, ChevronsRight } from "lucide-react";
 import { ChevronLeft, ChevronsLeft } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
+export default function Paginacao({ paginaAtual, paginasTotais, setPagina }) {
   return (
     <>
       {/* PAGINAÇÃO */}
@@ -11,14 +11,16 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
         {/* BOTÕES PARA ESQUERDA */}
         <div className="flex gap-2">
           <motion.button
+            aria-label="Primeira Página"
             className="rounded-full bg-[#B6B6B6] p-2 text-2xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
-            onClick={()=>setPagina(1)}
+            onClick={() => setPagina(1)}
           >
             <ChevronsLeft></ChevronsLeft>
           </motion.button>
 
           <motion.button
+            aria-label="Voltar 5 Páginas"
             className="rounded-full bg-[#B6B6B6] p-2 text-xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
@@ -31,6 +33,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
           </motion.button>
 
           <motion.button
+            aria-label="Voltar 1 Página"
             className="rounded-full bg-[#B6B6B6] p-2 text-2xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
@@ -56,6 +59,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
         {/* botão: Avançar 1 página  */}
         <div className="flex gap-2">
           <motion.button
+            aria-label="Avançar 1 Página"
             className="rounded-full bg-[#B6B6B6] p-2 text-2xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
@@ -69,6 +73,7 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
 
           {/* botão: Avançar 5 páginas  */}
           <motion.button
+            aria-label="Avançar 5 Páginas"
             className="rounded-full bg-[#B6B6B6] p-2 text-xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
@@ -82,10 +87,11 @@ export default function Paginacao({ paginaAtual, paginasTotais, setPagina}) {
 
           {/* botão: Passar todas as páginas  */}
           <motion.button
+            aria-label="Última Página"
             className="rounded-full bg-[#B6B6B6] p-2 text-2xl flex items-center text-white hover:cursor-pointer"
             whileHover={{ scale: 1.1 }}
             onClick={() => {
-                setPagina(paginasTotais);
+              setPagina(paginasTotais);
             }}
           >
             <ChevronsRight />
