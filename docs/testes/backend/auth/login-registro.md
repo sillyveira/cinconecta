@@ -19,8 +19,7 @@ Teste para validar a funcionalidade de login e registro, verificando diferentes 
 
 **Arquivos**
 
-- `backend/tests/controllers/authController.test.js` 
-- `backend/tests/api/api.test.js` 
+- `backend/tests/controllers/userController.test.js` 
 ---
 
 ## Pré-condições
