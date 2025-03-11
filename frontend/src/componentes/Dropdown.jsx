@@ -47,11 +47,11 @@ function DropDownMenu({
       }
     >
       <option value=""> {label} </option>
-      {opcoes.map((optione) => (
+      {Array.isArray(opcoes) ? opcoes.map((optione) => (
         <option key={optione.title} value={optione.value}>
           {optione.title}
         </option>
-      ))}
+      )) : []}
     </select>
   );
 }

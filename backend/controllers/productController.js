@@ -224,8 +224,8 @@ exports.update_product = async (req, res) => {
     // 🔹 Criar objeto atualizado
     const novoProduto = {
       nome: nome || produtoExistente.nome,
-      id_categoria: id_categoria || produtoExistente.id_categoria,
-      nome_categoria: id_categoria ? categoriasCache.get(id_categoria.toString()) : produtoExistente.nome_categoria,
+      id_categoria: id_categoria === "" ? null : id_categoria || produtoExistente.id_categoria,
+      nome_categoria: id_categoria === "" ? null : (id_categoria ? categoriasCache.get(id_categoria.toString()) : produtoExistente.nome_categoria),
       descricao: descricao || produtoExistente.descricao,
       quantidade: quantidade ?? produtoExistente.quantidade, // Permite zero
       validade: validade || produtoExistente.validade,

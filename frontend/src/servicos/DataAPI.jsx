@@ -48,7 +48,7 @@ export const buscarEstoque = async (logout, query = "") => {
         "Content-Type": "application/json",
       },
     });
-    
+
     if (!resposta.ok) {
       console.log(resposta.json());
       logout("Timeout");
@@ -133,16 +133,13 @@ export const buscarAuditoria = async (logout, query = "") => {
 
 export const buscarCategorias = async (logout) => {
   try {
-    const resposta = await fetch(
-      `http://localhost:3000/categorias/`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const resposta = await fetch(`http://localhost:3000/categorias/`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!resposta.ok) {
       console.log(resposta.json());
@@ -225,6 +222,53 @@ export const adicionarProduto = async (logout, produto, carregarEstoque) => {
   }
 };
 
+export const editarProduto = async (logout, produto, carregarEstoque) => {
+  try {
+    const resposta = await fetch(
+      `http://localhost:3000/produtos/atualizar-produto/${produto._id}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(produto),
+      }
+    );
+
+    if (!resposta.ok) {
+      toast.error("Ocorreu um erro ao editar uma categoria.");
+      throw new Error(`Erro na requisição: ${resposta.status}`);
+    }
+
+    const dados = await resposta.json();
+
+    if (
+      dados.message === "Token não está presente na solicitação." ||
+      dados.message === "O token é inválido ou está expirado."
+    ) {
+      logout("Expirado");
+      return [];
+    }
+
+    toast.success("O produto foi atualizado com sucesso.");
+    await carregarEstoque();
+    return dados.message;
+  } catch (error) {
+    console.error("Erro ao buscar estoque:", error);
+
+    // Verifica se o erro está relacionado a falha de conexão (erro de rede)
+    if (
+      error.message.includes("NetworkError") ||
+      error.message.includes("Failed to fetch")
+    ) {
+      logout("Timeout");
+    }
+
+    throw error; // Deixa o erro ser tratado pelo contexto
+  }
+};
+
 export const removerProduto = async (
   logout,
   idsRemovidos = [],
@@ -276,9 +320,13 @@ export const removerProduto = async (
   }
 };
 
-export const adicionarCategoria = async (logout, nomeCategoria, carregarCategorias) => {
-  if (!nomeCategoria){
-    toast.error("A categoria precisa de um nome!")
+export const adicionarCategoria = async (
+  logout,
+  nomeCategoria,
+  carregarCategorias
+) => {
+  if (!nomeCategoria) {
+    toast.error("A categoria precisa de um nome!");
     return;
   }
 
@@ -292,8 +340,8 @@ export const adicionarCategoria = async (logout, nomeCategoria, carregarCategori
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nome_categoria: nomeCategoria
-        })
+          nome_categoria: nomeCategoria,
+        }),
       }
     );
 
@@ -330,7 +378,12 @@ export const adicionarCategoria = async (logout, nomeCategoria, carregarCategori
   }
 };
 
-export const atualizarCategoria = async (logout, idCategoria, nomeCategoria, carregarCategorias) => {
+export const atualizarCategoria = async (
+  logout,
+  idCategoria,
+  nomeCategoria,
+  carregarCategorias
+) => {
   try {
     const resposta = await fetch(
       `http://localhost:3000/categorias/atualizar-categoria/${idCategoria}`,
@@ -341,8 +394,8 @@ export const atualizarCategoria = async (logout, idCategoria, nomeCategoria, car
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nome_categoria: nomeCategoria
-        })
+          nome_categoria: nomeCategoria,
+        }),
       }
     );
 
@@ -379,7 +432,11 @@ export const atualizarCategoria = async (logout, idCategoria, nomeCategoria, car
   }
 };
 
-export const deletarCategoria = async (logout, idCategoria, carregarCategorias) => {
+export const deletarCategoria = async (
+  logout,
+  idCategoria,
+  carregarCategorias
+) => {
   try {
     const resposta = await fetch(
       `http://localhost:3000/categorias/deletar-categoria/${idCategoria}`,
@@ -389,7 +446,8 @@ export const deletarCategoria = async (logout, idCategoria, carregarCategorias) 
         headers: {
           "Content-Type": "application/json",
         },
-      });
+      }
+    );
 
     if (!resposta.ok) {
       toast.error("Ocorreu um erro ao remover uma categoria.");
@@ -423,46 +481,4 @@ export const deletarCategoria = async (logout, idCategoria, carregarCategorias) 
     throw error; // Deixa o erro ser tratado pelo contexto
   }
 };
-
-
-  export const editarProduto = async (logout, produto, carregarEstoque) => {
-    try {
-      const resposta = await fetch(`http://localhost:3000/produtos/atualizar-produto/${produto._id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(produto)
-      });
-
-      if (!resposta.ok) {
-        toast.error('Ocorreu um erro ao editar uma categoria.');
-        throw new Error(`Erro na requisição: ${resposta.status}`);
-      }
-  
-      const dados = await resposta.json();
-  
-      if (
-        dados.message === "Token não está presente na solicitação." ||
-        dados.message === "O token é inválido ou está expirado."
-      ) {
-        logout("Expirado");
-        return [];
-      }
-      
-      toast.success('O produto foi atualizado com sucesso.')
-      await carregarEstoque();
-      return dados.message;
-    } catch (error) {
-        console.error("Erro ao buscar estoque:", error);
-    
-        // Verifica se o erro está relacionado a falha de conexão (erro de rede)
-        if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
-          logout("Timeout");
-        }
-    
-        throw error; // Deixa o erro ser tratado pelo contexto
-      }
-  };
 
