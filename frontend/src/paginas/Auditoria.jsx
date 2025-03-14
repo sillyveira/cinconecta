@@ -201,7 +201,8 @@ function Auditoria() {
             </p>
             <p>
               <strong>Categoria:</strong>{" "}
-              {item?.desc?.novoProduto?.nome_categoria || "Categoria desconhecida"}
+              {item?.desc?.novoProduto?.nome_categoria ||
+                "Categoria desconhecida"}
             </p>
             <p>
               <strong>Quantidade:</strong>{" "}
@@ -223,6 +224,10 @@ function Auditoria() {
             <p>
               <strong>Descrição:</strong>{" "}
               {item?.desc?.novoProduto?.descricao || "Descrição desconhecida"}
+            </p>
+            <hr />
+            <p>
+              <strong>Ação por:</strong> {item?.nome_usuario}
             </p>
           </div>
         );
@@ -268,6 +273,9 @@ function Auditoria() {
                 <hr />
               </div>
             ))}
+            <p>
+              <strong>Ação por:</strong> {item?.nome_usuario}
+            </p>
           </div>
         );
         break;
@@ -316,7 +324,6 @@ function Auditoria() {
             {item?.desc?.alteracoes && (
               <div>
                 <hr />
-                <br />
                 <p>
                   <strong>Alterações:</strong>
                 </p>
@@ -332,6 +339,11 @@ function Auditoria() {
                 ))}
               </div>
             )}
+
+            <hr />
+            <p>
+              <strong>Ação por:</strong> {item?.nome_usuario}
+            </p>
           </div>
         );
         break;
@@ -353,9 +365,10 @@ function Auditoria() {
       <Header titulo={"Auditoria"}></Header>
 
       <motion.div
-      initial={{x:-70}}
-      animate={{x:0}}
-      className="flex flex-row-reverse justify-center gap-4 pt-10">
+        initial={{ x: -70 }}
+        animate={{ x: 0 }}
+        className="flex flex-row-reverse justify-center gap-4 pt-10"
+      >
         {/* Componente de filtro para PC */}
         <FiltroAuditoria
           className={""}
@@ -365,8 +378,8 @@ function Auditoria() {
             setarFiltro(Info.acao, Info.dataInicial, Info.dataFinal);
             toast.success("O filtro foi aplicado com sucesso");
           }}
-          refreshFunction={()=>{
-            aplicarFiltro("")
+          refreshFunction={() => {
+            aplicarFiltro("");
             toast.success("A auditoria foi atualizada com sucesso.");
           }}
         />
