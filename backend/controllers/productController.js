@@ -243,7 +243,10 @@ exports.update_product = async (req, res) => {
     }
 
     // atualiza apenas se houver mudanças
-    await Product.updateOne({ _id: id, id_ong: id_ong }, novoProduto);
+    await Product.updateOne(
+      { _id: id, id_ong: id_ong},
+      novoProduto,
+      {runValidators: true});
 
     // criar log de auditoria
     try {

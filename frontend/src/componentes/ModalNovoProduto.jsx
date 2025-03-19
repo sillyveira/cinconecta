@@ -78,14 +78,15 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
   }
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     if (name === "nome") {
       setErros((prev) => ({
         ...prev,
-        nome: value.length > 40 ? "O nome pode ter no máximo 40 caracteres." : "",
+        nome:
+          value.length > 40 ? "O nome pode ter no máximo 40 caracteres." : "",
       }));
     }
-  
+
     if (name === "valor") {
       let formattedValue = value.replace(",", ".");
       setErros((prev) => ({
@@ -95,28 +96,40 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
       setFormData({ ...formData, [name]: formattedValue });
       return;
     }
-  
+
     if (name === "descricao") {
       setErros((prev) => ({
         ...prev,
-        descricao: value.length > 200 ? "A descrição pode ter no máximo 200 caracteres." : "",
+        descricao:
+          value.length > 200
+            ? "A descrição pode ter no máximo 200 caracteres."
+            : "",
       }));
     }
-  
+
     if (name === "codbarras") {
       setErros((prev) => ({
         ...prev,
-        codbarras: value.length > 128 ? "O código de barras pode ter no máximo 128 caracteres." : "",
+        codbarras:
+          value.length > 20
+            ? "O código de barras pode ter no máximo 20 caracteres."
+            : "",
       }));
     }
-  
+
     if (name === "quantidade") {
       if (!/^\d+$/.test(value)) {
         setErros((prev) => ({
           ...prev,
           quantidade: "A quantidade deve ser um número inteiro.",
         }));
+      } else if (parseInt(value) > 100000) {
+        setErros((prev) => ({
+          ...prev,
+          quantidade: "A quantidade não deve ultrapassar 100.000",
+        }));
       } else {
+        console.log(value);
         setErros((prev) => ({
           ...prev,
           quantidade: "",
@@ -133,12 +146,15 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
       }
       const [ano, mes, dia] = value.split("-").map(Number);
       const dateValue = new Date(value);
-    
+
       // Verifica se os valores são válidos
       if (
-        ano < 2000 || ano > 2100 || // Limita entre 2000 e 2100
-        mes < 1 || mes > 12 || // Mês inválido
-        dia < 1 || dia > 31 || // Dia inválido
+        ano < 2000 ||
+        ano > 2100 || // Limita entre 2000 e 2100
+        mes < 1 ||
+        mes > 12 || // Mês inválido
+        dia < 1 ||
+        dia > 31 || // Dia inválido
         isNaN(dateValue.getTime()) // Verifica se o objeto Date é válido
       ) {
         setErros((prev) => ({
@@ -151,13 +167,15 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
     }
     setFormData({ ...formData, [name]: value });
   };
+
   const isFormValid = () => {
     return (
-      formData.nome.length > 0 &&
-      formData.nome.length <= 40 &&
-      formData.quantidade &&
-      formData.descricao.length <= 200 &&
-      formData.codbarras.length <= 128 && 
+      formData?.nome?.length > 0 &&
+      formData?.nome?.length <= 40 &&
+      formData?.quantidade &&
+      formData?.descricao?.length <= 200 &&
+      formData?.codbarras?.length <= 20 &&
+      formData?.quantidade <= 100000 &&
       !erros.valor &&
       !erros.quantidade &&
       !erros.validade
