@@ -42,27 +42,29 @@ function criarTitulo(acao, item) {
 
 const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
 
-  // Se a diferença da data inicial par a data final for maior que um ano, setar para um ano apenas.
+  // Convertendo strings para objetos Date
+  dataFinal = new Date(dataFinal);
+  dataInicial = new Date(dataInicial);
 
-  // Calculando a diferença em milissegundos
-  dataFinal = new Date(dataFinal)
-  dataInicial = new Date(dataInicial)
-
-  const diferencaMs = dataInicial - dataFinal
-  // Convertendo a diferença de milissegundos para anos (aproximadamente)
+  // Corrigindo a diferença (subtraindo dataInicial de dataFinal)
+  const diferencaMs = dataFinal - dataInicial;
   const diferencaAnos = diferencaMs / (1000 * 60 * 60 * 24 * 365);
-  if (diferencaAnos > 1 || diferencaAnos <= -1){
-    dataInicial.setFullYear(dataFinal.getFullYear() - 1)
+
+  if (diferencaAnos > 1) {
+    dataInicial.setFullYear(dataFinal.getFullYear() - 1);
   }
+
+  // Definindo o início e o final do dia corretamente
+  dataInicial.setUTCHours(0, 0, 0, 0);
+  dataFinal.setUTCHours(23, 59, 59, 999);
 
   const query = {
     id_ong: ongid,
     data: {
-      $gte: new Date(dataInicial), // Maior ou igual à data inicial
-      $lte: new Date(dataFinal) // Menor ou igual à data final
+      $gte: dataInicial, // Data inicial com horário 00:00:00
+      $lte: dataFinal // Data final com horário 23:59:59
     }
-  }
-  
+  };
   // Se for fornecido um nome de um membro específico, será adicionado à query.
   if (nomeMembro) {
     query.nome_usuario = nomeMembro
