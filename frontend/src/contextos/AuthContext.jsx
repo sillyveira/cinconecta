@@ -63,6 +63,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("email");
     setUsername("");
     navigate("/login");
+    toast.dismiss();
     if (logoutMessage == "Expirado") {
       toast.error("A sua sessão expirou, logue novamente.");
     } else if (logoutMessage == "Logout") {
