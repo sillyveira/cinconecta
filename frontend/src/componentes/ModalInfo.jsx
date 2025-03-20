@@ -22,7 +22,7 @@ const ModalInfo = ({ isOpen, onClose, produto }) => {
           <strong>Quantidade:</strong> {produto.quantidade}
         </p>
         <p>
-          <strong>Preço:</strong>{" "}
+          <strong>Valor:</strong>{" "}
           {produto.valor ? `R$ ${produto.valor.toFixed(2)}` : "N/A"}
         </p>
         <p>

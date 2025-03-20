@@ -91,7 +91,7 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
       let formattedValue = value.replace(",", ".");
       setErros((prev) => ({
         ...prev,
-        valor: !/^\d*\.?\d*$/.test(formattedValue) ? "Preço inválido." : "",
+        valor: !/^\d*\.?\d*$/.test(formattedValue) ? "Valor inválido." : "",
       }));
       setFormData({ ...formData, [name]: formattedValue });
       return;
@@ -250,7 +250,7 @@ export default function ModalNovoProduto({ isOpen, onClose }) {
           <input
             type="text"
             name="valor"
-            placeholder="Preço"
+            placeholder="Valor (R$)"
             value={formData.valor}
             onChange={handleChange}
             className="p-3 bg-[#B6B6B6] text-white rounded-xl w-full max-h-[50px]"
