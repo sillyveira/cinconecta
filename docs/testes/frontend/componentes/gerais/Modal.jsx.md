@@ -25,8 +25,8 @@ Teste para validar a renderização correta do componente Modal, garantindo que 
 
 ## Testes realizados
 
-| ID | Teste | Ação | Resultado Esperado | Falha | Status |
-|-------|------|--------------------|-------|-------|
-| 0 | Renderizar o modal aberto | Definir isOpen=true |	O título e o conteúdo do modal são exibidos corretamente | Não | Passou |
-| 1 | Renderizar o modal fechado | Definir isOpen=false | O modal não deve ser renderizado na tela | Não | Passou |
-| 2 | Fechar o modal | Clicar no botão de fechar ("x") | A função onClose deve ser chamada corretamente | Não | Passou |
+| Teste | Ação | Resultado Esperado | Falha |
+|-------|------|--------------------|-------|
+| 0 | Renderizar o modal aberto | Definir isOpen=true |	O título e o conteúdo do modal são exibidos corretamente | Não |
+| 1 | Renderizar o modal fechado | Definir isOpen=false | O modal não deve ser renderizado na tela | Não |
+| 2 | Fechar o modal | Clicar no botão de fechar ("x") | A função onClose deve ser chamada corretamente | Não |

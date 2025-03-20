@@ -25,11 +25,11 @@ Teste para validar a renderização correta do componente Botao, garantindo que 
 
 ## Testes realizados
 
-| ID | Teste | Ação | Resultado Esperado | Falha | Status |
-|-------|------|--------------------|-------|-------|
-| 0 | Renderizar de tesxto | Renderizar o botão com um texto específicoa. | O botão deve exibir o texto corretamente | Não | Passou |
-| 1 | Aplicação de classe CSS | Passar uma classe TailwindCSS via className. | O botão deve conter a classe aplicada | Não | Passou |
-| 2 | Clique no botão ativo | Clicar no botão quando habilitado | A função onClick deve ser chamada | Não | Passou |
-| 3 | Clique no botão desativado | A função onCliClicar no botão quando disabled=true | A função onClick não deve ser chamada | Não | Passou |
-| 4 | Estilização do botão desativado | Definir disabled=true | O botão deve conter a classe "cursor-not-allowed" | Não | Passou |
-| 5 | Estilização do botão ativo | Definir ativo=true | O botão deve conter a classe "bg-cor-primaria" | Não | Passou |
+| ID | Teste | Ação | Resultado Esperado | Falha |
+|-------|------|--------------------|-------|
+| 0 | Renderizar de tesxto | Renderizar o botão com um texto específicoa. | O botão deve exibir o texto corretamente | Não |
+| 1 | Aplicação de classe CSS | Passar uma classe TailwindCSS via className. | O botão deve conter a classe aplicada | Não |
+| 2 | Clique no botão ativo | Clicar no botão quando habilitado | A função onClick deve ser chamada | Não |
+| 3 | Clique no botão desativado | A função onCliClicar no botão quando disabled=true | A função onClick não deve ser chamada | Não |
+| 4 | Estilização do botão desativado | Definir disabled=true | O botão deve conter a classe "cursor-not-allowed" | Não |
+| 5 | Estilização do botão ativo | Definir ativo=true | O botão deve conter a classe "bg-cor-primaria" | Não |

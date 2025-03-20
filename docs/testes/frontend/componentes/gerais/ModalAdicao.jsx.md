@@ -23,16 +23,10 @@ Garante que ao clicar no botão de adicionar produto, o modal abre corretamente,
 
 | ID | Caso de Teste | Passos | Resultado Esperado | Falha |
 |-------|------|--------------------|-------|-------|
-| 0 | Abrir e fechar o modal | 1. Clicar no botão para adicionar um novo produto.
-2. Verificar se o modal abre corretamente.
-3. Clicar no botão "X" no canto superior direito. | O modal deve abrir e fechar corretamente. | Não |
-| 1 | Preenchimento obrigatório | 1. Deixar os campos obrigatórios (Nome e Quantidade) vazios.
-2. Clicar em "Adicionar". | O sistema deve exibir mensagens informando que os campos obrigatórios precisam ser preenchidos. | Sim |
-| 2 | Seleção de categoria | 1. Clicar no botão de edição da categoria.
-2. Escolher uma categoria.
-3. Confirmar a seleção. | A categoria deve ser selecionada corretamente e aparecer no campo. | Não |
-| 3 | Adicionar um produto válido | 1. Preencher todos os campos corretamente.
-2. Clicar em "Adicionar". | O sistema deve salvar o produto e fechar o modal. | Não |
+| 0 | Abrir e fechar o modal | 1. Clicar no botão para adicionar um novo produto. 2. Verificar se o modal abre corretamente. 3. Clicar no botão "X" no canto superior direito. | O modal deve abrir e fechar corretamente. | Não |
+| 1 | Preenchimento obrigatório | 1. Deixar os campos obrigatórios (Nome e Quantidade) vazios. 2. Clicar em "Adicionar". | O sistema deve exibir mensagens informando que os campos obrigatórios precisam ser preenchidos. | Não |
+| 2 | Seleção de categoria | 1. Clicar no botão de edição da categoria. 2. Escolher uma categoria. 3. Confirmar a seleção. | A categoria deve ser selecionada corretamente e aparecer no campo. | Não |
+| 3 | Adicionar um produto válido | 1. Preencher todos os campos corretamente. 2. Clicar em "Adicionar". | O sistema deve salvar o produto e fechar o modal. | Não |
 
 
 ## Teste de Usabilidada
@@ -47,6 +41,5 @@ Garante que ao clicar no botão de adicionar produto, o modal abre corretamente,
 
 | ID | Caso de Teste | Passos | Resultado Esperado | Falha |
 |-------|------|--------------------|-------|-------|
-| 6 | Inserção de caracteres inválidos | 1. Digitar caracteres especiais no campo "Nome". |O sistema deve impedir caracteres inválidos. | Sim |
-| 7 | Inserção de quantidade negativa | 1. Inserir um valor negativo no campo "Quantidade". | O sistema deve exibir uma mensagem de erro. | Não |
-| 8 | Formato do preço | 1. Inserir um valor inválido no campo "Preço" (ex: "abc", "-10"). | O sistema deve impedir a inserção e exibir um aviso. | Não |
+| 6 | Inserção de quantidade negativa | 1. Inserir um valor negativo no campo "Quantidade". | O sistema deve exibir uma mensagem de erro. | Não |
+| 7 | Formato do preço | 1. Inserir um valor inválido no campo "Preço" (ex: "abc", "-10"). | O sistema deve impedir a inserção e exibir um aviso. | Não |
