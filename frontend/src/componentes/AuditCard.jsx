@@ -19,6 +19,7 @@ function AuditCard({titulo, horario, data, funcaoClique}) {
       <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            aria-label="Ativar Modal"
             onClick={funcaoClique}
             className="cursor-pointer"
           >
