@@ -35,8 +35,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    getOngMembers();
-  }, [isAuthenticated])
+    if (isAuthenticated) {
+      getOngMembers();
+    }
+  }, [isAuthenticated]);
 
   const login = (nomeUsuario, nomeOng, emailUsuario) => {
     

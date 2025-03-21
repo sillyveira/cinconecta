@@ -74,7 +74,7 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
     query.acao = acao 
   }
 
-  const logs = await Audit.find(query) //Enviando a query criada acima
+  const logs = await Audit.find(query).sort({data: 1}) //Enviando a query criada acima
 
   const logsFormatado = logs.map(documento => {
 
@@ -94,15 +94,49 @@ const getLogs = async(ongid, acao, dataInicial, dataFinal, nomeMembro) => {
 return logsFormatado;
 }
 
-const criarLogRevisao = async ( ongid, dataInicio) => {
+
+
+const checarUltimaAuditoriaParaCriarLogRevisao = async(ongid) => {
+  try {
+    const ong_ = await Ong.findById(ongid);
+    
+    if (!ong_){ // Se a ong não existir (erro)
+      return;
+    }
+
+    const ultimaAuditoria = ong_.ultima_auditoria;
+
+    if(!ultimaAuditoria){ // Se não existir a data da última auditoria (erro)
+      ong_.ultima_auditoria = new Date();
+      await ong_.save();
+      return;
+    }
+
+    const diaAnterior = new Date();
+    diaAnterior.setDate(diaAnterior.getDate() - 1);
+
+    const seisMesesAtras = new Date();
+    seisMesesAtras.setMonth(seisMesesAtras.getMonth() - 6);
+
+    if (ultimaAuditoria <= diaAnterior){
+      await criarLogRevisao(ong_._id, seisMesesAtras);
+      ong_.ultima_auditoria = new Date();
+      await ong_.save();
+    }
+
+  } catch (err) {
+    console.log("Erro inesperado ao checar a última auditoria:", err.message);  
+  }
+}
+
+const criarLogRevisao = async (ongid, dataFinal) => {
   try {
     
     // Busca os registros nos últimos x dias
     const logs = await Audit.find({
       id_ong: ongid,
-      acao: { $nin: ['rev'] }, // Não inclui os logs de revisão, login e registro.
-      data: { $gte: dataInicio, $lte: new Date() }, //Da data de início até a data atual.
-      // TODO: remover esse comentário ^^ É apenas para teste da função checar_logs 
+      acao: { $nin: ['rev'] }, // Não inclui os logs de revisão
+      data: { $gte: new Date("2023-01-01T00:00:00"), $lte: dataFinal }, //Do início até seis meses atrás.
     }).sort({ data: 1 });
 
     const logsPorData = [];
@@ -135,10 +169,6 @@ const criarLogRevisao = async ( ongid, dataInicio) => {
       entrada[4].push(log); // [data, 0, 0, [registro_adicionado]]
     });
 
-    // [data, 0, 0, [registro_adicionado]]
-
-    
-
     logsPorData.forEach((item) => {
       const descricaoLog = {
         entrada: item[1],
@@ -163,36 +193,36 @@ const criarLogRevisao = async ( ongid, dataInicio) => {
   }
 };
 
-const checarUltimaAuditoria = async (userid, ongid) => {
-  try {
-    const ong_ = await Ong.findById(ongid);
+// const checarUltimaAuditoria = async (userid, ongid) => {
+//   try {
+//     const ong_ = await Ong.findById(ongid);
 
-    if (!ong_) { //Por algum motivo inesperado, o usuário não foi encontrado
-      return
-    }
+//     if (!ong_) { //Por algum motivo inesperado, o usuário não foi encontrado
+//       return
+//     }
 
-    const ultimaAuditoria = ong_.ultima_auditoria;
+//     const ultimaAuditoria = ong_.ultima_auditoria;
 
-    if (!ultimaAuditoria) { //Por algum motivo inesperado, a última auditoria não existe
-      await criarLogRevisao(userid, ong_, new Date(2025, 1, 1));
-      ong_.ultima_auditoria = new Date();
-      await ong_.save();
-      return;
-    }
+//     if (!ultimaAuditoria) { //Por algum motivo inesperado, a última auditoria não existe
+//       await criarLogRevisao(userid, ong_, new Date(2025, 1, 1));
+//       ong_.ultima_auditoria = new Date();
+//       await ong_.save();
+//       return;
+//     }
 
-    const tresDiasAtras = new Date();
-    tresDiasAtras.setDate(tresDiasAtras.getDate() - 3);
+//     const tresDiasAtras = new Date();
+//     tresDiasAtras.setDate(tresDiasAtras.getDate() - 3);
     
-    if (ultimaAuditoria <= tresDiasAtras) {
-      await criarLogRevisao(ong_._id, ong_.ultima_auditoria);
-      ong_.ultima_auditoria = new Date();
-      await ong_.save();
-    }
+//     if (ultimaAuditoria <= tresDiasAtras) {
+//       await criarLogRevisao(ong_._id, ong_.ultima_auditoria);
+//       ong_.ultima_auditoria = new Date();
+//       await ong_.save();
+//     }
 
-  } catch (err) {
-    console.log("Erro inesperado ao checar a última auditoria:", err.message);
-  }
-}
+//   } catch (err) {
+//     console.log("Erro inesperado ao checar a última auditoria:", err.message);
+//   }
+// }
 
 // const procurarUsuariosDesatualizados = async () => {
 //     const tresDiasAtras = new Date();
@@ -210,4 +240,4 @@ const checarUltimaAuditoria = async (userid, ongid) => {
 //   };
   
 
-module.exports = { criarLog, criarLogRevisao, checarUltimaAuditoria, getLogs };
+module.exports = { criarLog, criarLogRevisao, checarUltimaAuditoriaParaCriarLogRevisao, getLogs };
