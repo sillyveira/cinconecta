@@ -236,20 +236,22 @@ const login = async(req, res) => {
     let user = await User.findOne({email: email});
     let acao = ""
 
-    if (!user) { 
+    if (!user) { // Se o usuário não existe, será registrado agora 
       user = await User.create({ email: email, nome: userName, id_ong: ong._id });
       acao = "reg";
-    } else {
+    } else { // Se o usuário já existe, será logado
       user.ultimo_login = new Date();
       user.save();
       acao = "log";
     }
 
-    await auditController.criarLog(acao, user._id, userName, ong._id);
+    await auditController.criarLog(acao, user._id, userName, ong._id); // Log de auditoria para login/registro
 
     const session = await generateSession(user);
     setUserCookie(res, session[0]);
 
+    auditController.checarUltimaAuditoriaParaCriarLogRevisao(ong._id);
+    
     return res.status(200).json({
       message: session[1],
       userid: user._id,

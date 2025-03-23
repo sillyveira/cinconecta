@@ -209,9 +209,11 @@ function Auditoria() {
               {item?.desc?.novoProduto?.quantidade || "Quantidade desconhecida"}
             </p>
             <p>
-              <strong>Preço:</strong>{" "}
-              {item?.desc?.novoProduto?.valor || "Preço desconhecido"}
-            </p>
+                  <strong>Valor:</strong>{" "}
+                  {item?.desc?.novoProduto?.valor != undefined
+                    ? `R$ ${item?.desc?.novoProduto?.valor?.toFixed(2)}`
+                    : "Valor desconhecido"}
+                </p>
             <p>
               <strong>Validade:</strong>{" "}
               {formatarData(item?.desc?.novoProduto?.validade)}
@@ -256,8 +258,10 @@ function Auditoria() {
                   {produto?.quantidade || "Quantidade desconhecida"}
                 </p>
                 <p>
-                  <strong>Preço:</strong>{" "}
-                  {produto?.valor || "Preço desconhecido"}
+                  <strong>Valor:</strong>{" "}
+                  {produto?.valor != undefined
+                    ? `R$ ${produto?.valor?.toFixed(2)}`
+                    : "Valor desconhecido"}
                 </p>
                 <p>
                   <strong>Validade:</strong> {formatarData(produto?.validade)}
@@ -303,9 +307,11 @@ function Auditoria() {
               {item?.desc?.produto?.quantidade || "Quantidade desconhecida"}
             </p>
             <p>
-              <strong>Preço:</strong>{" "}
-              {item?.desc?.produto?.valor || "Preço desconhecido"}
-            </p>
+                  <strong>Valor:</strong>{" "}
+                  {item?.desc?.produto?.valor != undefined
+                    ? `R$ ${item?.desc?.produto?.valor?.toFixed(2)}`
+                    : "Valor desconhecido"}
+                </p>
             <p>
               <strong>Validade:</strong>{" "}
               {formatarData(item?.desc?.produto?.validade)}
@@ -327,16 +333,38 @@ function Auditoria() {
                 <p>
                   <strong>Alterações:</strong>
                 </p>
-                {Object.entries(item.desc.alteracoes).map(([chave, valor]) => (
-                  <p key={chave}>
-                    <strong>
-                      {chave.charAt(0).toUpperCase() + chave.slice(1)}:
-                    </strong>{" "}
-                    {chave === "validade"
-                      ? new Date(valor).toLocaleDateString("pt-BR")
-                      : valor}
-                  </p>
-                ))}
+                {Object.entries(item.desc.alteracoes).map(([chave, valor]) => {
+                  let valorFormatado = valor; // Valor padrão, caso não haja formatação
+
+                  if (chave === "valor") {
+                    if (typeof valor === "number") {
+                      valorFormatado = `R$ ${valor.toFixed(2)}`; // Formata para R$ com duas casas decimais
+                    } else if (
+                      typeof valor === "string" &&
+                      !isNaN(parseFloat(valor))
+                    ) {
+                      valorFormatado = `R$ ${parseFloat(valor).toFixed(2)}`;
+                    } else {
+                      valorFormatado = `Valor desconhecido`; // ou outra mensagem de erro
+                    }
+                  } else if (chave === "Validade") {
+                    valorFormatado = new Date(valor)
+                      .toISOString()
+                      .split("T")[0]
+                      .split("-")
+                      .reverse()
+                      .join("/"); // Formata a data
+                  }
+
+                  return (
+                    <p key={chave}>
+                      <strong>
+                        {chave.charAt(0).toUpperCase() + chave.slice(1)}:
+                      </strong>{" "}
+                      {valorFormatado}
+                    </p>
+                  );
+                })}
               </div>
             )}
 

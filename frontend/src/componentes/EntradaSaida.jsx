@@ -37,11 +37,13 @@ export default function EntradaSaida() {
         <h2 className="text-white text-lg font-medium text-center">
           Gráfico de entrada e saída
         </h2>
+        {/* FEATURE FLAG: filtro por data 
+        
         <select className="bg-white rounded-2xl pl-1 text-center">
           <option value="">3 meses</option>
           <option value="">6 meses</option>
           <option value="">1 ano</option>
-        </select>
+        </select> */}
       </div>
 
       <div className="h-48">
