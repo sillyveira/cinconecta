@@ -208,7 +208,15 @@ exports.delete_product = async (req, res) => {
 // Controller para atualizar produtos
 exports.update_product = async (req, res) => {
   const { id } = req.params;
-  const { id_categoria, nome, descricao, quantidade, validade, valor, codbarras } = req.body;
+  const {
+    id_categoria,
+    nome,
+    descricao,
+    quantidade,
+    validade,
+    valor,
+    codbarras,
+  } = req.body;
   const id_usuario = req.userId;
   const id_ong = req.ongId;
   const nome_usuario = req.nomeUsuario;
@@ -234,8 +242,16 @@ exports.update_product = async (req, res) => {
     // 🔹 Criar objeto atualizado
     const novoProduto = {
       nome: nome || produtoExistente.nome,
-      id_categoria: id_categoria === "" ? null : id_categoria || produtoExistente.id_categoria,
-      nome_categoria: id_categoria === "" ? null : (id_categoria ? categoriasCache.get(id_categoria.toString()) : produtoExistente.nome_categoria),
+      id_categoria:
+        id_categoria === ""
+          ? null
+          : id_categoria || produtoExistente.id_categoria,
+      nome_categoria:
+        id_categoria === ""
+          ? null
+          : id_categoria
+          ? categoriasCache.get(id_categoria.toString())
+          : produtoExistente.nome_categoria,
       descricao: descricao || produtoExistente.descricao,
       quantidade: quantidade ?? produtoExistente.quantidade, // Permite zero
       validade: validade || produtoExistente.validade,
@@ -253,25 +269,31 @@ exports.update_product = async (req, res) => {
     }
 
     // atualiza apenas se houver mudanças
-    await Product.updateOne({ _id: id, id_ong: id_ong }, novoProduto);
+    await Product.updateOne({ _id: id, id_ong: id_ong }, novoProduto, {
+      runValidators: true,
+    });
 
     // criar log de auditoria
     try {
-      const qtd = (parseInt(novoProduto.quantidade) ?? 0) - (parseInt(produtoExistente.quantidade) ?? 0);
+      const qtd =
+        (parseInt(novoProduto.quantidade) ?? 0) -
+        (parseInt(produtoExistente.quantidade) ?? 0);
 
       const descricaoLog = {
         produto: produtoExistente,
         alteracoes: mudancas,
         entrada: qtd >= 0 ? qtd : 0,
         saida: qtd <= 0 ? Math.abs(qtd) : 0,
-        valor: (parseFloat(novoProduto.valor) ?? 0) - (parseFloat(produtoExistente.valor) ?? 0),
+        valor:
+          (parseFloat(novoProduto.valor) ?? 0) -
+          (parseFloat(produtoExistente.valor) ?? 0),
       };
 
       await auditController.criarLog(
-        "att", 
-        id_usuario, 
-        nome_usuario, 
-        id_ong, 
+        "att",
+        id_usuario,
+        nome_usuario,
+        id_ong,
         descricaoLog
       );
     } catch (err) {
@@ -291,7 +313,6 @@ exports.update_product = async (req, res) => {
     });
   }
 };
-
 
 // Funções para receber as alterações no update de produtos e fazer um log de auditoria.
 
@@ -313,9 +334,9 @@ function getAlteracoes(antigoProduto, novoProduto) {
     } else if (key === "validade") {
       chaveFinal = "Validade";
     } else if (key === "codbarras") {
-      chaveFinal = "Código de barras"
+      chaveFinal = "Código de barras";
     } else if (key === "descricao") {
-      chaveFinal = "Descrição"
+      chaveFinal = "Descrição";
     }
 
     // **Corrige a conversão da data antes da comparação**
@@ -351,7 +372,6 @@ function formatarDataParaISO(data) {
   return data; // Retorna o mesmo valor se não for uma data válida
 }
 
-
 function parseDataTypes(dados) {
   return {
     ...dados,
@@ -373,7 +393,7 @@ exports.view_product = async (req, res) => {
     if (validade) {
       const dataValidade = new Date(validade);
       if (!isNaN(dataValidade.getTime())) {
-        filtros.validade = { $lt: dataValidade }; // adicionando validade aos filtros
+        filtros.validade = { $lte: dataValidade }; // adicionando validade aos filtros
       }
     }
 
@@ -407,11 +427,14 @@ exports.view_product = async (req, res) => {
         nome: produto.nome || "",
         descricao: produto.descricao || "",
         quantidade: produto.quantidade || 0, // 0 se não existir
-        validade:
-          (produto.validade &&
-            new Date(produto.validade)
-              .toLocaleDateString('pt-BR')) ||
-          "", // "" se não existir
+        validade: produto.validade
+          ? new Date(produto.validade)
+              .toISOString()
+              .split("T")[0]
+              .split("-")
+              .reverse()
+              .join("/")
+          : "", // "" se não existir
         valor: produto.valor || 0, // 0 se não existir
         codbarras: produto.codbarras || "",
       };

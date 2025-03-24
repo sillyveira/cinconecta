@@ -49,11 +49,12 @@ function Perfil() {
           <hr className="text-[#B6B6B6] w-54" />
           {/* Botões */}
           <div className="flex flex-col items-center w-full py-4 gap-y-4">
-            <Botao
+            {/* Botão de configurações (Feature flag, ainda não terminado) */}
+            {/* <Botao
               texto={"Configurações"}
               onClick={() => {}}
               className={"w-54"}
-            ></Botao>
+            ></Botao> */}
 
             <Botao texto={"Sair"} onClick={() => {logout("Logout"); }} className={"w-54"}></Botao>
           </div>

@@ -237,7 +237,7 @@ export const editarProduto = async (logout, produto, carregarEstoque) => {
     );
 
     if (!resposta.ok) {
-      toast.error("Ocorreu um erro ao editar uma categoria.");
+      toast.error("Ocorreu um erro ao editar um produto.");
       throw new Error(`Erro na requisição: ${resposta.status}`);
     }
 
@@ -344,13 +344,18 @@ export const adicionarCategoria = async (
         }),
       }
     );
-
+    const dados = await resposta.json();
     if (!resposta.ok) {
-      toast.error("Ocorreu um erro ao adicionar uma categoria.");
+      let mensagemAdicional = ".";
+      if(dados.message == "Categoria já existe para esta ONG."){
+        mensagemAdicional = ": Esse nome já existe."
+      }
+      
+      toast.error(`Ocorreu um erro ao adicionar uma categoria${mensagemAdicional}`);
       throw new Error(`Erro na requisição: ${resposta.status}`);
     }
 
-    const dados = await resposta.json();
+    
 
     if (
       dados.message === "Token não está presente na solicitação." ||
