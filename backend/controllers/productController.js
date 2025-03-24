@@ -110,6 +110,7 @@ exports.delete_product = async (req, res) => {
   const id_usuario = req.userId;
   const nome_usuario = req.nomeUsuario;
 
+  
   // Verifica se a lista de IDs foi enviada e se é um array válido
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
     return res.status(400).json({
@@ -266,7 +267,13 @@ exports.update_product = async (req, res) => {
         valor: (parseFloat(novoProduto.valor) ?? 0) - (parseFloat(produtoExistente.valor) ?? 0),
       };
 
-      await auditController.criarLog("att", id_usuario, nome_usuario, id_ong, descricaoLog);
+      await auditController.criarLog(
+        "att", 
+        id_usuario, 
+        nome_usuario, 
+        id_ong, 
+        descricaoLog
+      );
     } catch (err) {
       console.error("Erro ao salvar o log de auditoria.", err);
     }
