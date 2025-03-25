@@ -462,6 +462,9 @@ describe("4. Testes de deleção de categorias", ()=>{
 
     afterEach(async()=>{
         await Cat.deleteMany({})
+        await ong.deleteMany({})
+        await session.deleteMany({})
+        await User.deleteMany({})
     })
 
     test("1 - Deleção de categorias bem-sucedida", async()=>{
@@ -527,5 +530,7 @@ describe("4. Testes de deleção de categorias", ()=>{
 
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json)
+
+        await mongoose.connect(process.env.MONGO_URI_TEST)
     })
 })
