@@ -1,16 +1,26 @@
 const categories = require("../models/Category");
 const Product = require("../models/Product");
 const mongoose = require("mongoose");
+const ong = require('../models/Ong')
 
 class CategoryController {
   async getCategories(req, res) {
+    
     try {
       const id_ong = req.ongId;
-      const categorias = await categories.find({ id_ong });
+      const findOng = await ong.findById(id_ong) //adicionei verificação de ongs
+
+      if(!findOng){
+        return res.status(404).json({ 
+          message: "Ong não encontrada."  //mudei de res.locals para essa forma (não sei o que estava pensando)
+        });
+
+      }
+      const categorias = await categories.find({ id_ong }).lean(); //bug corrigido
 
       return res.status(200).json({
         message: "Categorias retornadas com sucesso",
-        categorias,
+        categorias
       });
     } catch (error) {
       return res.status(400).json({ message: error.message });
