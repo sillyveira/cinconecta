@@ -27,5 +27,5 @@ Teste para validar a renderização e a funcionalidade de navegação do compone
 
 | Teste | Ação | Resultado Esperado | Falha |
 |-------|------|--------------------|-------|
-| 0 | Renderizar o componente Paginacao com as páginas corretas | O título deve ser exibido corretamente na tela. | Não |
+| 0 |   Renderizar o componente Paginacao com as páginas corretas | O título deve ser exibido corretamente na tela. | Não |
 | 1 | 	Chamar a função setPagina ao clicar nos botões de navegação | A função setPagina deve ser chamada com os valores de página corretos após os cliques nos botões de navegação. | Não |
