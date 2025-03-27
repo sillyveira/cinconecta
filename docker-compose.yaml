@@ -1,0 +1,35 @@
+networks:
+  la_rede:
+    driver: bridge
+
+services:
+  server:
+    container_name: cinconecta-server
+    build: ./backend
+    ports: 
+      - 3000:3000
+    depends_on:
+      - db
+    networks:
+      - la_rede
+  db:
+    image: mongo
+    container_name: cinconecta-db
+    expose:
+      - 27017:27017
+    ports:
+      - 27017:27017
+    volumes:
+      - /home/ifel/projetos/vols:/data/db
+    
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+    networks:
+      - la_rede
+
+  app:
+    container_name: cinconecta-client
+    build: ./frontend
+    ports:
+      - 5173:5173

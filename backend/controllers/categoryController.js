@@ -1,16 +1,26 @@
 const categories = require("../models/Category");
 const Product = require("../models/Product");
 const mongoose = require("mongoose");
+const ong = require('../models/Ong')
 
 class CategoryController {
   async getCategories(req, res) {
+    
     try {
       const id_ong = req.ongId;
-      const categorias = await categories.find({ id_ong });
+      const findOng = await ong.findById(id_ong) 
+      
+      if(!findOng){
+        return res.status(404).json({ 
+          message: "Ong não encontrada." 
+        });
+
+      }
+      const categorias = await categories.find({ id_ong }).lean();
 
       return res.status(200).json({
         message: "Categorias retornadas com sucesso",
-        categorias,
+        categorias
       });
     } catch (error) {
       return res.status(400).json({ message: error.message });
@@ -28,13 +38,20 @@ class CategoryController {
                 .json({ message: "Nome e/ou ID da ONG não podem ser nulos." });
         }
 
-        // Verificação de categoria existente
-        const categoriaExistente = await categories.findOne({ nome_categoria, id_ong });
-        if (categoriaExistente) {
-            return res.status(400).json({ message: "Categoria já existe para esta ONG." });
-        }
 
-        await categories.create({ nome_categoria, id_ong });
+      const findOng = await ong.findById(id_ong)
+
+      if(!findOng){
+        return res.status(404).json({ 
+          message: "Ong não encontrada." 
+        });
+      }
+
+      const novaCategoria = new categories({
+        nome_categoria,
+        id_ong,
+      });
+      await novaCategoria.save();
 
         return res.status(200).json({ message: "Categoria criada com sucesso!" });
     } catch (error) {
@@ -56,6 +73,15 @@ class CategoryController {
           .status(400)
           .json({ message: "Não foi possível identificar a ONG." });
       }
+
+      const findOng = await ong.findById(id_ong)
+
+      if(!findOng){
+        return res.status(404).json({ 
+          message: "Ong não encontrada." 
+        });
+      }
+
       if (!nome_categoria) {
         return res
           .status(400)
@@ -88,6 +114,14 @@ class CategoryController {
         return res
           .status(400)
           .json({ message: "Não foi possível identificar a ONG." });
+      }
+
+      const findOng = await ong.findById(id_ong)
+
+      if(!findOng){
+        return res.status(404).json({ 
+          message: "Ong não encontrada." 
+        });
       }
 
       await categories.findOneAndDelete({ _id: id_categoria, id_ong });
