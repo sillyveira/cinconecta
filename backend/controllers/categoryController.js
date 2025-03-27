@@ -8,14 +8,7 @@ class CategoryController {
     
     try {
       const id_ong = req.ongId;
-      const findOng = await ong.findById(id_ong) 
-      
-      if(!findOng){
-        return res.status(404).json({ 
-          message: "Ong não encontrada." 
-        });
-
-      }
+    
       const categorias = await categories.find({ id_ong }).lean();
 
       return res.status(200).json({
@@ -36,14 +29,6 @@ class CategoryController {
         return res
           .status(400)
           .json({ message: "Nome e/ou ID da ONG não podem ser nulos." });
-      }
-
-      const findOng = await ong.findById(id_ong)
-
-      if(!findOng){
-        return res.status(404).json({ 
-          message: "Ong não encontrada." 
-        });
       }
 
       const novaCategoria = new categories({
@@ -71,14 +56,6 @@ class CategoryController {
         return res
           .status(400)
           .json({ message: "Não foi possível identificar a ONG." });
-      }
-
-      const findOng = await ong.findById(id_ong)
-
-      if(!findOng){
-        return res.status(404).json({ 
-          message: "Ong não encontrada." 
-        });
       }
 
       if (!nome_categoria) {
@@ -113,14 +90,6 @@ class CategoryController {
         return res
           .status(400)
           .json({ message: "Não foi possível identificar a ONG." });
-      }
-
-      const findOng = await ong.findById(id_ong)
-
-      if(!findOng){
-        return res.status(404).json({ 
-          message: "Ong não encontrada." 
-        });
       }
 
       await categories.findOneAndDelete({ _id: id_categoria, id_ong });
