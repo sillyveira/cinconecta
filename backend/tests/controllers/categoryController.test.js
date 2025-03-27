@@ -1,12 +1,9 @@
-const request = require('supertest')
-const app = require('../../server.js')
 const mongoose = require('mongoose')
 const category = require('../../controllers/categoryController.js')
 const session = require('../../models/Session.js')
 const User = require("../../models/User");
 const Cat = require('../../models/Category.js')
 const ong = require('../../models/Ong.js')
-const { query } = require('express')
 const categoryController = require('../../controllers/categoryController.js')
 require("dotenv").config({path: '../../.env'})
 
