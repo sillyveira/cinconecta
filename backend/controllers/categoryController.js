@@ -8,15 +8,15 @@ class CategoryController {
     
     try {
       const id_ong = req.ongId;
-      const findOng = await ong.findById(id_ong) //adicionei verificação de ongs
-
+      const findOng = await ong.findById(id_ong) 
+      
       if(!findOng){
         return res.status(404).json({ 
-          message: "Ong não encontrada."  //mudei de res.locals para essa forma (não sei o que estava pensando)
+          message: "Ong não encontrada." 
         });
 
       }
-      const categorias = await categories.find({ id_ong }).lean(); //bug corrigido
+      const categorias = await categories.find({ id_ong }).lean();
 
       return res.status(200).json({
         message: "Categorias retornadas com sucesso",
@@ -36,6 +36,14 @@ class CategoryController {
         return res
           .status(400)
           .json({ message: "Nome e/ou ID da ONG não podem ser nulos." });
+      }
+
+      const findOng = await ong.findById(id_ong)
+
+      if(!findOng){
+        return res.status(404).json({ 
+          message: "Ong não encontrada." 
+        });
       }
 
       const novaCategoria = new categories({
@@ -64,6 +72,15 @@ class CategoryController {
           .status(400)
           .json({ message: "Não foi possível identificar a ONG." });
       }
+
+      const findOng = await ong.findById(id_ong)
+
+      if(!findOng){
+        return res.status(404).json({ 
+          message: "Ong não encontrada." 
+        });
+      }
+
       if (!nome_categoria) {
         return res
           .status(400)
@@ -96,6 +113,14 @@ class CategoryController {
         return res
           .status(400)
           .json({ message: "Não foi possível identificar a ONG." });
+      }
+
+      const findOng = await ong.findById(id_ong)
+
+      if(!findOng){
+        return res.status(404).json({ 
+          message: "Ong não encontrada." 
+        });
       }
 
       await categories.findOneAndDelete({ _id: id_categoria, id_ong });
