@@ -29,14 +29,15 @@ class CategoryController {
 
   async createCategories(req, res) {
     try {
-      const { nome_categoria } = req.body;
-      const id_ong = req.ongId;
+        const { nome_categoria } = req.body;
+        const id_ong = req.ongId;
 
-      if (!nome_categoria || !id_ong) {
-        return res
-          .status(400)
-          .json({ message: "Nome e/ou ID da ONG não podem ser nulos." });
-      }
+        if (!nome_categoria || !id_ong) {
+            return res
+                .status(400)
+                .json({ message: "Nome e/ou ID da ONG não podem ser nulos." });
+        }
+
 
       const findOng = await ong.findById(id_ong)
 
@@ -52,11 +53,11 @@ class CategoryController {
       });
       await novaCategoria.save();
 
-      return res.status(200).json({ message: "Categoria criada com sucesso!" });
+        return res.status(200).json({ message: "Categoria criada com sucesso!" });
     } catch (error) {
-      return res.status(400).json({ message: error.message });
+        return res.status(400).json({ message: error.message });
     }
-  }
+}
 
   async updateCategories(req, res) {
     try {
