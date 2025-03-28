@@ -6,6 +6,9 @@ services:
   server:
     container_name: cinconecta-server
     build: ./backend
+    environment: 
+      MONGO_URI: mongodb://root:pass@db:27017/cin-conecta?authSource=admin
+      API_LINK: https://bora-impactar-prd.setd.rdmapps.com.br/api/login.json
     ports: 
       - 3000:3000
     depends_on:
@@ -20,7 +23,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - /home/ifel/projetos/vols:/data/db
+      - /home/silveira/cinconecta-db/vols:/data/db
     
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
