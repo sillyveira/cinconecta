@@ -3,6 +3,8 @@ import DropDownMenu from "./Dropdown";
 import Botao from "./Botao";
 import { RefreshCcw } from "lucide-react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+
 
 export default function FiltroAuditoria({
   info,
@@ -11,6 +13,29 @@ export default function FiltroAuditoria({
   aplicarFiltro,
   refreshFunction
 }) {
+
+  const verificarData = (data) => {
+      const [ano, mes, dia] = data.split("-").map(Number);
+      const dateValue = new Date(data);
+
+      // Verifica se os valores são válidos
+      if (
+        ano < 2000 ||
+        ano > 2100 || // Limita entre 2000 e 2100
+        mes < 1 ||
+        mes > 12 || // Mês inválido
+        dia < 1 ||
+        dia > 31 || // Dia inválido
+        isNaN(dateValue.getTime()) // Verifica se o objeto Date é válido
+      ) {
+          return false;
+      } else {
+        return true;
+      }
+
+   
+  }
+
   return (
     <div
       className={`bg-gray-100 max-w-sm w-full flex flex-col items-center border rounded-xl shadow-lg h-fit pb-8 px-4 ${className}`}
@@ -73,7 +98,21 @@ export default function FiltroAuditoria({
       <Botao
         texto={"Salvar"}
         className={"mt-6 w-24 p-4"}
-        onClick={aplicarFiltro}
+        onClick={()=>{
+          if (verificarData(info.dataInicial) == false){
+            toast.error("A data inicial deve estar entre 01/01/2000 e 31/12/2100.");
+            return;
+          } else if (verificarData(info.dataFinal) == false){
+            toast.error("A data final deve estar entre 01/01/2000 e 31/12/2100.");
+            return;
+          } else if (info.dataFinal < info.dataInicial) {
+            toast.error("A data inicial deve ser menor ou igual à data final.");
+            return;
+          }
+
+          
+          aplicarFiltro();
+        }}
       />
     </div>
   );

@@ -3,7 +3,7 @@ networks:
     driver: bridge
 
 services:
-  server:
+  backend:
     container_name: cinconecta-server
     build: ./backend
     ports: 
@@ -32,4 +32,8 @@ services:
     container_name: cinconecta-client
     build: ./frontend
     ports:
-      - 5173:5173
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - la_rede

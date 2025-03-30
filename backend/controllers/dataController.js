@@ -63,11 +63,14 @@ const produtosProximosValidade = async (ongId) => {
         nome: produto.nome || "",
         descricao: produto.descricao || "",
         quantidade: produto.quantidade || 0, 
-        validade:
-          (produto.validade &&
-            new Date(produto.validade)
-              .toLocaleDateString('pt-BR')) ||
-          "", // "" se não existir
+        validade: produto.validade
+        ? new Date(produto.validade)
+            .toISOString()
+            .split("T")[0]
+            .split("-")
+            .reverse()
+            .join("/")
+        : "", // "" se não existir
         valor: produto.valor || 0, // 0 se não existir
         codbarras: produto.codbarras || "",
       };

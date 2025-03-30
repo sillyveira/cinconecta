@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 export const analiseDados = async (logout) => {
   try {
-    const resposta = await fetch("http://localhost:3000/analise-dados/dados", {
+    const resposta = await fetch("/server/analise-dados/dados", {
       method: "GET",
       credentials: "include",
       headers: {
@@ -41,7 +41,7 @@ export const analiseDados = async (logout) => {
 
 export const buscarEstoque = async (logout, query = "") => {
   try {
-    const resposta = await fetch(`http://localhost:3000/produtos${query}`, {
+    const resposta = await fetch(`/server/produtos${query}`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -86,7 +86,7 @@ export const buscarEstoque = async (logout, query = "") => {
 export const buscarAuditoria = async (logout, query = "") => {
   try {
     const resposta = await fetch(
-      `http://localhost:3000/auditoria/receber-logs${query}`,
+      `/server/auditoria/receber-logs${query}`,
       {
         method: "GET",
         credentials: "include",
@@ -96,7 +96,7 @@ export const buscarAuditoria = async (logout, query = "") => {
       }
     );
 
-    console.log(`http://localhost:3000/auditoria/receber-logs${query}`);
+    console.log(`/server/auditoria/receber-logs${query}`);
     if (!resposta.ok) {
       console.log(resposta.json());
       logout("Timeout");
@@ -133,7 +133,7 @@ export const buscarAuditoria = async (logout, query = "") => {
 
 export const buscarCategorias = async (logout) => {
   try {
-    const resposta = await fetch(`http://localhost:3000/categorias/`, {
+    const resposta = await fetch(`/server/categorias/`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -178,7 +178,7 @@ export const buscarCategorias = async (logout) => {
 export const adicionarProduto = async (logout, produto, carregarEstoque) => {
   try {
     const resposta = await fetch(
-      "http://localhost:3000/produtos/criar-produto",
+      "/server/produtos/criar-produto",
       {
         method: "POST",
         credentials: "include",
@@ -225,7 +225,7 @@ export const adicionarProduto = async (logout, produto, carregarEstoque) => {
 export const editarProduto = async (logout, produto, carregarEstoque) => {
   try {
     const resposta = await fetch(
-      `http://localhost:3000/produtos/atualizar-produto/${produto._id}`,
+      `/server/produtos/atualizar-produto/${produto._id}`,
       {
         method: "PUT",
         credentials: "include",
@@ -237,7 +237,7 @@ export const editarProduto = async (logout, produto, carregarEstoque) => {
     );
 
     if (!resposta.ok) {
-      toast.error("Ocorreu um erro ao editar uma categoria.");
+      toast.error("Ocorreu um erro ao editar um produto.");
       throw new Error(`Erro na requisição: ${resposta.status}`);
     }
 
@@ -276,7 +276,7 @@ export const removerProduto = async (
 ) => {
   try {
     const resposta = await fetch(
-      "http://localhost:3000/produtos/deletar-produto",
+      "/server/produtos/deletar-produto",
       {
         method: "POST",
         credentials: "include",
@@ -332,7 +332,7 @@ export const adicionarCategoria = async (
 
   try {
     const resposta = await fetch(
-      "http://localhost:3000/categorias/criar-categoria",
+      "/server/categorias/criar-categoria",
       {
         method: "POST",
         credentials: "include",
@@ -344,13 +344,18 @@ export const adicionarCategoria = async (
         }),
       }
     );
-
+    const dados = await resposta.json();
     if (!resposta.ok) {
-      toast.error("Ocorreu um erro ao adicionar uma categoria.");
+      let mensagemAdicional = ".";
+      if(dados.message == "Categoria já existe para esta ONG."){
+        mensagemAdicional = ": Esse nome já existe."
+      }
+      
+      toast.error(`Ocorreu um erro ao adicionar uma categoria${mensagemAdicional}`);
       throw new Error(`Erro na requisição: ${resposta.status}`);
     }
 
-    const dados = await resposta.json();
+    
 
     if (
       dados.message === "Token não está presente na solicitação." ||
@@ -386,7 +391,7 @@ export const atualizarCategoria = async (
 ) => {
   try {
     const resposta = await fetch(
-      `http://localhost:3000/categorias/atualizar-categoria/${idCategoria}`,
+      `/server/categorias/atualizar-categoria/${idCategoria}`,
       {
         method: "PUT",
         credentials: "include",
@@ -439,7 +444,7 @@ export const deletarCategoria = async (
 ) => {
   try {
     const resposta = await fetch(
-      `http://localhost:3000/categorias/deletar-categoria/${idCategoria}`,
+      `/server/categorias/deletar-categoria/${idCategoria}`,
       {
         method: "DELETE",
         credentials: "include",

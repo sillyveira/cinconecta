@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contextos/AuthContext";
 import { logoutRequest } from "../servicos/AuthAPI";
+import primaryLogo from '../imagens/primarylogo.png'
 const SIDEBAR_ITEMS = [
   {
     name: "Início",
@@ -93,7 +94,7 @@ export const Sidebar = () => {
           </div>
 
           <motion.img
-            src="./src/imagens/primarylogo.png"
+            src={primaryLogo}
             className={`w-30 left-4 fixed pl-2 -mt-2 pointer-events-none delay-50 transition-all overflow-hidden ${
               SidebarAberta ? "opacity-100" : "opacity-0"
             }`}

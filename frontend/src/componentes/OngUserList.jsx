@@ -14,9 +14,12 @@ export default function OngUserList({nomeUsuario, emailUsuario, dataUsuario}) {
       <div className="border-1 h-8 mx-2 border-[#B6B6B6]" />
 
       {/*DIV DO TITULO */}
+      <div className="place-items-center">
+      <h1> <strong>Nome</strong></h1>
       <h1 className=" min-w-[148px] max-w-[148px] text-center overflow-ellipsis">
         {nomeUsuario}
       </h1>
+      </div>
 
       <div className="border-1 h-8 mx-2 border-[#B6B6B6]" />
 

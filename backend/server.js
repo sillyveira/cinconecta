@@ -3,7 +3,7 @@ require('dotenv').config(); // Carrega as variáveis de .env
 require('./models/Database'); // Inicializa o servidor 
 const express = require('express');
 const app = express();
-const cors = require('cors');
+const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const {rateLimit} = require('express-rate-limit');
 // Importação de rotas
@@ -20,7 +20,7 @@ scheduler.iniciarScheduler(60);
 // Middleware para interpretar JSON
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost",
     credentials: true
 }));
 app.use(cookieParser()); //Para receber os cookies de token

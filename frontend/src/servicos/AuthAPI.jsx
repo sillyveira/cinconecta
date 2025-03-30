@@ -1,6 +1,6 @@
 export const loginRequest = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:3000/usuarios/login', {
+      const response = await fetch('/server/usuarios/login', {
         method: 'POST',
         credentials: "include",
         headers: {
@@ -22,7 +22,7 @@ export const loginRequest = async (email, password) => {
 
 export const logoutRequest = async () => {
     try {
-      const response = await fetch('http://localhost:3000/usuarios/logout', {
+      const response = await fetch('/server/usuarios/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -42,7 +42,7 @@ export const logoutRequest = async () => {
 
 export const getMembers = async () => {
     try {
-      const response = await fetch('http://localhost:3000/usuarios/membros', {
+      const response = await fetch('/server/usuarios/membros', {
         method: 'GET',
         credentials: "include",
         headers: {

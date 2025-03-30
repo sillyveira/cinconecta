@@ -6,6 +6,7 @@ import Header from "../componentes/Header";
 import OngUserList from "../componentes/OngUserList";
 import { useAuth } from "../contextos/AuthContext";
 import { motion } from "framer-motion";
+import userpfp from '../imagens/user.jpg';
 
 function Perfil() {
   const [openModal, setOpenModal] = useState(false);
@@ -37,7 +38,7 @@ function Perfil() {
           <div className="flex flex-row items-center justify-center py-4 px-4">
             <img
               className="rounded-full w-24"
-              src="./src/imagens/user.jpg"
+              src={userpfp}
               alt=""
             />
             <div className="flex flex-col text-black px-4">
@@ -49,11 +50,12 @@ function Perfil() {
           <hr className="text-[#B6B6B6] w-54" />
           {/* Botões */}
           <div className="flex flex-col items-center w-full py-4 gap-y-4">
-            <Botao
+            {/* Botão de configurações (Feature flag, ainda não terminado) */}
+            {/* <Botao
               texto={"Configurações"}
               onClick={() => {}}
               className={"w-54"}
-            ></Botao>
+            ></Botao> */}
 
             <Botao texto={"Sair"} onClick={() => {logout("Logout"); }} className={"w-54"}></Botao>
           </div>

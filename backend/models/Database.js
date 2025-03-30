@@ -1,15 +1,24 @@
-// Carregar variáveis de ambiente do arquivo .env
-require('dotenv').config()
+require('dotenv').config();
+const mongoose = require('mongoose');
 
-const mongoose = require('mongoose')
+const MONGODB_URI = process.env.MONGO_URI;
 
-const MONGO_URI = process.env.MONGO_URI 
+async function conectarMongoDB() {
+  try {
+    await mongoose.connect(MONGODB_URI, {});
+    console.log('[SUCESSO] Conexão estabelecida com o banco');
+  } catch (error) {
+    if (error.name === 'MongooseServerSelectionError') {
+      console.error('[ERRO] Falha na conexão com MongoDB:', error);
+      console.log('Tentando reconectar em 5 segundos...');
+      setTimeout(conectarMongoDB, 5000); 
+    } else {
+      console.error('[ERRO] Erro inesperado:', error);
+      process.exit(1);
+    }
+  }
+}
 
-// Estabelecendo conexão com o banco de dados
-mongoose.connect(MONGO_URI, {
-})
-    .then(() => console.log("[SUCESSO] Conexão estabelecida com o banco"))
-    .catch((err) => console.error("[ERRO] A conexão falhou: ", err))
+conectarMongoDB();
 
-
-module.exports = mongoose
+module.exports = mongoose;
