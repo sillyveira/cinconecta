@@ -43,13 +43,13 @@ const allowedOrigins = [
 	credentials: true
   }))
 app.use(cookieParser()); //Para receber os cookies de token
-app.set('trust proxy', 1);
+app.set('trust proxy', 5);
 app.use(rateLimit({ //Limitar requests a 300 por minuto 
 	windowMs: 60000, // 0.01s
 	limit: 300, 
 	standardHeaders: 'draft-8', 
 	legacyHeaders: false,
-  trustProxy: 1,
+  trustProxy: 5,
 }))
 
 // Rotas
