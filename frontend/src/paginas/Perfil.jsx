@@ -6,6 +6,7 @@ import Header from "../componentes/Header";
 import OngUserList from "../componentes/OngUserList";
 import { useAuth } from "../contextos/AuthContext";
 import { motion } from "framer-motion";
+import imgUser from "../imagens/user.jpg";
 
 function Perfil() {
   const [openModal, setOpenModal] = useState(false);
@@ -37,7 +38,7 @@ function Perfil() {
           <div className="flex flex-row items-center justify-center py-4 px-4">
             <img
               className="rounded-full w-24"
-              src="./src/imagens/user.jpg"
+              src={imgUser}
               alt=""
             />
             <div className="flex flex-col text-black px-4">

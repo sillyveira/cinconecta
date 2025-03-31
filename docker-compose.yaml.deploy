@@ -4,8 +4,8 @@ networks:
 
 services:
   server:
+    image: cinconecta-server
     container_name: cinconecta-server
-    build: ./backend
     ports: 
       - 3000:3000
     networks:
@@ -16,8 +16,8 @@ services:
  
 
   app:
+    image: cinconecta-client
     container_name: cinconecta-client
-    build: ./frontend
     ports:
       - 5173:5173
     networks:

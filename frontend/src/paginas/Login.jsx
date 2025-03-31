@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contextos/AuthContext";
 import { loginRequest } from "../servicos/AuthAPI"; // Importa a função da API
 import toast from "react-hot-toast";
+import imgLogo from "../imagens/primarylogo.png";
+import imgLogin from "../imagens/img-login.png";
+
+
 const Login = () => {
   const [dadosLogin, setDadosLogin] = useState({
     email: "",
@@ -39,12 +43,12 @@ const Login = () => {
   return (
     <>
       <div className="flex flex-col justify-between w-full h-screen overflow-hidden bg-gray-100">
-        <img src="./src/imagens/primarylogo.png" className="w-30 fixed top-4 left-6" />
+        <img src={imgLogo} className="w-30 fixed top-4 left-6" />
         <main className="p-10 flex flex-col h-screen justify-center items-center flex-grow [@media(max-height:600px)]:flex-row">
           <div className="flex flex-row justify-around items-center min-h-full min-w-full bg-gray-100 bd">
             <div className=" max-w-xl ">
               <img
-                src="./src/imagens/img-login.png"
+                src={imgLogin}
                 alt="Imagem vetorial com dois personagens simulando o uso da plataforma de forma criativa."
               />
             </div>

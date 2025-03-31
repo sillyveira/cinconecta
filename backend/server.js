@@ -19,10 +19,29 @@ scheduler.iniciarScheduler(60);
 
 // Middleware para interpretar JSON
 app.use(express.json());
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
-}));
+const allowedOrigins = [
+	'http://localhost',
+	'http://localhost:5173',
+	'http://localhost:3000',
+	'http://localhost/cinconecta',
+	'https://cinconecta-client', 
+	'http://cinboraimpactar.cin.ufpe.br',
+	'http://vm-cinboraimpactar.cin.ufpe.br',
+	'https://cinboraimpactar.cin.ufpe.br',
+	'https://vm-cinboraimpactar.cin.ufpe.br'
+  ]
+  
+  app.use(cors({
+	origin: function (origin, callback) {
+	  if (!origin || allowedOrigins.includes(origin)) {
+		callback(null, true)
+	  } else {
+		console.log('Blocked by CORS:', origin)
+		callback(new Error('Not allowed by CORS'))
+	  }
+	},
+	credentials: true
+  }))
 app.use(cookieParser()); //Para receber os cookies de token
 app.use(rateLimit({ //Limitar requests a 1 por 0.2 para evitar requests duplos.
 	windowMs: 60000, // 0.01s
