@@ -22,8 +22,15 @@ exports.create_product = async (req, res) => {
   if (!nome || !quantidade || !id_usuario) {
     return res.status(400).json({
       success: false,
-      message: "Todos os campos são necessários.",
+      message: "Campos obrigatórios.",
     });
+  }
+
+  if(!mongoose.Types.ObjectId.isValid(id_ong)) {
+    return res.status(400).json({
+      success: false,
+      message: "ID de ONG inválido.",
+    })
   }
 
   if (!mongoose.Types.ObjectId.isValid(id_usuario)) {
@@ -83,8 +90,10 @@ exports.create_product = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Produto criado com sucesso." });
-  } catch (error) {
+      .json({ success: true, message: "Produto criado com sucesso." });    
+  } 
+  
+  catch (error) {
     console.error("Erro ao criar produto:", error);
     res.status(500).json({
       success: false,
@@ -101,6 +110,7 @@ exports.delete_product = async (req, res) => {
   const id_usuario = req.userId;
   const nome_usuario = req.nomeUsuario;
 
+  
   // Verifica se a lista de IDs foi enviada e se é um array válido
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
     return res.status(400).json({
@@ -395,6 +405,8 @@ exports.view_product = async (req, res) => {
         categoriasCache.set(categoria._id.toString(), categoria.nome_categoria);
       }
     });
+    
+    
 
     if (id_categoria && mongoose.Types.ObjectId.isValid(id_categoria)) {
       filtros.id_categoria = id_categoria;
