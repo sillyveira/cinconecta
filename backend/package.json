@@ -21,19 +21,10 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/tests"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/tests/setupTests.js"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "node"
-    ],
-    "testMatch": [
-      "**/?(*.)+(test).js"
-    ]
+    "roots": ["<rootDir>/tests"],
+    "setupFilesAfterEnv": ["<rootDir>/tests/setupTests.js"],
+    "moduleFileExtensions": ["js", "json", "node"],
+    "testMatch": ["**/?(*.)+(test).js"]
   }
+  
 }
