@@ -1,0 +1,38 @@
+networks:
+  la_rede:
+    driver: bridge
+
+services:
+  server:
+    container_name: cinconecta-server
+    build: ./backend
+    environment: 
+      MONGO_URI: mongodb://root:pass@db:27017/cin-conecta?authSource=admin
+      API_LINK: https://bora-impactar-prd.setd.rdmapps.com.br/api/login.json
+    ports: 
+      - 3000:3000
+    depends_on:
+      - db
+    networks:
+      - la_rede
+  db:
+    image: mongo
+    container_name: cinconecta-db
+    expose:
+      - 27017:27017
+    ports:
+      - 27017:27017
+    volumes:
+      - /home/silveira/cinconecta-db/vols:/data/db
+    
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+    networks:
+      - la_rede
+
+  app:
+    container_name: cinconecta-client
+    build: ./frontend
+    ports:
+      - 5173:5173

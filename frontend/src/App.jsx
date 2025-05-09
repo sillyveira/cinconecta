@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
+import { Route, Routes, Navigate } from "react-router-dom";
+import Inicio from "./paginas/Inicio.jsx";
+import AnaliseGeral from "./paginas/AnaliseGeral.jsx";
+import { Sidebar } from "./componentes/Sidebar.jsx";
+import Estoque from "./paginas/Estoque.jsx";
+import Perfil from "./paginas/Perfil.jsx";
+import Auditoria from "./paginas/Auditoria.jsx";
+import Login from "./paginas/Login.jsx";
+import PoliticaPrivacidade from "./paginas/PoliticaPrivacidade.jsx";
+import { AuthProvider, useAuth } from "./contextos/AuthContext.jsx";
+import { DataProvider } from "./contextos/DataContext.jsx";
+import TermosCondicoes from "./paginas/TermosCondicoes.jsx";
+function AppRoutes() {
+  const { isAuthenticated } = useAuth();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex h-screen bg-white text-gray-200 overflow-hidden">
+      <div className={`z-10 w-full ${isAuthenticated && 'ml-20'}`}>
+        <Routes>
+          <Route path="/" element={isAuthenticated ? <Inicio /> : <Navigate to="/login" />} />
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
+          <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade/>} />
+          <Route path="/termos-condicoes-uso" element={<TermosCondicoes/>} ></Route>
+          <Route path="/perfil" element={isAuthenticated ? <Perfil /> : <Navigate to="/login" />} />
+          <Route path="/analise-geral" element={isAuthenticated ? <AnaliseGeral /> : <Navigate to="/login" />} />
+          <Route path="/estoque" element={isAuthenticated ? <Estoque /> : <Navigate to="/login" />} />
+          <Route path="/auditoria" element={isAuthenticated ? <Auditoria /> : <Navigate to="/login" />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      {isAuthenticated && <Sidebar />}
+    </div>
+
+  );
 }
 
-export default App
+function App() {
+  return (
+
+    <AuthProvider>
+      <DataProvider>
+        <AppRoutes />
+      </DataProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
