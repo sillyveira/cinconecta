@@ -5,8 +5,6 @@
 
 O **CinConecta** é um sistema de gestão de estoque descomplicado, desenvolvido por alunos de Sistemas de Informação do CIN-UFPE. Criado para ajudar ONGs necessitadas, o projeto foi baseado em pesquisas de campo na cidade de Recife - PE.  
 
-A plataforma é um **MVP funcional**, com backend e frontend totalmente integrados, e foi desenvolvida utilizando **React.js**, **Node.js** e **MongoDB**.  
-
 ## 🚀 Funcionalidades  
 
 - **Login Seguro:** Acesso por credenciais do governo, com opção para armazenar email, nome da ONG e identificador.  
@@ -20,8 +18,7 @@ A plataforma é um **MVP funcional**, com backend e frontend totalmente integrad
 - **Frontend:** React.js  
 - **Backend:** Node.js + Express  
 - **Banco de Dados:** MongoDB  
-- **Gerenciamento de Estado:** (Se usarem Redux, Context API, etc., podemos adicionar aqui)  
-- **Estilização:** (Se usarem Tailwind, Material UI, etc., podemos adicionar aqui)  
+- **Estilização:** TailwindCSS
 
 ## 📂 Estrutura do Projeto  
 
@@ -64,6 +61,8 @@ npm run dev
 ```  
 
 Acesse **http://localhost:5173** no navegador.  
+
+(O projeto provavelmente não funcionará localmente por causa das variáveis de ambiente. Porém você pode acessá-lo em https://cinboraimpactar.cin.ufpe.br/cinconecta)
 
 ## 🤝 Contribuição  
 
